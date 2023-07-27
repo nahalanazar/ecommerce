@@ -55,7 +55,6 @@ const manageUser = async(req, res)=>{
         // const userData = await User.findOne({email : email})
         const allUsers = await User.find({}, { password: 0 }).sort({name :1})
         res.render("index" , {allUsers})
-        console.log(User.name)
 
     } catch (error) {
         console.log(error.message)
@@ -81,6 +80,8 @@ const blockUser = async(req,res)=>{
       console.log(error.message)
     }
   }
+
+  
 
 module.exports = {
     loadLogin,

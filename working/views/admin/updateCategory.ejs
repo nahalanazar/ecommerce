@@ -1,0 +1,9 @@
+<h1>Edit Category</h1>
+<form action="/admin/editCategory" method="POST">
+  <label for="name">Name</label>
+  <input type="text" id="name" name="name" value="<%= category.name %>" required>
+  <label for="description">Description</label>
+  <textarea id="description" name="description" required><%= category.description %></textarea>
+  <input type="hidden" name="id" value="<%=category._id%>">
+  <button type="submit">Update Category</button>
+</form>
