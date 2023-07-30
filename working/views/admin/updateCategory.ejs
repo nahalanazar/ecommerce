@@ -1,9 +1,55 @@
-<h1>Edit Category</h1>
-<form action="/admin/editCategory" method="POST">
-  <label for="name">Name</label>
-  <input type="text" id="name" name="name" value="<%= category.name %>" required>
-  <label for="description">Description</label>
-  <textarea id="description" name="description" required><%= category.description %></textarea>
-  <input type="hidden" name="id" value="<%=category._id%>">
-  <button type="submit">Update Category</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      .card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        .card .card-body {
+            padding: 3rem 4rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <title>Fashion Palace</title>
+</head>
+<body>
+    <main class="container py-5 d-flex flex-column align-items-center justify-content-center">
+        <h1 class="mb-5 text-center text-secondary">Edit Category</h1>
+
+        <form action="/admin/updateCategory" method="POST" class="card shadow-lg mx-auto" style="max-width: 400px;">
+          <div class="card-body">
+            <div class="form-group mb-4">
+                <label for="name" class="form-label">Name</label>
+                <input type="text" id="name" name="name" class="form-control" value="<%= category.name %>" required>
+            </div>
+            <div class="form-group mb-4">
+                <label for="description" class="form-label">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="3" required><%= category.description %></textarea>
+            </div>
+            <input type="hidden" name="id" value="<%= category._id %>">
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Update Category</button>
+            </div>
+          </div>
+        </form>
+    </main>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

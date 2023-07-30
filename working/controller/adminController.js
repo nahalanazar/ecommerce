@@ -20,7 +20,7 @@ const verifyLogin = async(req,res)=>{
         if(adminData){
             if(password===adminData.password){
                 req.session.admin_id = adminData._id
-                return res.redirect('/admin/index')
+                return res.redirect('/admin/dashboard')
             }else{
                 res.render('login',{message:"Email and password are incorrect"})
             }
@@ -32,13 +32,13 @@ const verifyLogin = async(req,res)=>{
     }
 }
 
-// const loadDashboard = async(req, res) => {
-//     try {
-//         res.render('index')
-//     } catch (error) {
-//         console.log(error.message)
-//     }
-// }
+const loadDashboard = async(req, res) => {
+    try {
+        res.render('dashboard')
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 
 const logout = async(req, res) => {
    try {
@@ -87,6 +87,7 @@ module.exports = {
     loadLogin,
     verifyLogin,
     logout,
+    loadDashboard,
     manageUser,
     blockUser,
     unBlockUser

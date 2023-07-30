@@ -1,8 +1,21 @@
 const { name } = require("ejs");
 const User = require("../models/userModel")
+const Product = require("../models/productModel")
+const Category = require("../models/categoryModel")
 const bcrypt = require("bcrypt");
 require('dotenv').config();
-const otpHelper=require("../Helper/otpHelper")
+
+//const otpHelper=require("../Helper/otpHelper")
+// const accountSid = process.env.TWILIO_SID
+// const authToken = process.env.TWILIO_AUTH_TOKEN
+// const verifySid = "VAe86f583a3b6c2a84119a5f15ef3c7c89";
+// const client = require("twilio")(accountSid, authToken);
+
+const accountSid = "AC2494e61a37ee26d347cbbf64da4d268c";
+const authToken = "048d3fadd534299d32789774829b6088";
+const verifySid = "VAe86f583a3b6c2a84119a5f15ef3c7c89";
+const client = require("twilio")(accountSid, authToken);
+
 
 const home = async (req, res) => {
     try {
@@ -60,8 +73,8 @@ const insertUser = async (req, res) => {
       if(existingUser){
         return res.render("public/signup",{message:"Email already exists"})
       }
-      const mobileNumberRegex = /^\d{10}$/;
-      if (!mobileNumberRegex.test(mobile)) {
+      const mobileRegex = /^\d{10}$/;
+      if (!mobileRegex.test(mobile)) {
           return res.render("public/signup", { message: "Mobile Number should have 10 digits" });
       }
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
@@ -95,10 +108,10 @@ const insertUser = async (req, res) => {
 
   const verifyLogin = async(req, res)=>{
     try {
-      const mobileNumber = req.body.mobile
+      const mobile = req.body.mobile
       const password = req.body.password
   
-      const userData = await User.findOne({mobile:mobileNumber})
+      const userData = await User.findOne({mobile:mobile})
      
   
       if (userData) {
@@ -108,18 +121,26 @@ const insertUser = async (req, res) => {
             res.render('public/login', {message:"Your account is blocked"})
             console.log("you are blocked");
           }else{
-            const otp = otpHelper.generateOtp()
-            //const phone= otpHelper.sendOtp(mobileNumber,otp)
-              console.log(`Otp is ${otp}`)
-            try {
-                req.session.otp = otp;
-                req.session.userData = req.body;
-                req.session.mobile = mobileNumber 
-                req.session.username = userData.name
-                res.render('public/verifyOtp')     
-            } catch (error) {
-                console.log(error.message); 
-            }
+            // const otp = otpHelper.generateOtp()
+            // const phone= otpHelper.sendOtp(mobile,otp)
+            //   console.log(`Otp is ${otp}`)
+            client.verify.v2
+      .services(verifySid)
+        .verifications.create({to:`+91${mobile}`,channel:'sms'})
+      .then((verification) => {
+        console.log(verification.status)
+        req.session.userData = req.body;
+        req.session.mobile = mobile 
+        req.session.username = userData.name
+        res.render('public/verifyOtp', { mobile: mobile });
+      })
+            // try {
+            //     req.session.otp = otp;
+              
+            //     res.render('public/verifyOtp')     
+            // } catch (error) {
+            //     console.log(error.message); 
+            // }
           }
         }else{
           res.render('public/login', {message:"Password is incorrect"})
@@ -135,51 +156,97 @@ const insertUser = async (req, res) => {
 
   const verifyOtp = async (req, res) => {
     const otp=req.body.otp
+
     try {
 
-      const sessionOTP=req.session.otp;
-        const userData=req.session.userData;
-        
-        if (!sessionOTP || !userData) {
+      const otp =req.body.otp;
+       const mobile = req.body.mobile
+        const user = await User.findOne({mobile:mobile})
+        if (!user) {
             res.render('public/verifyOtp',{ message: 'Invalid Session' });
-        }else if (sessionOTP !== otp) {
-            res.render('public/verifyOtp',{ message: 'Invalid OTP' });
         }else{
-
-            req.session.user_id=userData;
+          client.verify.v2
+      .services(verifySid)
+      .verificationChecks.create({to:`+91${mobile}`, code: otp})
+      .then((verification_check)=>{
+        console.log(verification_check.status);
+         req.session.loggedIn = true;
+         req.session.user_id=user;
+         res.redirect('/')
+      })
             
-            res.redirect('/')
-            console.log(userName)
+            // res.redirect('/')
+            // console.log(userName)
         }
     } catch (error) {
         console.log(error.message)
     }
   }
   
-const product = async (req, res) => {
-    try {
-        res.render('public/product')
-    } catch (error) {
-        console.log(error.message)
-    }
-}
 
-const userLogout = async(req, res)=>{
-  try {
-    req.session.user_id=null
-    res.redirect('/login')
-  } catch (error) {
-    console.log(error.message)
+  const userLogout = async(req, res)=>{
+    try {
+      req.session.user_id=null
+      res.redirect('/login')
+    } catch (error) {
+      console.log(error.message)
+    }
   }
-}
+
+
+  const shop = async (req, res) => {
+    try {
+      const category = await Category.find({});
+      const page = parseInt(req.query.page) || 1; 
+      const limit = 6;
+      const skip = (page - 1) * limit; // Calculate the number of products to skip
+  
+      // Fetch products with pagination
+      const totalProducts = await Product.countDocuments({ $and: [{ isListed: true }, { isProductListed: true }] }); // Get the total number of products
+      const totalPages = Math.ceil(totalProducts / limit); // Calculate the total number of pages
+  
+      const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
+        .skip(skip)
+        .limit(limit)
+        .populate('category');
+  
+      res.render('public/shop', { product: products, category, currentPage: page, totalPages });
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const categoryPage = async (req,res) =>{
+    try{
+        const  categoryId = req.query.id
+        const category = await Category.find({ })
+        const page = parseInt(req.query.page) || 1; 
+        const limit = 6;
+        const skip = (page - 1) * limit;
+        const totalProducts = await Product.countDocuments({ category:categoryId,$and: [{ isListed: true }, { isProductListed: true }]}); // Get the total number of products
+        const totalPages = Math.ceil(totalProducts / limit);
+         
+        const product = await Product.find({ category:categoryId,$and: [{ isListed: true }, { isProductListed: true }]})
+        .skip(skip)
+        .limit(limit)
+        .populate('category')
+        res.render('public/categoryShop',{product,category, currentPage: page, totalPages })
+      }
+    catch(err){
+        console.log('category page error',err);
+      }
+  }
+
+
 
 module.exports= {
     home,
     login,
     signup,
-    product,
     insertUser,
     verifyLogin,
     verifyOtp,
-    userLogout
+    userLogout,
+    shop,
+    categoryPage
 }

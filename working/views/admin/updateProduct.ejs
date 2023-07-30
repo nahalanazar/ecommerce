@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+    
+        <!-- Bootstrap CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+    
+        <style>
+            .card {
+                border-radius: 1rem;
+                border: none;
+                box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+                margin: auto;
+            }
+            .card .card-body {
+                padding: 3rem 4rem;
+            }
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            .content-main {
+                max-width: 800px;
+                margin: auto;
+            }
+            /* Define the color of the labels and inputs here */
+            .form-label {
+                color: #007bff; /* blue color */
+            }
+            .form-control {
+                color: #495057;
+            }
+        </style>
+    
+        <title>Fashion Palace</title>
+    </head>
+<body>
+    <main class="container py-5 d-flex flex-column align-items-center justify-content-center">
+        <h1 class="mb-5 text-center text-secondary">Update Product</h1>
+
+        <section class="content-main">
+            <form action="/admin/updateProduct" method="post" enctype="multipart/form-data" class="card shadow-lg mx-auto">
+              <div class="card-body">
+                <!-- Product title -->
+                <div class="form-group mb-4">
+                    <div><label for="name" class="form-label">Product title</label></div>
+                    <div><input type="text" id="name" name="name" class="form-control" value="<%= product.name %>" placeholder="Type here" required></div>
+                </div>
+
+                <!-- Description -->
+                <div class="form-group mb-4">
+                    <div><label for="description" class="form-label">Description</label></div>
+                    <div><textarea id="description" name="description" class="form-control" rows="4" placeholder="Type here" required><%= product.description %></textarea></div>
+                </div>
+
+                <!-- Category -->
+                <div class="form-group mb-4">
+                    <div><label for="category" class="form-label">Category</label></div>
+                    <div>
+                        <select id="category" name="category" class="form-select">
+                            <% category.forEach(function(category) { %>
+                            <option value="<%= category._id %>"><%= category.name %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Cost -->
+                <div class="form-group mb-4">
+                    <div><label for="price" class="form-label">Cost in INR</label></div>
+                    <div><input type="number" id="price" name="price" class="form-control" value="<%= product.price %>" placeholder="00.0" required></div>
+                </div>
+
+                <!-- Images -->
+                <!-- Main Image -->
+                <div class="form-group mb-4">
+                    <div><label for="mainImage" class="form-label">Main Image</label></div>
+                    <div>
+                        <img src="./product_images/<%= product.images[0]%>" id="imgView1" alt="product image" width="100px" height="100px">
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <div>
+                        <input type="file" id="mainImage" name="images" class="form-control" onchange="viewImage1(event)">
+                    </div>
+                </div>
+
+                <!-- Second Image -->
+                <div class="form-group mb-4">
+                    <div><label for="secondImage" class="form-label">Second Image</label></div>
+                    <div>
+                        <img src="./product_images/<%= product.images[1]%>" id="imgView2" alt="product image" width="100px" height="100px">
+                    </div>
+                    <div>
+                        <input type="file" id="secondImage" name="images" class="form-control" onchange="viewImage2(event)">
+                    </div>
+                </div>
+
+                <!-- Third Image -->
+                <div class="form-group mb-4">
+                    <div><label for="thirdImage" class="form-label">Third Image</label></div>
+                    <div>
+                        <img src="./product_images/<%= product.images[2]%>" id="imgView3" alt="product image" width="100px" height="100px">
+                    </div>
+                    <div>
+                        <input type="file" id="thirdImage" name="images" class="form-control" onchange="viewImage3(event)">
+                    </div>
+                </div>
+
+                <!-- Hidden Input -->
+                <input type="hidden" name="id" value="<%= product._id %>">
+
+                <!-- Submit Button -->
+                <div class="d-flex justify-content-center">
+                    <input type="submit" value="Publish" class="btn btn-primary">
+                </div>
+              </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Bootstrap JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        function viewImage1(event) {
+              document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
+            }
+            function viewImage2(event) {
+              document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
+            }
+            function viewImage3(event) {
+              document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
+            }
+    </script>
+</body>
+</html>

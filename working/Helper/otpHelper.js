@@ -12,17 +12,17 @@ const generateOtp = () => {
   });
 };
 
-const sendOtp = async (mobileNumber, otp) => {
-  try {
-    await client.messages.create({
-      body: `Your OTP for Fashion Palace Sign Up is: ${otp}`,
-      from: '+12728880977',
-      to: `+91${mobileNumber}`,
-    });
-  } catch (error) {
-    console.log(error.message);
-    throw new Error("Failed to send OTP");
-  }
-};
+// const sendOtp = async (mobileNumber, otp) => {
+//   try {
+//     await client.messages.create({
+//       body: `Your OTP for Fashion Palace Sign Up is: ${otp}`,
+//       from: '+12728880977',
+//       to: `+91${mobileNumber}`,
+//     });
+//   } catch (error) {
+//     console.log(error.message);
+//     throw new Error("Failed to send OTP");
+//   }
+// };
 
 module.exports = { generateOtp, sendOtp };

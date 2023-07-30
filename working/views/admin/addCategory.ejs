@@ -1,8 +1,98 @@
-<h1>New Category</h1>
-<form action="/admin/addCategory" method="POST">
-  <label for="name">Name</label>
-  <input type="text" id="name" name="name">
-  <label for="description">Description</label>
-  <textarea id="description" name="description"></textarea>
-  <button type="submit">Create Category</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.1/font/bootstrap-icons.css">
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .btn-back {
+            margin: 1rem;
+            font-size: 1rem;
+            color: #ffffff;
+            background-color: #007bff;
+            text-decoration: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+        .card .card-body {
+            padding: 3rem 4rem;
+        }
+        .btn-primary {
+            background-color:#007bff;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+    </style>
+
+    <title>Fashion Palace</title>
+</head>
+<body>
+    <!-- Back button -->
+    <a href="/admin/categoryManagement" class="btn btn-primary btn-back"><i class="bi bi-arrow-left"></i> Category Management</a>
+
+
+    <!-- Main content -->
+    <main class="container my-5">
+        <h2 class="mb-5 text-center text-secondary">Add New Category</h2>
+        <form action="/admin/addCategory" method="post">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <!-- Category Name -->
+                    <div class="form-group mb-4">
+                      <label class="form-label" for="name">Category Name</label>
+                    </div>
+                    <div class="form-group mb-4">
+                      <input type="text" id="name" class="form-control" name="name" placeholder="Enter category name">
+                    </div>
+                  
+                    <!-- Description -->
+                    <div class="form-group mb-4">
+                      <label class="form-label" for="description">Description</label>
+                    </div>
+                    <div class="form-group mb-4">
+                      <textarea class="form-control" id="description" name="description" rows="4" placeholder="Enter category description"></textarea>
+                    </div>   
+                    
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary mt-3"> Publish Category</button>
+                </div>
+            </div>
+        </form>
+        
+        <!-- Error message -->
+        <div class="text-center mt-5">
+            <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
+        </div>
+    </main>
+
+    <!-- Optional JavaScript; choose one of the two! -->
+    <!-- Option 1: Bootstrap Bundle with Popper -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
