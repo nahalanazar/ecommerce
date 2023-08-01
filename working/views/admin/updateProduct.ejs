@@ -85,7 +85,7 @@
 
                 <div class="form-group mb-4">
                     <div>
-                        <input type="file" id="mainImage" name="images" class="form-control" onchange="viewImage1(event)">
+                        <input type="file" id="mainImage" name="images" class="form-control" onchange="viewImage(event, 'imgView1')">
                     </div>
                 </div>
 
@@ -96,7 +96,7 @@
                         <img src="./product_images/<%= product.images[1]%>" id="imgView2" alt="product image" width="100px" height="100px">
                     </div>
                     <div>
-                        <input type="file" id="secondImage" name="images" class="form-control" onchange="viewImage2(event)">
+                        <input type="file" id="secondImage" name="images" class="form-control" onchange="viewImage(event, 'imgView2')">
                     </div>
                 </div>
 
@@ -107,7 +107,7 @@
                         <img src="./product_images/<%= product.images[2]%>" id="imgView3" alt="product image" width="100px" height="100px">
                     </div>
                     <div>
-                        <input type="file" id="thirdImage" name="images" class="form-control" onchange="viewImage3(event)">
+                        <input type="file" id="thirdImage" name="images" class="form-control" onchange="viewImage(event, 'imgView3')">
                     </div>
                 </div>
 
@@ -127,15 +127,9 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        function viewImage1(event) {
-              document.getElementById('imgView1').src = URL.createObjectURL(event.target.files[0])
-            }
-            function viewImage2(event) {
-              document.getElementById('imgView2').src = URL.createObjectURL(event.target.files[0])
-            }
-            function viewImage3(event) {
-              document.getElementById('imgView3').src = URL.createObjectURL(event.target.files[0])
-            }
-    </script>
+        function viewImage(event, imageId) {
+            document.getElementById(imageId).src = URL.createObjectURL(event.target.files[0]);
+        }
+</script>
 </body>
 </html>

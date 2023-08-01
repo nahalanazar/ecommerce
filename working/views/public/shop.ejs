@@ -3,6 +3,40 @@
 <head>
 	<title>Fashion Palace</title>
 	<%- include("./includes/template-head-part") %>
+
+	<style>
+		.img {
+  			width: 200px;
+  			height: 400px;
+  			object-fit: cover;
+		}
+		.pagination {
+  			margin-top: 10px;
+  			border-left: 1px solid #ffffff;
+  			border-radius: 0px; }
+  		.pagination a {
+    		width: 40px;
+    		line-height: 40px;
+    		text-align: center;
+    		display: inline-block;
+    		background: #cfcccc; }
+    	.pagination a.active {
+      		color: #fff; }
+    	.pagination a:hover {
+      		color: #fff; }
+  		.pagination .dot-dot {
+    		width: auto;
+    		background: transparent;
+    		border-top: 0px;
+    		border-bottom: 0px;
+    		color: #cccccc;
+    		padding: 0 5px; }
+    	.pagination .dot-dot:hover {
+      		background: transparent;
+      		border: 0px;
+      		border-right: 1px solid #eee;
+      		color: #cccccc; }
+	</style>
 </head>
 <body class="animsition">
 	
@@ -345,7 +379,7 @@
 						<!-- Block2 -->
 						<div class="block2">
 							<div class="block2-pic hov-img0">
-								<img src="../admin/product_images/<%= item.images[0]%>" alt="IMG-PRODUCT">
+								<img class="img" src="../admin/product_images/<%= item.images[0]%>" alt="IMG-PRODUCT">
 			
 								<a href="/productPage?id=<%=item._id %>" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04">
 									Quick View
@@ -393,11 +427,31 @@
 				<% }) %>
 			</div>
 
+			
+
 			<!-- Load more -->
 			<div class="flex-c-m flex-w w-full p-t-45">
-				<a href="/shop/#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-					Load More
-				</a>
+				<div class="pagination">
+					<% if (currentPage > 1) { %>
+					  <a href="/shop?page=<%= currentPage - 1 %>" class="prev-arrow flex-c-m stext-10 cl5 size-20 bg2 bor1">
+						<i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+					  </a>
+					<% } %>
+				  
+					<% for (let i = 1; i <= totalPages; i++) { %>
+					  <% if (i === currentPage) { %>
+						<a href="/shop?page=<%= i %>" class="active flex-c-m stext-10 cl5 size-20 bg2 bor1"><%= i %></a>
+					  <% } else { %>
+						<a href="/shop?page=<%= i %>"  class="flex-c-m stext-10 cl5 size-30 bg2 bor1"><%= i %></a>
+					  <% } %>
+					<% } %>
+				  
+					<% if (currentPage < totalPages) { %>
+					  <a href="/shop?page=<%= currentPage + 1 %>" class="next-arrow flex-c-m stext-10 cl5 size-20 bg2 bor1">
+						<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+					  </a>
+					<% } %>
+				</div>
 			</div>
 		</div>
 	</div>

@@ -1,4 +1,4 @@
-const { name } = require("ejs");
+//const { name } = require("ejs");
 const User = require("../models/userModel")
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
@@ -12,23 +12,48 @@ require('dotenv').config();
 // const client = require("twilio")(accountSid, authToken);
 
 const accountSid = "AC2494e61a37ee26d347cbbf64da4d268c";
-const authToken = "048d3fadd534299d32789774829b6088";
+const authToken = "34f8d49af9a2a357fe48f753d805cffa";
 const verifySid = "VAe86f583a3b6c2a84119a5f15ef3c7c89";
 const client = require("twilio")(accountSid, authToken);
 
 
+// const home = async (req, res) => {
+//     try {
+//       //if(req.session.ivide_check){
+//         //console.log(req.session)
+//         res.render('public/index')
+//       //}else{
+//         //res.redirect('/login')
+//       //}
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
+
 const home = async (req, res) => {
-    try {
-      //if(req.session.ivide_check){
-        //console.log(req.session)
-        res.render('public/index')
-      //}else{
-        //res.redirect('/login')
-      //}
-    } catch (error) {
-        console.log(error.message)
-    }
-}
+  try {
+    const category = await Category.find({});
+    const page = parseInt(req.query.page) || 1; 
+    const limit = 8;
+    const skip = (page - 1) * limit; // Calculate the number of products to skip
+
+    // Fetch products with pagination
+    const totalProducts = await Product.countDocuments({ $and: [{ isListed: true }, { isProductListed: true }] }); // Get the total number of products
+    const totalPages = Math.ceil(totalProducts / limit); // Calculate the total number of pages
+
+    // const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
+    //   .skip(skip)
+    //   .limit(limit)
+    //   .populate('category');
+
+      const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
+      .populate('category');
+
+    res.render('public/index', { product: products, category, currentPage: page, totalPages });
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
 const login = async (req, res) => {
     try {
@@ -58,33 +83,35 @@ const securePassword = async (password) => {
 const insertUser = async (req, res) => {
     try {
       const { name, email, mobile, password } = req.body;
-      const existingUser = await User.findOne({email:email})
+      const existingUser = await User.findOne({$or: [{email:email}, {mobile:mobile}]})
+
       const spassword = await securePassword(password);
       if(!req.body.name || req.body.name.trim().length === 0){
-        return res.render("public/signup", { message: "Name is required"})
+        return res.render("public/signup", { message: "Name is required", formData: req.body})
       }
       if (/\d/.test(req.body.name)) {
-        return res.render("public/signup", { message: "Name should not contain numbers" });
-      }
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)){
-          return res.render("public/signup", { message: "Email Not Valid" });
-      }
-      if(existingUser){
-        return res.render("public/signup",{message:"Email already exists"})
+        return res.render("public/signup", { message: "Name should not contain numbers", formData: req.body });
       }
       const mobileRegex = /^\d{10}$/;
       if (!mobileRegex.test(mobile)) {
-          return res.render("public/signup", { message: "Mobile Number should have 10 digits" });
+          return res.render("public/signup", { message: "Mobile Number should have 10 digits", formData: req.body });
       }
+      if(existingUser){
+        return res.render("public/signup",{message:"User already registered", formData: req.body})
+      }
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)){
+          return res.render("public/signup", { message: "Email Not Valid", formData: req.body });
+      }
+      
       const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
       if(!passwordRegex.test(req.body.password)){
-          return res.render("public/signup", { message: "Password Should Contain atleast 8 characters, one number and a special character" });
+          return res.render("public/signup", { message: "Password Should Contain atleast 8 characters, one number and a special character", formData: req.body });
       }
 
 
       if(req.body.password!=req.body.confPassword){
-          return res.render("public/signup", { message: "Password and Confirm Password must be same" });
+          return res.render("public/signup", { message: "Password and Confirm Password must be same", formData: req.body });
       }
 
       const user = new User({
@@ -112,6 +139,7 @@ const insertUser = async (req, res) => {
       const password = req.body.password
   
       const userData = await User.findOne({mobile:mobile})
+      console.log(userData,"vl userdata");
      
   
       if (userData) {
@@ -209,6 +237,9 @@ const insertUser = async (req, res) => {
         .skip(skip)
         .limit(limit)
         .populate('category');
+
+        // const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
+        // .populate('category');
   
       res.render('public/shop', { product: products, category, currentPage: page, totalPages });
     } catch (error) {
@@ -230,7 +261,7 @@ const insertUser = async (req, res) => {
         .skip(skip)
         .limit(limit)
         .populate('category')
-        res.render('public/categoryShop',{product,category, currentPage: page, totalPages })
+        res.render('public/categoryShop',{product,category, currentPage: page, totalPages, categoryId })
       }
     catch(err){
         console.log('category page error',err);

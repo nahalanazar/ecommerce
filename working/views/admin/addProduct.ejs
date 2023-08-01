@@ -110,7 +110,10 @@
                                         <label class="form-label" for="main-image">Main Image</label>
                                     </div>
                                     <div>
-                                        <input class="form-control" type="file" id="main-image" name="images">
+                                        <img src="" id="imgView1" alt="product image" width="100px" height="100px">
+                                    </div>
+                                    <div>
+                                        <input type="file" id="first-image" name="images" class="form-control" onchange="viewImage(event, 'imgView1')">
                                     </div>
                                 </div>
                                 
@@ -119,7 +122,10 @@
                                         <label class="form-label" for="second-image">Second Image</label>
                                     </div>
                                     <div>
-                                        <input class="form-control" type="file" id="second-image" name="images">
+                                        <img src="" id="imgView2" alt="product image" width="100px" height="100px">
+                                    </div>
+                                    <div>
+                                        <input type="file" id="second-image" name="images" class="form-control" onchange="viewImage(event, 'imgView2')">
                                     </div>
                                 </div>
                                 
@@ -128,9 +134,13 @@
                                         <label class="form-label" for="third-image">Third Image</label>
                                     </div>
                                     <div>
-                                        <input class="form-control" type="file" id="third-image" name="images">
+                                        <img src="" id="imgView3" alt="product image" width="100px" height="100px">
+                                    </div>
+                                    <div>
+                                        <input type="file" id="third-image" name="images" class="form-control" onchange="viewImage(event, 'imgView3')">
                                     </div>
                                 </div>
+                                
             
                                 <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-box-arrow-in-up"></i> Publish Product</button>
                 </div>
@@ -145,5 +155,11 @@
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+            function viewImage(event, imageId) {
+                document.getElementById(imageId).src = URL.createObjectURL(event.target.files[0]);
+            }
+    </script>
 </body>
 </html>

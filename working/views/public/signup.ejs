@@ -16,34 +16,37 @@
 
     <div class="text-center center-div" id="signup">
         <div class="container w-25 py-5">
-            <div class="title pb-5">
+            <div class="title pb-3">
                 <h2 class="font-weight-bold">Signup System</h2>
+                <span style="color: red;"><%=(typeof message!=='undefined')?message:""%></span>
             </div>
+
             <form action="" method="post" id="signup-form">
                 <div class="form-group">
                     <label for="name">Name</label>
-                    <input type="text" class="form-control" id="name" name="name" required>
+                    <input type="text" class="form-control" id="name" name="name" value="<%= typeof formData !== 'undefined' ? formData.name : '' %>">
                 </div>
                 <div class="form-group">
                     <label for="mobile">Mobile</label>
-                    <input type="tel" class="form-control" id="mobile" name="mobile" required >
+                    <input type="tel" class="form-control" id="mobile" name="mobile" value="<%= typeof formData !== 'undefined' ? formData.mobile : '' %>">
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" class="form-control" id="email"  name="email" required>
+                    <input type="email" class="form-control" id="email"  name="email" value="<%= typeof formData !== 'undefined' ? formData.email : '' %>">
                 </div>
                 <div class="form-group">
                     <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" name="password" required>
+                    <input type="password" class="form-control" id="password" name="password">
                 </div>
                 <div class="col-md-12 form-group">
                     <label for="password">Confirm Password</label>
-                    <input type="password" class="form-control" id="name" name="confPassword" required>
+                    <input type="password" class="form-control" id="name" name="confPassword">
                 </div>
                 <br>
                 <button type="submit" class="btn btn-success rounded-pill">Signup</button>
             </form>
-            <%=(typeof message!=='undefined')?message:""%>
+            
+            
 
         </div>
     </div>
