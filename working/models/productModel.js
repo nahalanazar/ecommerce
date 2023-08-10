@@ -28,6 +28,9 @@ const productSchema = new mongoose.Schema({
   isProductListed:{
     type:Boolean,
     default:true
+  },
+  stock:{
+    type:Number
   }
 });
 

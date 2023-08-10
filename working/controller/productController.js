@@ -1,11 +1,11 @@
 const Product = require('../models/productModel')
 const Category = require('../models/categoryModel')
-const productHelper = require('../Helper/productHelper')
+const productHelper = require('../helper/productHelper')
+const cartHelper = require('../helper/cartHelper')
 
 const loadProducts = async(req,res)=>{
     try {
       const categories = await Category.find({})
-      //res.render('addProduct')
       res.render('addProduct',{category:categories})
     } catch (error) {
       console.log(error.message)
@@ -27,9 +27,15 @@ const loadProducts = async(req,res)=>{
       if (!req.body.name || req.body.name.trim().length === 0) {
         return res.render("addProduct", { message: "Name is required",category:categories });
       }
-    if(req.body.price<=0){
-      return res.render("addProduct", { message: "Product Price Should be greater than 0",category:categories });
-    }
+      if (!req.body.description || req.body.description.trim().length === 0) {
+        return res.render("addProduct", { message: "Description is required",category:categories });
+      }
+      if(req.body.price<=0){
+        return res.render("addProduct", { message: "Product Price Should be greater than 0",category:categories });
+      }
+      if(req.body.stock< 0 || req.body.stock.trim().length === 0 ){
+        return res.render("addProduct", { message: "Stock  Should be greater than 0",category:categories });
+      }
 
       const images = req.files.map(file => file.filename);
       await productHelper.createProduct(req.body,images)
@@ -37,7 +43,6 @@ const loadProducts = async(req,res)=>{
     } catch (error) {
       console.log(error)
     }
-  
   };
 
 
@@ -86,9 +91,13 @@ const loadProducts = async(req,res)=>{
 
   const productPage = async (req, res) => {
     try {
+      const usercart = res.locals.user
+
+      const count = await cartHelper.getCartCount(usercart.id)
       const id = req.query.id
       const product = await Product.findOne({ _id : id }).populate('category')
-      res.render('public/product',{product : product})    } catch (error) {
+      res.render('public/product',{product : product, count: count })    
+    } catch (error) {
       console.log(error);
       res.send({ success: false, error: error.message });
     }

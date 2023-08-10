@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fashion Palace</title>
+    <%- include("./includes/template-head-part") %>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+    <style>
+        .forms-container {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .form-container {
+            flex: 0 0 100%;
+        }
+        @media (min-width: 768px) {
+            .form-container {
+                flex: 1 0 calc(50% - 1em);
+            }
+        }
+    </style>
+</head>
+<body class="animsition">
+    <!-- Header -->
+    <%- include("./includes/template-header") %>
+
+    <div class="forms-container">
+        <!-- Form 1: Billing Details -->
+        <div class="form-container">
+            <form class="bg0 p-t-75 p-b-85 contact_form" action="#" method="post" novalidate="novalidate">
+                <div class="col-lg-12 m-b-50">
+                    <div class="bor10 p-40">
+                        <h2 class="card-title">Billing Details</h2>
+                    <%if(address[0]){%>
+
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="first" name="name" value="<%=address[0].name%>">
+                            </span>
+                        </div>
+                        <div class="col-md-6 form-group p_star">
+                            <input type="text" class="form-control" id="number" name="number" value="<%=address[0].mobileNumber%>">
+                        </span>
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add1" name="address" value="<%=address[0].address%>">
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add1" name="locality" value="<%=address[0].locality%>">
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add1" name="city" value="<%=address[0].city%>">
+                        </div>
+                        <div class="col-md-12 form-group">
+                            <input type="text" class="form-control" id="zip" name="zip" value="<%=address[0].pincode%>">
+                        </div>
+                        <div class="col-md-12 form-group p_star">
+                            <input type="text" class="form-control" id="add1" name="state" value="<%=address[0].state%>">
+                        </div>
+                    <%}else{%>
+                        <div class="col-md-12 form-group p_star">
+                            <h1>Please Add An Address</h1>
+                        </div>
+                    <%}%>
+
+                    
+                    </div>
+                </div>
+            </form>
+            <div class="flex-w flex-t bor12 p-t-15 p-b-30">
+                <div class="size-209 p-r-18 p-r-0-sm w-full-ssm">
+                    <div class="p-t-15">
+                        <div class="flex-w">
+                            <!-- Button trigger modal -->
+                            <button type="button" class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#exampleModal1">
+                                CHANGE  ADDRESS
+                            </button>
+                            <button type="button" class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer" data-toggle="modal" data-target="#exampleModal2">
+                                ADD NEW ADDRESS
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Button trigger modal -->
+
+  
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="margin-top: 150px ;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">ADDRESSES</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="pop-up-list">
+                                <div class="comment-list grid-view" style="height: 500px; overflow-y:scroll;">
+                                    <form id="addressForm" action="/changeDefaultAddress" method="POST">
+                                        <% address.forEach(function(address,index) {%>
+                                            <label for="address<%=index%>">Address</label>
+                                            <input type="radio" id="addressRadio{<%=index%>}" name="addressRadio" value="<%=address._id%>" onchange="this.form.submit()">
+                                            <br>
+                                        <div class="single-comment grid-item">
+                                            <div class="user justify-content-between d-flex">
+                                            <div class="desc">
+                                                <h5>Name: <%=address.name%></h5>
+                                                <h5>Number: <%=address.mobileNumber%></h5>
+                                                <h5>Address: <%=address.address%></h5>
+                                                <h5>City: <%=address.city%></h5>
+                                                <h5>Street: <%=address.locality%></h5>
+                                                <h5>Pin: <%=address.pincode%></h5>
+                                            </div>
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <% }) %>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        
+                    </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" style="margin-top: 150px ;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add Address</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="popup-wrapper">
+                                <div class="popup">
+                                    <button class="close-button"></button>
+                                    <form class="popup-form" action="/checkOutAddress" method="POST" id="myForm" onsubmit="return validateForm()">
+                                        <input type="text" class="popup-form__input" placeholder="Name" name="name" id="name">
+                                        <span id="nameError"></span>
+                                        <input type="tel" class="popup-form__input" placeholder="Mobile Number" name="mno" id="mno">
+                                        <span id="mnoError"></span>
+                                        <textarea class="popup-form__input" placeholder="House Address" name="address" id="address"></textarea>
+                                        <input type="text" class="popup-form__input" placeholder="City" name="city" id="city">
+                                        <input type="text" class="popup-form__input" placeholder="Street" name="locality" id="locality">
+                                        <input type="text" class="popup-form__input" placeholder="PostalCode/PIN" name="pincode" id="pincode">
+                                        <input type="text" class="popup-form__input" placeholder="State" name="state" id="state">
+                                        <button type="submit" id="btn" class="popup-form__submit btn btn-primary">ADD</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    
+                        
+                    </div>
+                    </div>
+                </div>
+
+        </div>
+
+
+
+        <!-- Form 2: Your Order -->
+        <div class="form-container p-t-75">
+            <div class="card">
+                <div class="card-body">
+                    <form id="checkOut-form">
+                        <div class="order_box">
+                            <h2 class="card-title">Your Order</h2>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item"><h5>Product Total</h5></li>
+                                <% cart.forEach(function(cart,index) {%>
+                                <li class="list-group-item">
+                                    <a href="#" style="color: black;"><%=cart.carted.name%> 
+                                    <span class="middle" style="color: black;">x <%=cart.quantity%></span><br> 
+                                    <span class="last" style="color: black;">₹<%= cart.total %></span></a>
+                                </li>
+                                <% }) %>
+                            </ul>   
+                            <ul class="list list_2">
+                                <!-- <li><a href="#">Subtotal <span id="subTotal">₹<%=total.cartTotal%></span></a></li> -->
+                                <!-- <li><a href="#">Discount  <span id="couponOffer"></span></a></li> -->
+                                <li class="p-t-10"><b>Total</b> <span id="total"><b>₹<%=total.cartTotal%></b></span></li>
+                                <input type="hidden" name="discountPercentage" id="discountPercentage" value="0">
+                                <input type="hidden" name="discountAmount" id="discountAmount" value="0">
+                                <input type="hidden" name="total" value="<%=total.cartTotal%>" id="totalVal" >
+                                <%if(address[0]){%>
+                                <input type="hidden" name="address" value="<%=address[0]._id%>" >
+                                <%}else{%>
+                                <%}%>
+                            </ul>                         
+                            <div class="form-group row coupon_area p-t-15">
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control" placeholder="Enter coupon code" name="couponCode" id="couponCode">
+                                </div>
+                                <div class="col-sm-4">
+                                    <button class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer" style="width: 100px; height: 40px;" onclick="applyCoupon('<%=total.cartTotal%>')">Apply</button>
+                                </div>
+                            </div>                            
+                            <span id="couponErr"></span>
+                            <h4 class="p-b-10">Payment</h4>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option4" name="paymentOption" value="wallet" >
+                                    <label for="f-option4">Wallet</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>Pay  amount from your wallet</p>
+                            </div>
+
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <input type="radio" id="f-option5" name="paymentOption" value="cod" checked>
+                                    <label for="f-option5">Cash On Delivery</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>Pay the amount at your doorstep</p>
+                            </div>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                <input type="radio" id="f-option6" name="paymentOption" value="razorpay" checked>
+                                    <label for="f-option6">Razorpay</label>
+                                    <div class="check"></div>
+                                </div>
+                                <p>Pay through Razorpay</p>
+                            </div>
+                            
+                            <%if(address[0]){%>
+                                <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer mx-auto d-block" style="width: 150px;" onclick="proceedToPayment()">Place Order</button>
+                            <%}else{%>
+                                <button class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer mx-auto d-block" style="width: 150px;" disabled onclick="proceedToPayment()">Place Order</button>
+                            <%}%>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <%- include("./includes/template-footer-and-scripts") %>
+
+
+    <!-- <div class="pop-up-list">
+        <button class="pop-up-button"><i class="fa fa-times" aria-hidden="true"></i>
+        </button>
+        <div class="top-title-section">
+            <p class="top-title special">Addresses</p>
+        </div>
+            <br>
+
+        <div class="comment-list grid-view" style="height: 500px; overflow-y:scroll;">
+            <form id="addressForm" action="/changeDefaultAddress" method="POST">
+                <% address.forEach(function(address,index) {%>
+                    <label for="address<%=index%>">Address</label>
+                    <input type="radio" id="addressRadio{<%=index%>}" name="addressRadio" value="<%=address._id%>" onchange="this.form.submit()">
+                    <br>
+                <div class="single-comment grid-item">
+                    <div class="user justify-content-between d-flex">
+                    <div class="desc">
+                        <h5>Name: <%=address.name%></h5>
+                        <h5>Number: <%=address.mobileNumber%></h5>
+                        <h5>Address: <%=address.address%></h5>
+                        <h5>City: <%=address.city%></h5>
+                        <h5>Street: <%=address.locality%></h5>
+                        <h5>Pin: <%=address.pincode%></h5>
+                    </div>
+                    </div>
+                </div>
+                <br>
+                <% }) %>
+            </form>
+        </div>
+    </div> -->
+
+    <!-- <div class="overlay-pop-up"></div> -->
+
+
+    <!-- <div class="popup-wrapper">
+        <div class="popup">
+            <button class="close-button"></button>
+            <form class="popup-form" action="/checkOutAddress" method="POST" id="myForm" onsubmit="return validateForm()">
+                <h2 class="popup-form__title">Add Address</h2>
+                <input type="text" class="popup-form__input" placeholder="Name" name="name" id="name">
+                <span id="nameError"></span>
+                <input type="tel" class="popup-form__input" placeholder="Mobile Number" name="mno" id="mno">
+                <span id="mnoError"></span>
+                <textarea class="popup-form__input" placeholder="House Address" name="address" id="address"></textarea>
+                <input type="text" class="popup-form__input" placeholder="City" name="city" id="city">
+                <input type="text" class="popup-form__input" placeholder="Street" name="locality" id="locality">
+                <input type="text" class="popup-form__input" placeholder="PostalCode/PIN" name="pincode" id="pincode">
+                <input type="text" class="popup-form__input" placeholder="State" name="state" id="state">
+                <button type="submit" id="btn" class="popup-form__submit">ADD</button>
+            </form>
+        </div>
+    </div> -->
+
+    <script>
+        function validateForm() {
+            const name = document.getElementById("name").value.trim();
+            const mobileNumber = document.getElementById("mno").value.trim();
+            const address = document.getElementById("address").value.trim();
+            const city = document.getElementById("city").value.trim();
+            const locality = document.getElementById("locality").value.trim();
+            const pincode = document.getElementById("pincode").value.trim();
+            const state = document.getElementById("state").value.trim();
+      
+            // Check if the name is not empty
+            if (name === "") {
+              alert("Please enter valid Name");
+                return false;
+            }
+      
+            // Check if the mobile number is a valid number with at least 10 digits
+            if (isNaN(mobileNumber) || mobileNumber.length < 10) {
+              alert("Please enter valid mobile Number .");
+                return false;
+            }
+      
+            // Check if the address is not empty
+            if (address === "") {
+                alert("Please enter your house address.");
+                return false;
+            }
+      
+            // Check if the city is not empty
+            if (city === "") {
+                alert("Please enter your city.");
+                return false;
+            }
+      
+            // Check if the street/locality is not empty
+            if (locality === "") {
+                alert("Please enter your street/locality.");
+                return false;
+            }
+      
+            // Check if the postal code/PIN is not empty and is a valid number
+            if (pincode === "" || isNaN(pincode)) {
+                alert("Please enter a valid postal code/PIN.");
+                return false;
+            }
+      
+            // Check if the state is not empty
+            if (state === "") {
+                alert("Please enter your state.");
+                return false;
+            }
+      
+            // If all validations pass, the form will be submitted
+            return true;
+        }
+    </script>
+
+    <script>
+
+        function proceedToPayment() {
+            event.preventDefault()
+            $.ajax({
+                url: "/checkOut",
+                method: 'POST',
+                data: $('#checkOut-form').serialize(),
+                success: (response) => {
+                console.log(response,'+++++=========== ');
+                if (response.error) {
+                    console.log(response,'error--------------------------------');
+
+                    console.log(response.error.message,'---------------');
+                    Swal.fire({
+                    title: 'Error!',
+                    text: response.error,
+                    icon: 'error',
+                    timer: 5000
+                    })
+                } else if (response.codStatus == true) {
+                    console.log(response,'status');
+                    Swal.fire({
+                    title: 'Order Placed!',
+                    text: 'Your order has been placed successfully.',
+                    icon: 'success',
+                    timer: 5000
+                    }).then(() => {
+                    location.href = '/'
+                    })
+                }else if (response.orderStatus== true) {
+                    Swal.fire({
+                    title: 'Order Placed!',
+                    text: 'Your order has been placed successfully.',
+                    icon: 'success',
+                    timer: 5000
+                    }).then(() => {
+                    location.href = '/'
+                    })
+                }else if (response.status== "OrderFailed") {
+                    Swal.fire({
+                    title: 'Order Failed!',
+                    text: 'Your Product is Out of Stock .Please Check after some time',
+                    icon: 'error',
+                    timer: 5000
+                    }).then(() => {
+                    location.href = '/'
+                    })
+                }
+                else {
+                    try {
+                    razorpay(response)
+                    console.log(response, '1');
+                    console.log(response.amount, '2');
+                    } catch (error) {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error.message,
+                        icon: 'error',
+                        timer: 5000
+                    })
+                    }
+                } 
+                }
+            })
+        }
+
+    </script>
+
+<!-- <script>
+
+    var popup = document.getElementsByClassName("pop-up-list")[0];
+    console.log(popup)
+    var overlay = document.getElementsByClassName("overlay-pop-up")[0];
+
+    var button = document.getElementsByClassName("button")[0];
+
+    var close = document.getElementsByClassName('pop-up-button')[0];
+
+    button.onclick=function(){
+    popup.style.display = "block";
+    overlay.style.display = "block";
+    }
+
+    overlay.onclick=function(){
+    popup.style.display = "none";
+    overlay.style.display = "none"; 
+    }
+   
+    close.onclick=function(){
+    popup.style.display = "none";
+    overlay.style.display = "none"; 
+   }
+</script> -->
+
+<!-- <script>
+    // Get references to the elements
+    let popupWrappers = document.querySelectorAll(".popup-wrapper");
+    let popupForms = document.querySelectorAll(".popup-form");
+    let popupBtns = document.querySelectorAll(".btn-reply");
+    let popupCloses = document.querySelectorAll(".close-button");
+
+    // Add event listeners to each popup button
+    popupBtns.forEach((btn, index) => {
+        btn.addEventListener("click", (e) => {
+            e.preventDefault();
+            showPopup(index);
+        });
+    });
+
+    // Add event listeners to each popup close button
+    popupCloses.forEach((closeBtn, index) => {
+        closeBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            removePopup(index);
+        });
+    });
+
+    // Add event listeners to each popup form
+    popupForms.forEach((form) => {
+        form.addEventListener("submit", () => {
+            // Implement your form submission logic here
+            removePopup();
+        });
+    });
+
+    // Add event listeners to each popup wrapper
+    popupWrappers.forEach((wrapper, index) => {
+        wrapper.addEventListener("click", (e) => {
+            let target = e.target;
+            if (target.classList.contains("popup-wrapper")) {
+                removePopup(index);
+            } else {
+                return;
+            }
+        });
+    });
+
+    function showPopup(index) {
+        popupWrappers[index].classList.add("active");
+        bodyScroll();
+    }
+
+    function removePopup(index) {
+        popupWrappers[index].classList.remove("active");
+        bodyScroll();
+    }
+
+    function bodyScroll() {
+        document.body.classList.toggle("no-scroll");
+    }
+</script> -->
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</body>
+</html>

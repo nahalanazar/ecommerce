@@ -1,0 +1,181 @@
+<style>
+  .inside {
+    width: 100%;
+  }
+
+  .wallet-top {
+    margin-top: 30px;
+    text-align: center;
+    margin-right: 30px;
+    margin-left: 40px;
+    margin-bottom: 50px;
+  }
+
+  button {
+    border: 0;
+    transition: 0.3s;
+  }
+
+  h3 {
+    color: #00000061;
+    font-size: 13px;
+  }
+
+  .card span {
+
+    position: absolute;
+
+    bottom: 10px;
+    font-weight: 300;
+    font-size: 13px;
+    color: rgb(0, 0, 0);
+  }
+
+  .card h2 {
+    color: rgb(0, 0, 0);
+    font-weight: 300;
+  }
+
+  .card i {
+    position: absolute;
+    right: 6px;
+    bottom: 6px;
+    font-size: 22px;
+    color: white;
+  }
+
+  .wallet-top h1 {
+    color: #00000061;
+    font-size: 35px;
+  }
+
+  .wallet-top .card {
+    background-image: linear-gradient(189deg, #c1d8ff 23%, #ffffff 114%);
+    width: 100%;
+    height: 250px;
+    box-shadow: 14px 11px 25px -9px #272b32b0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    border-color: azure;
+    position: relative;
+    border: 0;
+
+  }
+  .form-popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: #f8f8f8;
+        border-radius: 0px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+        z-index: 10000;
+        padding: 40px;
+        color: #000000;
+        overflow-y: auto;
+        max-height: 80vh;
+    }
+
+    .form-container {
+        height: 100%;
+    }
+
+    .form-popup input[type="text"],
+    .form-popup input[type="number"],
+    .form-popup input[type="email"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        border: none;
+    }
+
+    .form-popup .btn-group {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .form-popup .btn {
+        margin-left: 10px;
+    }
+
+    .form-popup::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .form-popup::-webkit-scrollbar-track {
+        background-color: #f1f1f1;
+    }
+
+    .form-popup::-webkit-scrollbar-thumb {
+        background-color: #888;
+    }
+
+    .form-popup::-webkit-scrollbar-thumb:hover {
+        background-color: #555;
+    }
+
+</style>
+
+<div class="col-lg-4">
+    <div class="card mb-4">
+      <div class="card-body text-center">
+        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
+          class="rounded-circle img-fluid" style="width: 150px;">
+        <h5 class="my-3"><%= user.name %></h5>
+        <a href="/profile">
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fas fa-globe fa-lg text-warning"></i>
+            <p class="mb-0">Profile</p>
+          </li>
+        </a>
+        <a href="/profileOrderList">
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fab fa-github fa-lg" style="color: #333333;"></i>
+            <p class="mb-0">Orders</p>
+        </li>
+        </a>
+        <a href="/profileAddress">
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
+            <p class="mb-0">Address</p>
+        </li>
+        </a>
+        <!-- <p class="text-muted mb-1">Full Stack Developer</p>
+        <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
+        <div class="d-flex justify-content-center mb-2">
+          <button type="button" class="btn btn-primary">Follow</button>
+          <button type="button" class="btn btn-outline-primary ms-1">Message</button>
+        </div> -->
+      </div>
+    </div>
+    <!-- <div class="card mb-4 mb-lg-0">
+      <div class="card-body p-0">
+        <ul class="list-group list-group-flush rounded-3">
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fas fa-globe fa-lg text-warning"></i>
+            <p class="mb-0">Profile</p>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fab fa-github fa-lg" style="color: #333333;"></i>
+            <p class="mb-0">Orders</p>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fab fa-twitter fa-lg" style="color: #55acee;"></i>
+            <p class="mb-0">Address</p>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fab fa-instagram fa-lg" style="color: #ac2bac;"></i>
+            <p class="mb-0">mdbootstrap</p>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center p-3">
+            <i class="fab fa-facebook-f fa-lg" style="color: #3b5998;"></i>
+            <p class="mb-0">mdbootstrap</p>
+          </li>
+        </ul>
+      </div>
+    </div> -->
+</div>

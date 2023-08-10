@@ -8,7 +8,8 @@ const createProduct = (data,images) => {
         description:data.description,
         images:images,
         category:data.category,
-        price:data.price
+        price:data.price,
+        stock: data.stock
       });
   
       newProduct.save()
@@ -66,7 +67,8 @@ const createProduct = (data,images) => {
                 name: data.name,
                 description: data.description,
                 category: data.category,
-                price: data.price
+                price: data.price,
+                stock: data.stock
             }
         };
 

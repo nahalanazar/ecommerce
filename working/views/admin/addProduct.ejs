@@ -4,8 +4,9 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fashion Palace</title>
     <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
-
+    <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
@@ -47,17 +48,32 @@
         .form-group {
             margin-bottom: 1.5rem;
         }
+        .narrow-column {
+            width: 20px;
+        }
     </style>
 
-    <title>Fashion Palace</title>
 </head>
 <body>
-    <!-- Back button -->
-    <a href="/admin/productManagement" class="btn btn-primary btn-back"><i class="bi bi-arrow-left"></i>Product Management</a>
-
-
-    <!-- Main content -->
-    <main class="container my-5">
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <%- include("./includes/sidebar.ejs") %>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+          <!--  Header Start -->
+          <%- include("./includes/header.ejs") %>
+          <!--  Header End -->
+          <div class="container-fluid">
+            <!--  Row 1 -->
+            
+            <div class="row">
+              
+              <div class="col-lg-12 d-flex align-items-stretch">
+                <div class="card w-100">
+                  <div class="card-body p-4">
+                                    <!-- Main content -->
+    <main class="container my-5">       
         <h1 class="mb-5 text-center text-secondary">Add New Product</h1>
         <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
             <div class="card shadow-lg">
@@ -100,6 +116,15 @@
                                     </div>
                                     <div>
                                         <input type="number" id="product-price" class="form-control" name="price" placeholder="00.0">
+                                    </div>
+                                </div>
+
+                                <div class="form-group mb-4">
+                                    <div>
+                                        <label class="form-label">Stock</label>  
+                                    </div>                                    
+                                    <div>
+                                        <input type="number" placeholder="0" class="form-control" name="stock" id="stock" onkeyup="stockValidation()"><span id="stockError"></span>
                                     </div>
                                 </div>
                                 
@@ -151,15 +176,42 @@
             <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
         </div>
     </main>
-
-    <!-- Optional JavaScript; choose one of the two! -->
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+      </div>
 
     <script>
             function viewImage(event, imageId) {
                 document.getElementById(imageId).src = URL.createObjectURL(event.target.files[0]);
             }
+    </script>
+    <script>
+        const stock = document.getElementById("stock")
+
+        function stockValidation(){
+            const stockValue = stock.value
+			if(stockValue.trim()==0){
+				stockError.innerHTML = 'Stock is Required'
+				stockError.style.color = 'red'
+				stock.style.border = "solid 2px red";
+				return false;
+			}
+            if(stockValue <  0 ){
+				stockError.innerHTML = 'Stock Must be greater than or equal to zero'
+				stockError.style.color = 'red'
+				stock.style.border = "solid 2px red";
+				return false;
+			}
+            stockError.innerHTML = ""
+			stockError.style.color = "green"
+			stock.style.border = "solid 2px green";
+			return true
+        }
     </script>
 </body>
 </html>

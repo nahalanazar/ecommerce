@@ -73,17 +73,6 @@
                                 <a href="/admin/updateCategory?id=<%=category._id %>"><span class="badge bg-primary rounded-3 fw-semibold">Edit</span></a>
                               </div>
                             </td>
-                            <!-- <td>
-                              <div class="d-flex align-items-center gap-2">
-                                if (user.is_blocked == false) 
-                                  <a href="/admin/blockUser?id=< user._id %>">Block User</a>
-                                 else
-                                  <a href="/admin/unBlockUser?id=< user._id %>">Unblock User</a>
-                                }                                
-                              </div>
-                              <div class="d-flex align-items-center gap-2">
-                              </div>
-                            </td> -->
                             <td> <%if(category.isListed==true){%>
                               <div>
                                   <span class="mb-0 fw-normal">Active</span>
@@ -134,37 +123,3 @@
 </body>
 
 </html>
-
-
-<h1>Categories</h1>
-<a href="/admin/addCategory">New Category</a>
-<ul>
-<% categories.forEach(category => { %>
-  <li>
-    <h2><%= category.name %></h2>
-    <p><%= category.description %></p>
-    <a href="/admin/editCategory?id=<%=category._id %>">Edit</a>
-    <form action="/admin/categories/delete/<%= category._id %>" method="POST">
-      <button type="submit">Delete</button>
-    </form>
-  </li>
-<% }); %>
-</ul>
-
-
-
-
-<!-- <h1>Categories</h1>
-<a href="/admin/addCategory">New Category</a>
-<ul>
-< categories.forEach(category => { %>
-  <li>
-    <h2><= category.name %></h2>
-    <p><= category.description %></p>
-    <a href="/admin/updateCategory?id=<= category._id %>">Edit</a>
-    <form action="/admin/categories/delete/<= category._id %>" method="POST">
-      <button type="submit">Delete</button>
-    </form>
-  </li>
-< }); %>
-</ul> -->

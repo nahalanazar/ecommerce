@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fashion Palace</title>
+  <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+  <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <%- include("./includes/sidebar.ejs") %>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <%- include("./includes/header.ejs") %>
+      <!--  Header End -->
+      <div class="container-fluid">
+        <!--  Row 1 -->
+        
+        <div class="row">
+          
+            <section class="content-main">
+                <!-- <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Order List </h2>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Search order ID" class="form-control bg-white">
+                    </div>
+                </div> -->
+                <div class="card mb-4">
+                  <h5 class="card-title fw-semibold p-4">Orders List</h5>
+
+                    <!-- <header class="card-header">
+                        <div class="row gx-3">
+                            <div class="col-lg-4 col-md-6 me-auto">
+                                <input type="text" placeholder="Search..." class="form-control">
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Status</option>
+                                    <option>Active</option>
+                                    <option>Disabled</option>
+                                    <option>Show all</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <select class="form-select">
+                                    <option>Show 20</option>
+                                    <option>Show 30</option>
+                                    <option>Show 40</option>
+                                </select>
+                            </div>
+                        </div>
+                    </header> -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#ID</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Total</th>
+                                        <th scope="col">Status</th>
+                                        <th scope="col">Date</th>
+                                        <th scope="col" class="text-end"> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% orders.forEach(function(order,index) {%>
+                                    <tr>
+                                        <td><%=order.orders._id%></td>
+                                        <td><b><%=order.orders.name%></b></td>
+                                        <td>₹<%=order.orders.totalPrice%></td>
+                                        <td>
+                                            <% if (order.orders.orderStatus == 'Placed') { %>
+                                                <div class="badge rounded-pill alert-primary"><%= order.orders.orderStatus %></div>
+                                            <% } else if (order.orders.orderStatus == 'Dispatched') { %>
+                                                <div class="badge rounded-pill alert-info"><%= order.orders.orderStatus %></div>
+                                            <% } else if (order.orders.orderStatus == 'Cancel Requested' ) { %>
+                                                <div class="badge rounded-pill alert-warning"><%= order.orders.orderStatus %></div>
+                                            <% } else if (order.orders.orderStatus == 'Delivered') { %>
+                                                <div class="badge rounded-pill alert-success"><%= order.orders.orderStatus %></div>
+                                            <% } else if (order.orders.orderStatus == 'Return Requested' ) { %>
+                                                <div class="badge rounded-pill alert-warning"><%= order.orders.orderStatus %></div>
+                                            <% } else { %>
+                                                <div class="badge rounded-pill alert-danger"><%= order.orders.orderStatus %></div>
+                                            <% } %>
+                                        </td>
+                                        <td><%=order.orders.createdAt.toLocaleString()%></td>
+                                        <td class="text-end">
+                                            <a href="/admin/orderDetails?id=<%=order.orders._id%>" class="btn btn-md btn-primary rounded font-sm">Detail</a>
+                                            <div class="dropdown">
+                                                <a href="" data-bs-toggle="dropdown" class="btn btn-primary rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                                <div class="dropdown-menu">
+                                                    <%if(order.orders.orderStatus=='Placed'||order.orders.orderStatus=='Cancel Declined'){%>
+                                                        <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Dispatched')">Dispatched</a>
+                                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Accepted')">Cancel Order</a>
+                                                    <%}else if(order.orders.orderStatus=='Dispatched'){%>
+                                                        <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Delivered')">Delivered</a>
+                                                    <%}else if(order.orders.orderStatus=='Cancel Requested'){%>
+                                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Accepted')"> Accept Cancel</a>
+                                                        <a class="dropdown-item" onclick="cancelStatus('<%=order.orders._id%>','<%=order.user%>','Cancel Declined')">Decline Cancel</a>
+                                                    <%}else if(order.orders.orderStatus=='Return Requested'){%>
+                                                        <a class="dropdown-item" onclick="returnOrder('<%=order.orders._id%>','<%=order.user%>','Return Accepted')"> Accept Return</a>
+                                                        <a class="dropdown-item" onclick="returnOrder('<%=order.orders._id%>','<%=order.user%>','Return Declined')">Decline Return</a>
+                                                    <%}%>
+                                                </div>
+                                            </div> <!-- dropdown //end -->
+                                        </td>
+                                    </tr>
+                                    <% }) %>
+                                </tbody>
+                            </table>
+                        </div> <!-- table-responsive //end -->
+                    </div> <!-- card-body end// -->
+                </div> <!-- card end// -->
+                <div class="pagination-area mt-15 mb-50">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <% if (i === page) { %>
+                                    <li class="page-item active" ><span class="btn btn-primary"><%= i %></span></li>
+                                <% } else { %>
+                                    <li class="page-item"><a class="page-link btn btn-secondary" href="/admin/orderList?page=<%= i %>&limit=<%= limit %>"><%= i %></a></li>
+                                <% } %>
+                            <% } %>
+                            
+                            
+                        </ul>
+                    </nav>
+                </div>
+            </section>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+
+    function orderStatus(orderId, status){
+      console.log(orderId, status);
+      $.ajax({
+        url:'/admin/orderStatus',
+        method:'put',
+        data: {
+          orderId: orderId,
+          status: status,
+        },
+        success:(response)=>
+        {
+          if(response)
+          {
+            location.reload()
+          }
+        }
+      })
+    }
+
+    function cancelStatus(orderId,userId, status){
+      console.log(orderId, status,userId);
+      $.ajax({
+        url:'/admin/cancelOrder',
+        method:'put',
+        data: {
+          orderId: orderId,
+          status: status,
+          userId:userId 
+        },
+        success:(response)=>
+        {
+          if(response)
+          {
+            location.reload()
+          }
+        }
+      })
+    }
+
+    function returnOrder(orderId,userId, status){
+      console.log(orderId, status);
+      $.ajax({
+        url:'/admin/returnOrder',
+        method:'put',
+        data: {
+          orderId: orderId,
+          status: status,
+          userId:userId 
+        },
+        success:(response)=>
+        {
+          if(response)
+          {
+            location.reload()
+          }
+        }
+      })
+    }
+
+  </script>
+
+
+  <!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/admin/assets/js/sidebarmenu.js"></script>
+  <script src="/admin/assets/js/app.min.js"></script>
+  <script src="/admin/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/admin/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/admin/assets/js/dashboard.js"></script>
+</body>
+
+</html>

@@ -5,12 +5,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+    <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.1/font/bootstrap-icons.css">
 
     <style>
-      .card {
+        body {
+            background-color: #f8f9fa;
+        }
+        .btn-back {
+            margin: 1rem;
+            font-size: 1rem;
+            color: #ffffff; /* White text */
+            background-color: #007bff; /* Blue background */
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none; /* No underline */
+        }
+        .card {
             border-radius: 1rem;
             border: none;
             box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
@@ -20,34 +35,71 @@
         .card .card-body {
             padding: 3rem 4rem;
         }
+        .btn-primary {
+            background-color:#007bff;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
         .form-group {
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .narrow-column {
+            width: 20px;
         }
     </style>
 
     <title>Fashion Palace</title>
 </head>
 <body>
-    <main class="container py-5 d-flex flex-column align-items-center justify-content-center">
-        <h1 class="mb-5 text-center text-secondary">Edit Category</h1>
 
-        <form action="/admin/updateCategory" method="POST" class="card shadow-lg mx-auto" style="max-width: 400px;">
-          <div class="card-body">
-            <div class="form-group mb-4">
-                <label for="name" class="form-label">Name</label>
-                <input type="text" id="name" name="name" class="form-control" value="<%= category.name %>" required>
-            </div>
-            <div class="form-group mb-4">
-                <label for="description" class="form-label">Description</label>
-                <textarea id="description" name="description" class="form-control" rows="3" required><%= category.description %></textarea>
-            </div>
-            <input type="hidden" name="id" value="<%= category._id %>">
-            <div class="d-flex justify-content-center">
-                <button type="submit" class="btn btn-primary">Update Category</button>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <%- include("./includes/sidebar.ejs") %>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+          <!--  Header Start -->
+          <%- include("./includes/header.ejs") %>
+          <!--  Header End -->
+          <div class="container-fluid">
+            <!--  Row 1 -->
+            
+            <div class="row">
+              
+              <div class="col-lg-12 d-flex align-items-stretch">
+                <div class="card w-100">
+                  <div class="card-body p-4">
+                    <!-- Main content -->
+                    <main class="container py-5 d-flex flex-column align-items-center justify-content-center">
+                        <h1 class="mb-5 text-center text-secondary">Edit Category</h1>
+                
+                        <form action="/admin/updateCategory" method="POST" class="card shadow-lg mx-auto" style="max-width: 400px;">
+                            <div class="card-body">
+                            <div class="form-group mb-4">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" id="name" name="name" class="form-control" value="<%= category.name %>" required>
+                            </div>
+                            <div class="form-group mb-4">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea id="description" name="description" class="form-control" rows="3" required><%= category.description %></textarea>
+                            </div>
+                            <input type="hidden" name="id" value="<%= category._id %>">
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Update Category</button>
+                            </div>
+                            </div>
+                        </form>
+                    </main>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-        </form>
-    </main>
+        </div>
+    </div>
+
 
     <!-- Bootstrap JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>

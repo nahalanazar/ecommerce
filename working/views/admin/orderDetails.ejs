@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fashion Palace</title>
+  <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+  <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+  <!-- CSS only -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+
+<body>
+  <!--  Body Wrapper -->
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+    data-sidebar-position="fixed" data-header-position="fixed">
+    <!-- Sidebar Start -->
+    <%- include("./includes/sidebar.ejs") %>
+    <!--  Sidebar End -->
+    <!--  Main wrapper -->
+    <div class="body-wrapper">
+      <!--  Header Start -->
+      <%- include("./includes/header.ejs") %>
+      <!--  Header End -->
+      <div class="container-fluid">
+        <!--  Row 1 -->
+        
+        <div class="row">
+          
+            <section class="content-main">
+                <div class="content-header">
+                    <div>
+                        <h2 class="content-title card-title">Order detail</h2>
+                    </div>
+                </div>
+                <div class="card">
+                    <header class="card-header">
+                        <div class="row align-items-center">
+                            <div class="col-lg-6 col-md-6 mb-lg-0 mb-15">
+                                <span>
+                                    <i class="material-icons md-calendar_today"></i> <b><%=orders[0].createdAt.toLocaleString()%></b>
+                                </span> <br>
+                                <small class="text-muted">Order ID: <%=orders[0]._id%></small>
+                            </div>
+                         
+                        </div>
+                    </header> <!-- card-header end// -->
+                    <div class="card-body">
+                        <div class="row mb-50 mt-20 order-info-wrap">
+                            <div class="col-md-6">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-person"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Customer</h6>
+                                        <p class="mb-1">
+                                            <%=address.item.name%>  <template class="__cf_email__" data-cfemail="e2838e879aa2879a838f928e87cc818d8f">[email&#160;protected]</template> <br><%=address.item.mobileNumber%>
+                                        </p>
+                                   
+                                    </div>
+                                </article>
+                            </div> <!-- col// -->
+                            <!-- col// -->
+                            <div class="col-md-4">
+                                <article class="icontext align-items-start">
+                                    <span class="icon icon-sm rounded-circle bg-primary-light">
+                                        <i class="text-primary material-icons md-place"></i>
+                                    </span>
+                                    <div class="text">
+                                        <h6 class="mb-1">Deliver to</h6>
+                                        <p class="mb-1">
+                                            <%=address.item.address%><br>
+                                            <%=address.item.locality%> <br>
+                                            <%=address.item.city%> <br>
+                                            <%=address.item.pincode%> <br>
+                                            <%=address.item.state%>
+                                        </p>
+                                    </div>
+                                </article>
+                            </div> <!-- col// -->
+                        </div> <!-- row // -->
+                        
+                            <div class="col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th width="40%">Product</th>
+                                                <th width="20%">Unit Price</th>
+                                                <th width="20%">Quantity</th>
+                                                <th width="20%" class="text-end">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% products.forEach(function(product,index) {%>
+    
+                                            <tr>
+                                                <td>
+                                                    <div class="left">
+                                                        <img src="./product_images/<%=product.image[0]%>" width="40" height="50" class="img-xs" alt="Item">
+                                                    </div>
+                                                    <div class="info"> <%=product.productName%> </div>
+                                                </td>
+                                                <td> ₹<%=product.productPrice%></td>
+                                                <td> <%=product.quantity%></td> 
+                                                <td class="text-end"> ₹<%= product.productPrice*product.quantity %> </td>
+                                            </tr>
+                                            <% }) %>
+<!--                                         
+                                            <tr>
+                                                <td colspan="4">
+                                                    <article class="float-end">
+                                                        <dl class="dlist">
+                                                            <dt>Coupon Code:</dt>
+                                                            <dd> <b class="h6"><%=orders[0].couponCode%></b> </dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Discount Percentage:</dt>
+                                                            <dd> <b class="h6"><%=orders[0].discountPercentage+' % '%></b> </dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt>Discount Amount:</dt>
+                                                            <dd> <b class="h6"><%='- ₹ '+orders[0].discountAmount%></b> </dd>
+                                                        </dl>
+                                                    
+                                                        <dl class="dlist">
+                                                            <dt>Grand total:</dt>
+                                                            <dd> <b class="h5">₹<%=orders[0].totalPrice%></b> </dd>
+                                                        </dl>
+                                                        <dl class="dlist">
+                                                            <dt class="text-muted">Status:</dt>
+                                                            <dd>
+                                                                <span class="badge rounded-pill alert-success text-success"><%=orders[0].paymentStatus%></span>
+                                                            </dd>
+                                                        </dl>
+                                                    </article>
+                                                </td>
+                                            </tr> -->
+                                        </tbody>
+                                    </table>
+                                </div> <!-- table-responsive// -->
+                            </div> <!-- col// -->
+                            
+                            <div class="col-lg-4 pt-5">
+                                <%if(orders[0].paymentMethod == 'razorpay'){%>
+                                <div class="box shadow-sm bg-light">
+                                    <h6 class="mb-15">Payment info</h6>
+                                    <p>
+                                        Payment Method : Razorpay <br>
+    
+                                    </p>
+                                    <p style="font-weight: bold;">Transaction Id : <%=orders[0].razorpayId%> </p>
+                                </div>
+                                <%}else{%>
+                                    <div class="box shadow-sm bg-light">
+                                        <h6 class="mb-15">Payment info</h6>
+                                        <p>
+                                            Payment Method : <%=orders[0].paymentMethod.toUpperCase()%> <br>
+                                          
+                                        </p>
+                                    </div>
+                                <%}%>
+                             
+                            </div> <!-- col// -->
+                    </div> <!-- card-body end// -->
+                </div> <!-- card end// -->
+            </section>
+
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+  <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script>
+  <script src="/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/admin/assets/js/sidebarmenu.js"></script>
+  <script src="/admin/assets/js/app.min.js"></script>
+  <script src="/admin/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="/admin/assets/libs/simplebar/dist/simplebar.js"></script>
+  <script src="/admin/assets/js/dashboard.js"></script>
+</body>
+
+</html>

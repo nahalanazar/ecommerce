@@ -1,5 +1,5 @@
 const Category = require('../models/categoryModel')
-const categoryHelper = require('../Helper/categoryHelper')
+const categoryHelper = require('../helper/categoryHelper')
 const loadCategory = async(req,res)=>{
     try {
       const categories = await Category.find({});

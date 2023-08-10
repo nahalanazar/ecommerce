@@ -4,20 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Fashion Palace</title>
-    <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <style>
-      body{
-        background-color: lightblue; 
-      }
-    </style>
+    <%- include("./includes/template-head-part") %>   
   </head>
-  <body>
+  <body class="animsition">
+
+  <!-- Header -->
+	<%- include("./includes/template-header") %>
+
     <div class="text-center center-div" id="login">
         <div class="container w-25 py-5">
             <div class="title pb-5">
-                <h2 class="font-weight-bold">Login System</h2>
+                <h2 class="font-weight-bold">Login</h2>
                 <!-- <span><%= locals.msg ? msg : "Log in for the existing user" %></span>
                 <% if(locals.logout){ %>
                     <div class="alter alert-success text-center">
@@ -36,17 +33,15 @@
     
             <form action="/loginValidate" method="post">
                 <div class="form-group">
-                    <input type="string" class="form-control" placeholder="mobile" name="mobile">
-                    <br>
+                    <input type="string" class="form-control mb-4" placeholder="mobile" name="mobile">
                 </div>
                 <div class="form-group">
-                    <input type="password" class="form-control" placeholder="Password" name="password" required>
-                    <br>
+                    <input type="password" class="form-control mb-5" placeholder="Password" name="password" required>
                 </div>
                 <div class="d-flex align-items-center justify-content-between mb-4">
-                    <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
+                    <a class="text-primary fw-bold" href="/forgotPassword">Forgot Password ?</a>
                   </div>
-                  <button type="submit" class="btn btn-success rounded-pill">Send OTP</button>
+                  <button type="submit" class="btn btn-success rounded-pill mb-3">Send OTP</button>
                   <div class="d-flex align-items-center justify-content-center">
                     <p class="mb-0">New to Fashion Palace?</p>
                     <a class="text-primary ms-2" href="signup">Create an account</a>
@@ -54,6 +49,24 @@
             </form>
         </div>
     </div>
+
+    
+    <div class="text-center center-div" id="login">
+        <div class="container w-25 py-5">
+            <form action="/loginValidate2" method="post">
+                <div class="form-group">
+                    <input type="string" class="form-control" placeholder="mobile" name="mobile">
+                    <br>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Password" name="password" required>
+                    <br>
+                </div>
+                  <button type="submit" class="btn btn-success rounded-pill">Login</button>
+            </form>
+        </div>
+    </div>
+    <%- include("./includes/template-footer-and-scripts") %>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   </body>

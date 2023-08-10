@@ -16,8 +16,8 @@ adminRoute.post('/', adminController.verifyLogin)
 adminRoute.get('/dashboard', auth.isLogin, adminController.loadDashboard)
 adminRoute.get('/index', auth.isLogin, adminController.manageUser)
 adminRoute.get('/logout', auth.isLogin, adminController.logout)
-adminRoute.get('/blockUser', auth.isLogin, adminController.blockUser)
-adminRoute.get('/unBlockUser', auth.isLogin, adminController.unBlockUser)
+adminRoute.post('/blockUser', auth.isLogin, adminController.blockUser)
+adminRoute.post('/unBlockUser', auth.isLogin, adminController.unBlockUser)
 
 adminRoute.get('/categoryManagement', auth.isLogin, categoryController.loadCategory)
 adminRoute.get('/addCategory', auth.isLogin, categoryController.loadAddCategory)
@@ -35,6 +35,12 @@ adminRoute.get('/unListProduct', productController.unListProduct)
 adminRoute.get('/reListProduct', productController.reListProduct)
 adminRoute.get('/updateProduct', auth.isLogin, productController.loadUpdateProduct)
 adminRoute.post('/updateProduct', multer.upload, productController.updateProduct)
+
+adminRoute.get('/orderList', auth.isLogin, adminController.orderList)
+adminRoute.put('/orderStatus', adminController.changeStatus)  
+adminRoute.put('/cancelOrder', adminController.cancelOrder)
+adminRoute.put('/returnOrder', adminController.returnOrder)
+adminRoute.get('/orderDetails', auth.isLogin, adminController.orderDetails)
 
 
 module.exports = adminRoute

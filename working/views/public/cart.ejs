@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Fashion Palace</title>
+    <%- include("./includes/template-head-part") %>
+</head>
+<body class="animsition">
+	
+	<!-- Header -->
+    <%- include("./includes/template-header") %>
+
+	<!-- breadcrumb -->
+	<div class="container">
+		<div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+			<a href="/index" class="stext-109 cl8 hov-cl1 trans-04">
+				Home
+				<i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+			</a>
+
+			<span class="stext-109 cl4">
+				Shoping Cart
+			</span>
+		</div>
+	</div>
+		
+
+	<!-- Shoping Cart -->
+	<form class="bg0 p-t-75 p-b-85">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-xl-7 m-lr-auto m-b-50">
+					<div class="m-l-25 m-r--38 m-lr-0-xl">
+						<div class="wrap-table-shopping-cart">
+						  <%if(cart.length!=0){%>
+							<table class="table-shopping-cart">
+								<thead>
+								  <tr class="table_head">
+									<th class="column-1">Product</th>
+									<th class="column-1"></th>
+									<th class="column-2">Price</th>
+									<th class="column-3">Quantity</th>
+									<th class="column-4">Total</th>
+									<th class="column-5">Remove</th>
+								  </tr>
+								</thead>
+								<tbody>
+								 <% cart.forEach(function(cart,index) {%>
+								  <tr class="table_row">
+									<td class="column-1">
+										<div class="how-itemcart1">
+											<a href="/productPage?id=<%=cart.carted._id %>"> <img src="../admin/product_images/<%= cart.carted.images[0]%>" width="50px" height="80px"  alt="" ></a>
+										</div>
+									</td>
+									<td>
+										<div class="media-body">
+                                            <p><a style="color: black;" href="/productPage?id=<%=cart.carted._id %>"><%=cart.carted.name%></a></p>
+                                        </div>
+									</td>
+									<td class="column-2">
+										<h5><i class="fa fa-inr" aria-hidden="true"></i>
+											<%=cart.carted.price%></h5>
+									</td>
+									<td data-title="Stock">
+										<div class="product_count wrap-num-product flex-w m-l-auto m-r-0">
+										  <button class="reduced items-count btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="changeQuantity('<%= cart._id %>','<%=cart.item%>','<%=user._id%>','<%=index%>',-1)"><i class="fs-16 zmdi zmdi-minus"></i></button>
+										  <input type="number" name="qty" id="qty-val-<%= cart.item %>" maxlength="12" title="Quantity:" class="qty-val mtext-104 cl3 txt-center num-product" value="<%= cart.quantity %>"><span id="qty-val-<%= cart.item %>" class="qty-val"></span>
+										  <button class="increase items-count btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" onclick="changeQuantity('<%= cart._id %>','<%=cart.item%>','<%=user._id%>','<%=index%>',1)"><i class="fs-16 zmdi zmdi-plus"></i></button>
+										</div>
+									</td>
+									<td class="column-4">
+										<span id="subTotal-<%=cart.item%>" class="subTotalVal">₹<%= cart.total %></span> 
+									</td>	
+                                	<td class="action" style="padding-left: 40px; font-size: 20px;" data-title="Remove">
+										<a href="#" class="text-muted" onclick="deleteProduct('<%=cart._id%>','<%=cart.item%>','<%= cart.quantity %>')"><i class="fa fa-trash" aria-hidden="true"></i></a>
+									</td>							  
+								  </tr>
+								 <% }) %>
+
+								 <tr class="bottom_button">
+									<td>
+	
+									</td>
+									<td>
+	
+									</td>
+									<td>
+	
+									</td>
+									<td class="column-4">
+										<h5>Sub Total</h5>
+									</td>
+									<td>
+										<h5 id="total">₹<%=cartTotal%></h5>
+									</td>
+								 </tr>
+								 
+								</tbody>
+							</table>
+							
+							<div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+								<div class="flex-w flex-m m-r-20 m-tb-5">
+									<div class="checkout_btn_inner d-flex align-items-center">
+										<a class="gray_btn flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" href="/shop">Continue Shopping</a>
+										<a class="primary-btn flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" href="/checkOut">checkout</a>
+									</div>
+								</div>
+							</div>
+						  <%}else{%>
+							<center>
+								<div class="col-md-lg-5">
+									<div class="typography">
+										<h1>CART IS EMPTY</h1>
+									</div>
+								</div>
+								<a class="gray_btn flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5" href="/shop">Continue Shopping</a>
+							</center>
+							<% } %>
+						</div>
+
+						<!-- <div class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-40 p-lr-15-sm">
+							<div class="flex-w flex-m m-r-20 m-tb-5">
+								<input class="stext-104 cl2 plh4 size-117 bor13 p-lr-20 m-r-10 m-tb-5" type="text" name="coupon" placeholder="Coupon Code">
+									
+								<div class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-5">
+									Apply coupon
+								</div>
+							</div>
+
+							<div class="flex-c-m stext-101 cl2 size-119 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer m-tb-10">
+								Update Cart
+							</div>
+						</div> -->
+					</div>
+				</div>
+
+				
+			</div>
+		</div>
+	</form>
+		
+
+
+	<script>
+		function deleteProduct(cartId, proId, quantity){
+			Swal.fire({
+				title: 'Are you sure?',
+      			text: "You won't be able to revert this!",
+      			icon: 'warning',
+      			showCancelButton: true,
+      			confirmButtonColor: '#3085d6',
+      			cancelButtonColor: '#d33',
+      			confirmButtonText: 'Yes, delete it!',
+      			timer: 3000
+			}).then((result) => {
+				if(result.isConfirmed) {
+					$.ajax({
+						url: '/delete-product-cart',
+          				method: 'DELETE',
+          				data: {
+            				cartId: cartId,
+            				proId: proId,
+            				quantity: quantity
+          				},
+          				success: (response) => {
+            				if (response.status) {
+              				location.reload()
+            				}
+          				}
+					})
+				}
+			})
+		}
+
+		function changeQuantity (cartId, proId, userId, index, count){
+			event.preventDefault();
+			const quantity = document.getElementById(`qty-val-${proId}`).value
+			count = parseInt(count)
+			console.log("nahala");
+			if(quantity == 1 && count == -1){
+				Swal.fire({
+					title: "Delete item from cart?",
+					text: "You won't be able to revert this!",
+					icon: 'warning',
+              		showCancelButton: true,
+              		confirmButtonColor: '#3085d6',
+              		cancelButtonColor: '#d33',
+              		confirmButtonText: 'Yes, delete it!',
+              	
+				}).then((result) => {
+					if(result.isConfirmed){
+						$.ajax({
+							url: '/change-product-quantity',
+							method: 'PUT',
+							data: {
+								cartId: cartId,
+								proId: proId,
+								userId: userId,
+								count: count,
+								quantity: quantity
+							},
+							success: (response) => {
+								console.log(response.status)
+								if(response.status){
+								location.reload()
+								}
+							}
+						})
+					}
+				})
+			}else{
+				$.ajax({
+					url: '/change-product-quantity',
+					method: 'PUT',
+					data: {
+						cartId: cartId,
+						proId: proId,
+						userId: userId,
+						count: count,
+						quantity: quantity
+					},
+					success: (response) => {
+						if(response.status == true){
+							const qtyElem = document.querySelector(`#qty-val-${proId}`)
+							qtyElem.value = response.newQuantity
+							const subTotalVal = document.querySelector(`#subTotal-${proId}`)
+							subTotalVal.innerHTML = response.newSubTotal
+							document.getElementById('total').innerHTML = response.cartTotal
+						}else if(response.status == 'outOfStock'){
+							Swal.fire({
+								icon: 'warning',
+								title: 'Out Of Stock',
+								showConfirmButton: false,
+								timer: 5000
+							})
+						}
+					}
+				})
+			}
+		}
+	</script>
+
+	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Footer -->
+<%- include("./includes/template-footer-and-scripts") %>
+</body>
+</html>

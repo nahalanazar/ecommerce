@@ -15,7 +15,7 @@
                          gggh
                         </a> -->
 
-                        <a href="" class="flex-c-m trans-04 p-lr-25">
+                        <a href="profile" class="flex-c-m trans-04 p-lr-25">
                             <%= userName ? userName : "" %>
                         </a>
     
@@ -31,9 +31,9 @@
                 <% } else { %>    
                     <div class="right-top-bar flex-w h-full">
     
-                        <!-- <a href="" class="flex-c-m trans-04 p-lr-25">
+                        <a href="" class="flex-c-m trans-04 p-lr-25">
                             USD
-                        </a> -->
+                        </a>
     
                         <a href="/login" class="flex-c-m trans-04 p-lr-25">
                             Login
@@ -47,7 +47,7 @@
             <nav class="limiter-menu-desktop container">
                 
                 <!-- Logo desktop -->		
-                <a href="/public/#" class="logo">
+                <a href="/index" class="logo">
                     <img src="/public/images/icons/logo-01.png" alt="IMG-LOGO">
                 </a>
 
@@ -86,44 +86,65 @@
                 </div>	
 
                 <!-- Icon header -->
-                <div class="wrap-icon-header flex-w flex-r-m">
-                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
-                        <i class="zmdi zmdi-search"></i>
+                <% if (isAuthenticated) { %>
+                    <div class="wrap-icon-header flex-w flex-r-m">
+                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                            <i class="zmdi zmdi-search"></i>
+                        </div>
+    
+                        <a href="/cart">
+                            <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="<%=count%>">
+                                <i class="zmdi zmdi-shopping-cart"></i>
+                            </div>
+                        </a>
+    
+                        <a href="/index" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="1">
+                            <i class="zmdi zmdi-favorite-outline"></i>
+                        </a>
                     </div>
-
-                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti js-show-cart" data-notify="2">
-                        <i class="zmdi zmdi-shopping-cart"></i>
-                    </div>
-
-                    <a href="/public/#" class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="0">
-                        <i class="zmdi zmdi-favorite-outline"></i>
-                    </a>
-                </div>
+                <% } else { %>
+                    <div class="wrap-icon-header flex-w flex-r-m">
+                        <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 js-show-modal-search">
+                            <i class="zmdi zmdi-search"></i>
+                        </div>
+                    </div> 
+                <% } %>    
+   
             </nav>
         </div>	
     </div>
 
     <!-- Header Mobile -->
     <div class="wrap-header-mobile">
-        <!-- Logo moblie -->		
+        <!-- Logo mobile -->		
         <div class="logo-mobile">
             <a href="/index"><img src="/public/images/icons/logo-01.png" alt="IMG-LOGO"></a>
         </div>
 
         <!-- Icon header -->
-        <div class="wrap-icon-header flex-w flex-r-m m-r-15">
-            <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
-                <i class="zmdi zmdi-search"></i>
+        <% if (isAuthenticated) { %>
+            <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+                    <i class="zmdi zmdi-search"></i>
+                </div>
+    
+                <a href="/cart">
+                    <div class="icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti" data-notify="5">
+                        <i class="zmdi zmdi-shopping-cart"></i>
+                    </div>
+                </a>
+    
+                <a href="/index" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
+                    <i class="zmdi zmdi-favorite-outline"></i>
+                </a>
             </div>
-
-            <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti js-show-cart" data-notify="2">
-                <i class="zmdi zmdi-shopping-cart"></i>
+        <% } else { %>
+            <div class="wrap-icon-header flex-w flex-r-m m-r-15">
+                <div class="icon-header-item cl2 hov-cl1 trans-04 p-r-11 js-show-modal-search">
+                    <i class="zmdi zmdi-search"></i>
+                </div>
             </div>
-
-            <a href="/public/#" class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-r-11 p-l-10 icon-header-noti" data-notify="0">
-                <i class="zmdi zmdi-favorite-outline"></i>
-            </a>
-        </div>
+        <% } %>    
 
         <!-- Button show menu -->
         <div class="btn-show-menu-mobile hamburger hamburger--squeeze">
@@ -132,7 +153,6 @@
             </span>
         </div>
     </div>
-
 
     <!-- Menu Mobile -->
     <div class="menu-mobile">
@@ -143,38 +163,52 @@
                 </div>
             </li>
 
-            <li>
+            <% if (isAuthenticated) { %>
+                <li>
                 <div class="right-top-bar flex-w h-full">
-                    <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
+                    <!-- <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
                         Help & FAQs
+                    </a> -->
+
+                    <a href="" class="flex-c-m p-lr-10 trans-04">
+                        <%= userName ? userName : "" %>
                     </a>
 
-                    <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
-                        My Account
-                    </a>
+                    <!-- <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
+                        USD
+                    </a> -->
 
-                    <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
-                        EN
+                    <a href="logout" class="flex-c-m p-lr-10 trans-04">
+                        Logout
                     </a>
-
+                </div>
+                </li>         
+            <% } else { %>  
+                <li>
+                <div class="right-top-bar flex-w h-full">
                     <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
                         USD
                     </a>
+
+                    <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
+                        Login
+                    </a>
                 </div>
-            </li>
+                </li>  
+            <% } %>    
         </ul>
 
         <ul class="main-menu-m">
             <li>
                 <a href="/index">Home</a>
-                <ul class="sub-menu-m">
+                <!-- <ul class="sub-menu-m">
                     <li><a href="/public/index.html">Homepage 1</a></li>
                     <li><a href="/public/home-02.html">Homepage 2</a></li>
                     <li><a href="/public/home-03.html">Homepage 3</a></li>
                 </ul>
                 <span class="arrow-main-menu-m">
                     <i class="fa fa-angle-right" aria-hidden="true"></i>
-                </span>
+                </span> -->
             </li>
 
             <li>
@@ -214,4 +248,90 @@
             </form>
         </div>
     </div>
+
+    <!-- Cart -->
+	<!-- <div class="wrap-header-cart js-panel-cart">
+		<div class="s-full js-hide-cart"></div>
+
+		<div class="header-cart flex-col-l p-l-65 p-r-25">
+			<div class="header-cart-title flex-w flex-sb-m p-b-8">
+				<span class="mtext-103 cl2">
+					Your Cart
+				</span>
+
+				<div class="fs-35 lh-10 cl2 p-lr-5 pointer hov-cl1 trans-04 js-hide-cart">
+					<i class="zmdi zmdi-close"></i>
+				</div>
+			</div>
+			
+			<div class="header-cart-content flex-w js-pscroll">
+				<ul class="header-cart-wrapitem w-full">
+					<li class="header-cart-item flex-w flex-t m-b-12">
+						<div class="header-cart-item-img">
+							<img src="/public/images/item-cart-01.jpg" alt="IMG">
+						</div>
+
+						<div class="header-cart-item-txt p-t-8">
+							<a href="/public/#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+								White Shirt Pleat
+							</a>
+
+							<span class="header-cart-item-info">
+								1 x $19.00
+							</span>
+						</div>
+					</li>
+
+					<li class="header-cart-item flex-w flex-t m-b-12">
+						<div class="header-cart-item-img">
+							<img src="/public/images/item-cart-02.jpg" alt="IMG">
+						</div>
+
+						<div class="header-cart-item-txt p-t-8">
+							<a href="/public/#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+								Converse All Star
+							</a>
+
+							<span class="header-cart-item-info">
+								1 x $39.00
+							</span>
+						</div>
+					</li>
+
+					<li class="header-cart-item flex-w flex-t m-b-12">
+						<div class="header-cart-item-img">
+							<img src="/public/images/item-cart-03.jpg" alt="IMG">
+						</div>
+
+						<div class="header-cart-item-txt p-t-8">
+							<a href="/public/#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">
+								Nixon Porter Leather
+							</a>
+
+							<span class="header-cart-item-info">
+								1 x $17.00
+							</span>
+						</div>
+					</li>
+				</ul>
+				
+				<div class="w-full">
+					<div class="header-cart-total w-full p-tb-40">
+						Total: $75.00
+					</div>
+
+					<div class="header-cart-buttons flex-w w-full">
+						<a href="/public/shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+							View Cart
+						</a>
+
+						<a href="/public/shoping-cart.html" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+							Check Out
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div> -->
+
 </header>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Fashion Palace</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"/>
+    <%- include("./includes/template-head-part") %>
+    
+  </head>
+
+  <body>
+    <!-- Header -->
+    <%- include("./includes/template-header") %>
+
+    <section style="background-color: #eee">
+      <div class="container py-5">
+        <div class="row">
+          <%- include("./includes/profileSide") %>
+          <div class="col-lg-8">
+            <div class="card mb-4">
+              <div class="card-body">
+                <h4>My Orders</h4>
+                <br>     
+
+                <!--================Order Details Area =================-->
+                <section class="order_details section_gap">
+                    <div class="container">
+                        <div class="row order_d_inner">
+                            <div class="col-md-6">
+                                <div class="details_item">
+                                    <h5>Order Info</h5>
+                                    <br>
+                                    <ul class="list">
+                                        <li>Order ID: <%=orders[0]._id%></li>
+                                        <li>Date: <%=orders[0].createdAt.toLocaleString()%></li>
+                                        <li>Total: ₹<%=orders[0].totalPrice%></li>
+                                        <li>Payment method: <%=orders[0].paymentMethod%></a></li>
+                                        <li>Payment Status: <%=orders[0].paymentStatus%></a></li>
+                                        <li>Transaction Id: <%=orders[0].razorpayId%></li>
+
+                                    </ul>
+                                </div>
+                            </div>
+                        
+                            <div class="col-md-6">
+                                <div class="details_item">
+                                    <h5>Shipping Address</h5>
+                                    <br>
+                                    <ul class="list">
+                                        <li>Name: <%=address.item.name%></li>
+                                        <li>Adress: <%=address.item.address%></li>
+                                        <li>City: <%=address.item.city%></li>
+                                        <li>Locality: <%=address.item.locality%></li>
+                                        <li>Pincode: <%=address.item.pincode%></li>
+                                        <li>State: <%=address.item.state%></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="order_details_table py-4">
+                            <h2>Order Details</h2>
+                            <br>
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Product</th>
+                                            <th scope="col">Price</th>
+                                            <th scope="col">Quantity</th>
+                                            <th scope="col">Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% products.forEach(function(product,index) {%>
+
+                                        <tr>
+                                            <td>
+                                                <p><%=product.productName%></p>
+                                            </td>
+                                            <td>
+                                                <p>₹<%=product.productPrice%></p>
+                                            </td>
+                                            <td>
+                                                <h5><%=product.quantity%></h5>
+                                            </td>
+                                            <td>
+                                                <p>₹<%=product.productPrice*product.quantity%></p>
+                                            </td>
+                                        </tr>
+                                        <% }) %>
+                                        <!-- <tr>
+                                            <td>
+                                                <h4>Coupon Code</h4>
+                                            </td>
+                                            <td>
+                                                <h5></h5>
+                                            </td>
+                                            <td>
+                                                <p><%=orders[0].couponCode%></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h4>Discount %</h4>
+                                            </td>
+                                            <td>
+                                                <h5></h5>
+                                            </td>
+                                            <td>
+                                                <p><%=orders[0].discountPercentage%> %</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <h4>Discount Amount</h4>
+                                            </td>
+                                            <td>
+                                                <h5></h5>
+                                            </td>
+                                            <td>
+                                                <p>₹ <%=orders[0].discountAmount%></p>
+                                            </td>
+                                        </tr> -->
+                                    
+                                        <tr>
+                                            <td>
+                                                <h4>Total</h4>
+                                            </td>
+                                            <td>
+                                                <h5></h5>
+                                            </td>
+                                            <td>
+                                                <p>₹ <%=orders[0].totalPrice%></p>
+                                            </td>
+                                            <!-- <td>
+                                                <a href="/invoice?id=<=orders[0]._id%>" class="btn btn-primary">Download Invoice</a>
+                                            </td> -->
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!--================End Order Details Area =================-->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <%- include("./includes/template-footer-and-scripts") %>
+
+    </body>
+</html>

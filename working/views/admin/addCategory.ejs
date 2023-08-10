@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
-
+    <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
 
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
@@ -48,51 +48,72 @@
         .form-group {
             margin-bottom: 1rem;
         }
+        .narrow-column {
+            width: 20px;
+        }
     </style>
 
     <title>Fashion Palace</title>
 </head>
 <body>
-    <!-- Back button -->
-    <a href="/admin/categoryManagement" class="btn btn-primary btn-back"><i class="bi bi-arrow-left"></i> Category Management</a>
-
-
-    <!-- Main content -->
-    <main class="container my-5">
-        <h2 class="mb-5 text-center text-secondary">Add New Category</h2>
-        <form action="/admin/addCategory" method="post">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <!-- Category Name -->
-                    <div class="form-group mb-4">
-                      <label class="form-label" for="name">Category Name</label>
-                    </div>
-                    <div class="form-group mb-4">
-                      <input type="text" id="name" class="form-control" name="name" placeholder="Enter category name">
-                    </div>
-                  
-                    <!-- Description -->
-                    <div class="form-group mb-4">
-                      <label class="form-label" for="description">Description</label>
-                    </div>
-                    <div class="form-group mb-4">
-                      <textarea class="form-control" id="description" name="description" rows="4" placeholder="Enter category description"></textarea>
-                    </div>   
-                    
-                    <!-- Submit button -->
-                    <button type="submit" class="btn btn-primary mt-3"> Publish Category</button>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <%- include("./includes/sidebar.ejs") %>
+        <!--  Sidebar End -->
+        <!--  Main wrapper -->
+        <div class="body-wrapper">
+          <!--  Header Start -->
+          <%- include("./includes/header.ejs") %>
+          <!--  Header End -->
+          <div class="container-fluid">
+            <!--  Row 1 -->
+            
+            <div class="row">
+              
+              <div class="col-lg-12 d-flex align-items-stretch">
+                <div class="card w-100">
+                  <div class="card-body p-4">
+                    <!-- Main content -->
+                    <main class="container my-5">
+                        <h2 class="mb-5 text-center text-secondary">Add New Category</h2>
+                        <form action="/admin/addCategory" method="post">
+                            <div class="card shadow-lg">
+                                <div class="card-body">
+                                    <!-- Category Name -->
+                                    <div class="form-group mb-4">
+                                      <label class="form-label" for="name">Category Name</label>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                      <input type="text" id="name" class="form-control" name="name" placeholder="Enter category name">
+                                    </div>
+                                  
+                                    <!-- Description -->
+                                    <div class="form-group mb-4">
+                                      <label class="form-label" for="description">Description</label>
+                                    </div>
+                                    <div class="form-group mb-4">
+                                      <textarea class="form-control" id="description" name="description" rows="4" placeholder="Enter category description"></textarea>
+                                    </div>   
+                                    
+                                    <!-- Submit button -->
+                                    <button type="submit" class="btn btn-primary mt-3"> Publish Category</button>
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <!-- Error message -->
+                        <div class="text-center mt-5">
+                            <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
+                        </div>
+                    </main>
+                  </div>
                 </div>
+              </div>
             </div>
-        </form>
-        
-        <!-- Error message -->
-        <div class="text-center mt-5">
-            <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
+          </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Optional JavaScript; choose one of the two! -->
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

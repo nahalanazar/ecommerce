@@ -7,12 +7,16 @@
   <title>Fashion Palace</title>
   <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
   <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+  <style>
+    .narrow-column {
+        width: 20px;
+    }
+    </style>
 </head>
 
 <body>
   <!--  Body Wrapper -->
-  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
-    data-sidebar-position="fixed" data-header-position="fixed">
+  <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full" data-sidebar-position="fixed" data-header-position="fixed">
     <!-- Sidebar Start -->
     <%- include("./includes/sidebar.ejs") %>
     <!--  Sidebar End -->
@@ -29,10 +33,10 @@
           <div class="col-lg-12 d-flex align-items-stretch">
             <div class="card w-100">
               <div class="card-body p-4">
-                <h5 class="card-title fw-semibold mb-4">Product list</h5>
+                <h5 class="card-title fw-semibold mb-4">Product List</h5>
                 <a href="/admin/product"><span class="badge bg-primary rounded-3 fw-semibold">New Product</span></a>
                 <div class="table-responsive">
-                  <table class="table text-nowrap mb-0 align-middle">
+                  <table class="table mb-0 align-middle">
                       <!-- <thead class="text-dark fs-4">
                         <tr>
                           <th class="border-bottom-0">
@@ -60,18 +64,19 @@
                       </thead> -->
                       <thead>
                         <tr>
-                            <th>Product</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Category</th>
-                            <th>Status</th>
-                            <th class="text-end"> Action </th>
+                            <th class="narrow-column">Product</th>
+                            <th class="narrow-column">Price</th>
+                            <th class="narrow-column">Stock</th>
+                            <th class="narrow-column">Description</th>
+                            <th class="narrow-column">Category</th>
+                            <th class="narrow-column">Status</th>
+                            <th class="text-end narrow-column"> Action </th>
                         </tr>
                     </thead>
                       <% product.forEach((item) => { %>
                         <tbody>
                             <tr>
-                                <td width="30%">
+                                <td>
                                     <a href="#" class="itemside">
                                         <div class="info pl-3">
                                             <h6 class="mb-0 title"><img src="./product_images/<%=item.images[0]%>" width="50px" height="50px" class="img-sm img-thumbnail" alt="Item"></h6>
@@ -79,8 +84,8 @@
                                         <h6 class="mb-0 tooltip-ellipsis" title="<%= item.name %>"><%= item.name %></h6>
                                     </a>
                                 </td>
-                                <td width="20%"><i class="fa fa-inr" aria-hidden="true"></i>
-                                    <%= item.price %></td>
+                                <td width="20%"><i class="fa fa-inr" aria-hidden="true"></i><%= item.price %></td>
+                                <td><%= item.stock %></td>
                                 <td title="<%= item.description %>" class="tooltip-ellipsis"><%= item.description %></td>                            
                                 <td title="<%= item.category.name %>" class="tooltip-ellipsis"><%= item.category.name %></td>
                                 <%if(item.isProductListed==true && item.isListed == true){%>
@@ -113,8 +118,8 @@
         </div>
         
       </div>
-    </div>
   </div>
+  
   <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script>
   <script src="/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/admin/assets/js/sidebarmenu.js"></script>
