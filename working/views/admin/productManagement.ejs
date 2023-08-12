@@ -6,11 +6,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fashion Palace</title>
   <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+
   <style>
     .narrow-column {
         width: 20px;
     }
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+         color: #2e21e6;           
+         border-color: #ddd;
+         background-color: #fff;  
+         padding: 10px;           
+         cursor: pointer;                
+     }
+
+     .dataTables_wrapper .dataTables_paginate .paginate_button.next {
+         background-color: grey; 
+         color: white;           
+     }
+
+     .dataTables_wrapper .dataTables_paginate .paginate_button.previous {
+         background-color: gray;  
+         color: white;            
+     }
+     
+     .dataTables_wrapper .dataTables_paginate .paginate_button {
+         margin-right: 10px;        /* Add spacing between all paginate buttons */
+         margin-left: 10px;
+     }
+     .dataTables_paginate {
+         display: flex !important;
+         justify-content: center !important;
+         padding: 40px 0 !important;
+     }
     </style>
 </head>
 
@@ -34,55 +64,32 @@
             <div class="card w-100">
               <div class="card-body p-4">
                 <h5 class="card-title fw-semibold mb-4">Product List</h5>
-                <a href="/admin/product"><span class="badge bg-primary rounded-3 fw-semibold">New Product</span></a>
+                <a href="/admin/product"><span class="badge bg-primary rounded-3 fw-semibold mb-2">New Product</span></a>
                 <div class="table-responsive">
-                  <table class="table mb-0 align-middle">
-                      <!-- <thead class="text-dark fs-4">
-                        <tr>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Product ID</h6>
-                          </th>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Name</h6>
-                          </th>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Category</h6>
-                          </th>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Description</h6>
-                          </th>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Price</h6>
-                          </th>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Image</h6>
-                          </th>
-                          <th class="border-bottom-0">
-                            <h6 class="fw-semibold mb-0">Actions</h6>
-                          </th>
-                        </tr>
-                      </thead> -->
-                      <thead>
-                        <tr>
-                            <th class="narrow-column">Product</th>
-                            <th class="narrow-column">Price</th>
-                            <th class="narrow-column">Stock</th>
-                            <th class="narrow-column">Description</th>
-                            <th class="narrow-column">Category</th>
-                            <th class="narrow-column">Status</th>
-                            <th class="text-end narrow-column"> Action </th>
-                        </tr>
+                  <table class="table mb-0 align-middle" id="myTable">
+                    <thead>
+                      <tr>
+                          <th class="narrow-column">SI No.</th>
+                          <th class="narrow-column">Product</th>
+                          <th class="narrow-column">Price</th>
+                          <th class="narrow-column">Stock</th>
+                          <th class="narrow-column">Description</th>
+                          <th class="narrow-column">Category</th>
+                          <th class="narrow-column">Status</th>
+                          <th class="text-end narrow-column"> Action </th>
+                      </tr>
                     </thead>
-                      <% product.forEach((item) => { %>
-                        <tbody>
+                      <% let i = 1 %>
+                      <tbody>
+                        <% product.forEach((item) => { %>
+                        
                             <tr>
+                              <td scope="row"><%= i %></td>
                                 <td>
-                                    <a href="#" class="itemside">
-                                        <div class="info pl-3">
-                                            <h6 class="mb-0 title"><img src="./product_images/<%=item.images[0]%>" width="50px" height="50px" class="img-sm img-thumbnail" alt="Item"></h6>
-                                        </div>
-                                        <h6 class="mb-0 tooltip-ellipsis" title="<%= item.name %>"><%= item.name %></h6>
-                                    </a>
+                                  <div class="info pl-3">
+                                      <h6 class="mb-0 title"><img src="./product_images/<%=item.images[0]%>" width="50px" height="50px" class="img-sm img-thumbnail" alt="Item"></h6>
+                                  </div>
+                                  <h6 class="mb-0 tooltip-ellipsis" title="<%= item.name %>"><%= item.name %></h6>
                                 </td>
                                 <td width="20%"><i class="fa fa-inr" aria-hidden="true"></i><%= item.price %></td>
                                 <td><%= item.stock %></td>
@@ -95,7 +102,7 @@
                                   <% } %>
                                   <td>
                                     <div class="dropdown col-lg-2 col-sm-2 col-4 col-action text-start">
-                                      <a href="#" data-bs-toggle="dropdown" class="btn btn-primary rounded btn-sm font-sm"> <i class="material-icons md-more_horiz text-end"></i> </a>
+                                      <a href="#" data-bs-toggle="dropdown" class="btn btn-primary rounded btn-sm font-sm"> <i class="material-icons md-more_horiz text-end">Edit</i> </a>
                                       <div class="dropdown-menu text-end">
                                           <a class="dropdown-item" href="/admin/updateProduct?id=<%= item._id %>">Edit</a>
                                           <%if(item.isProductListed==true && item.isListed == true){%>
@@ -104,10 +111,11 @@
                                               <a class="dropdown-item" href="/admin/reListProduct?id=<%= item._id %>">Re List</a>
                                             <% } %>
                                       </div>
-                                  </div>
+                                    </div>
                                     </div>
                                   </td>
                             </tr>
+                            <% i++; %>
                             <% }) %>
                         </tbody>
                   </table>
@@ -116,12 +124,31 @@
             </div>
           </div>
         </div>
-        
       </div>
   </div>
-  
-  <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script>
+
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // $.noConflict();
+      
+      var table = $('#myTable').DataTable({
+        "paging": true,          // Enable pagination
+        "pageLength": 10,        // Number of rows per page
+        "lengthMenu": [10, 25, 50, 75, 100],  // Dropdown options for rows per page
+      });
+    
+      table.on('draw', function() {
+        $(".paginate_button:not(.previous):not(.next)").addClass("number_button");
+      });
+    });
+  </script>
+  
+  <!-- <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script> -->
   <script src="/admin/assets/js/sidebarmenu.js"></script>
   <script src="/admin/assets/js/app.min.js"></script>
   <script src="/admin/assets/libs/apexcharts/dist/apexcharts.min.js"></script>

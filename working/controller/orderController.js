@@ -68,21 +68,27 @@ const postCheckOut  = async (req, res) => {
         const userId = res.locals.user._id;
         const data = req.body;
         try { 
-        const checkStock = await orderHelper.checkStock(userId)
-        if(checkStock){
-            if (data.paymentOption === "cod") { 
-            const updatedStock = await orderHelper.updateStock(userId)
-            const response = await orderHelper.placeOrder(data,userId);
-            await Cart.deleteOne({ user:userId  })
-            res.json({ codStatus: true });
+            const checkStock = await orderHelper.checkStock(userId)
+            if(checkStock){
+                if (data.paymentOption === "cod") { 
+                    const updatedStock = await orderHelper.updateStock(userId)
+                    const response = await orderHelper.placeOrder(data,userId);
+                    await Cart.deleteOne({ user:userId  })
+                    // res.render('public/success')
+                    res.json({ codStatus: true });
+                }else if (data.paymentOption === "wallet") {
+                    const updatedStock = await orderHelper.updateStock(userId)
+                    const response = await orderHelper.placeOrder(data,userId);
+                    await Cart.deleteOne({ user:userId  })
+                    res.json({ orderStatus: true, message: "order placed successfully" });
+                }
+            }else{
+                await Cart.deleteOne({ user:userId  })
+                res.json({ status: 'OrderFailed' });
             }
-        }else{
-            await Cart.deleteOne({ user:userId  })
-            res.json({ status: 'OrderFailed' });
-        }
         } catch (error) {
-        console.log({ error: error.message }, "22");
-        res.json({ status: false, error: error.message });
+            console.log({ error: error.message }, "22");
+            res.json({ status: false, error: error.message });
         }
     } catch (error) {
         console.error(error);

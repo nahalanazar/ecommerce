@@ -55,7 +55,6 @@ const addToCart = (req, res) => {
 }
 
 const deleteProduct = (req, res) => {
-    console.log("deleted");
     cartHelper.deleteProduct(req.body).then((response) => {
         res.send(response)
     })

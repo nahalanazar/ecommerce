@@ -7,6 +7,41 @@
   <title>Fashion Palace</title>
   <link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
   <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+  <style>
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+         color: #2e21e6;           
+         border-color: #ddd;
+         background-color: #fff;  
+         padding: 10px;           
+         cursor: pointer;        
+         
+     }
+
+     .dataTables_wrapper .dataTables_paginate .paginate_button.next {
+         background-color: grey; 
+         color: white;           
+     }
+
+     .dataTables_wrapper .dataTables_paginate .paginate_button.previous {
+         background-color: gray;  
+         color: white;            
+     }
+     
+     .dataTables_wrapper .dataTables_paginate .paginate_button {
+         margin-right: 10px;        /* Add spacing between all paginate buttons */
+         margin-left: 10px;
+     }
+     .dataTables_paginate {
+         display: flex !important;
+         justify-content: center !important;
+         padding: 40px 0 !important;
+     }
+
+ </style>
+
 </head>
 
 <body>
@@ -30,9 +65,9 @@
             <div class="card w-100">
               <div class="card-body p-4">
                 <h5 class="card-title fw-semibold mb-4">Category list</h5>
-                <a href="/admin/addCategory"><span class="badge bg-primary rounded-3 fw-semibold">New Category</span></a>
+                <a href="/admin/addCategory"><span class="badge bg-primary rounded-3 fw-semibold mb-2 p-1">New Category</span></a>
                 <div class="table-responsive">
-                  <table class="table text-nowrap mb-0 align-middle">
+                  <table class="table text-nowrap mb-0 align-middle" id="myTable">
                     <% if (categories.length > 0) { %>
                       <thead class="text-dark fs-4">
                         <tr>
@@ -84,13 +119,13 @@
                                   <%}%>
                             </td>
                             <td>
-                                  <div>
-                                      <%if(category.isListed==true){%>
-                                      <a class="text-danger" href="/admin/unListCategory?id=<%=category._id %>">Un List</a>
-                                      <%}else{%>
-                                          <a href="/admin/reListCategory?id=<%=category._id %>">Re List</a>
-                                          <%}%>   
-                                  </div>
+                                <div>
+                                    <%if(category.isListed==true){%>
+                                    <a class="text-danger" href="/admin/unListCategory?id=<%=category._id %>">Un List</a>
+                                    <%}else{%>
+                                        <a href="/admin/reListCategory?id=<%=category._id %>">Re List</a>
+                                        <%}%>   
+                                </div>
                            </td>
                           </tr> 
                           <% i++; %>
@@ -109,11 +144,30 @@
             </div>
           </div>
         </div>
-        
       </div>
     </div>
   </div>
-  <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // $.noConflict();
+      
+      var table = $('#myTable').DataTable({
+        "paging": true,          // Enable pagination
+        "pageLength": 10,        // Number of rows per page
+        "lengthMenu": [10, 25, 50, 75, 100],  // Dropdown options for rows per page
+      });
+    
+      table.on('draw', function() {
+        $(".paginate_button:not(.previous):not(.next)").addClass("number_button");
+      });
+    });
+  </script>
+
+  <!-- <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script> -->
   <script src="/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
   <script src="/admin/assets/js/sidebarmenu.js"></script>
   <script src="/admin/assets/js/app.min.js"></script>

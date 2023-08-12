@@ -72,110 +72,84 @@
               <div class="col-lg-12 d-flex align-items-stretch">
                 <div class="card w-100">
                   <div class="card-body p-4">
-                                    <!-- Main content -->
-    <main class="container my-5">       
-        <h1 class="mb-5 text-center text-secondary">Add New Product</h1>
-        <form action="/admin/addProduct" method="post" enctype="multipart/form-data">
-            <div class="card shadow-lg">
-                <div class="card-body">
-                    <!-- Your form groups go here -->
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="product-name">Product title</label>
-                                    </div>
-                                    <div>
-                                        <input type="text" id="product-name" class="form-control" name="name" placeholder="Type here">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="product-description">Description</label>
-                                    </div>
-                                    <div>
-                                        <textarea class="form-control" id="product-description" name="description" rows="4" placeholder="Type here"></textarea>
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="product-category">Category</label>
-                                    </div>
-                                    <div>
-                                        <select class="form-select" id="product-category" name="category">
-                                            <% category.forEach(function(category) { %>
-                                            <option value="<%= category._id %>"><%= category.name %></option>
-                                            <% }); %>
-                                        </select>
-                                    </div>
-                                </div>
-            
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="product-price">Cost in INR</label>
-                                    </div>
-                                    <div>
-                                        <input type="number" id="product-price" class="form-control" name="price" placeholder="00.0">
-                                    </div>
-                                </div>
+                        <!-- Main content -->
+                        <main class="container my-5">       
+                            <h1 class="mb-5 text-center text-secondary">Add New Product</h1>
+                            <div class="text-center mt-5">
+                                <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
+                            </div>
+                            <form id="productForm" action="/admin/addProduct" method="post" enctype="multipart/form-data">
+                                <div class="card shadow-lg">
+                                    <div class="card-body">
+                                        <!-- Your form groups go here -->
+                                        <div class="form-group mb-4">
+                                            <div>
+                                                <label class="form-label" for="product-name">Product title</label>
+                                            </div>
+                                            <div>
+                                                <input type="text" id="product-name" class="form-control" name="name" placeholder="Type here">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group mb-4">
+                                            <div>
+                                                <label class="form-label" for="product-description">Description</label>
+                                            </div>
+                                            <div>
+                                                <textarea class="form-control" id="product-description" name="description" rows="4" placeholder="Type here"></textarea>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="form-group mb-4">
+                                            <div>
+                                                <label class="form-label" for="product-category">Category</label>
+                                            </div>
+                                            <div>
+                                                <select class="form-select" id="product-category" name="category">
+                                                    <% category.forEach(function(category) { %>
+                                                    <option value="<%= category._id %>"><%= category.name %></option>
+                                                    <% }); %>
+                                                </select>
+                                            </div>
+                                        </div>
 
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label">Stock</label>  
-                                    </div>                                    
-                                    <div>
-                                        <input type="number" placeholder="0" class="form-control" name="stock" id="stock" onkeyup="stockValidation()"><span id="stockError"></span>
+                                        <div class="form-group mb-4">
+                                            <div>
+                                                <label class="form-label" for="product-price">Cost in INR</label>
+                                            </div>
+                                            <div>
+                                                <input type="number" id="product-price" class="form-control" name="price" placeholder="00.0">
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group mb-4">
+                                            <div>
+                                                <label class="form-label">Stock</label>  
+                                            </div>                                    
+                                            <div>
+                                                <input type="number" placeholder="0" class="form-control" name="stock" id="stock" onkeyup="stockValidation()"><span id="stockError"></span>
+                                            </div>
+                                        </div>
+                                        
+                                        <h5 class="mt-5 mb-3 text-secondary">Product Images</h5>
+                                        
+                                        <div class="form-group mb-4">
+                                            <div>
+                                                <label class="form-label" for="images">Product Images</label>
+                                            </div>
+                                            <div id="imgPreviewContainer">
+                                                <!-- Images will be previewed here -->
+                                            </div>
+                                            <div>
+                                                <input type="file" id="images" name="images" class="form-control" onchange="viewImages(event)" multiple>
+                                            </div>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-box-arrow-in-up"></i> Publish Product</button>
                                     </div>
                                 </div>
-                                
-                                <h5 class="mt-5 mb-3 text-secondary">Product Images</h5>
-                                
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="main-image">Main Image</label>
-                                    </div>
-                                    <div>
-                                        <img src="" id="imgView1" alt="product image" width="100px" height="100px">
-                                    </div>
-                                    <div>
-                                        <input type="file" id="first-image" name="images" class="form-control" onchange="viewImage(event, 'imgView1')">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="second-image">Second Image</label>
-                                    </div>
-                                    <div>
-                                        <img src="" id="imgView2" alt="product image" width="100px" height="100px">
-                                    </div>
-                                    <div>
-                                        <input type="file" id="second-image" name="images" class="form-control" onchange="viewImage(event, 'imgView2')">
-                                    </div>
-                                </div>
-                                
-                                <div class="form-group mb-4">
-                                    <div>
-                                        <label class="form-label" for="third-image">Third Image</label>
-                                    </div>
-                                    <div>
-                                        <img src="" id="imgView3" alt="product image" width="100px" height="100px">
-                                    </div>
-                                    <div>
-                                        <input type="file" id="third-image" name="images" class="form-control" onchange="viewImage(event, 'imgView3')">
-                                    </div>
-                                </div>
-                                
-            
-                                <button type="submit" class="btn btn-primary mt-3"><i class="bi bi-box-arrow-in-up"></i> Publish Product</button>
-                </div>
-            </div>
-        </form>
-        
-        <div class="text-center mt-5">
-            <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
-        </div>
-    </main>
+                            </form>        
+                        </main>
                     </div>
                   </div>
                 </div>
@@ -186,9 +160,48 @@
       </div>
 
     <script>
-            function viewImage(event, imageId) {
-                document.getElementById(imageId).src = URL.createObjectURL(event.target.files[0]);
+
+        function viewImages(event) {
+        const files = event.target.files;
+        const imgPreviewContainer = document.getElementById("imgPreviewContainer");
+        
+        // Clear the preview container
+        imgPreviewContainer.innerHTML = '';
+
+        if (files.length > 3) {
+            alert('You can upload up to 3 images only.');
+            event.target.value = '';  // Clear the input
+            return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            
+            // Validate file size
+            if (file.size > 2 * 1024 * 1024) {
+                alert('Each image should be less than 2MB in size.');
+                event.target.value = '';  // Clear the input
+                return;
             }
+
+            // Validate file type
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            if (!validTypes.includes(file.type)) {
+                alert('Only jpeg and png image types are allowed.');
+                event.target.value = '';  // Clear the input
+                return;
+            }
+
+            // Display image preview
+            const imgPreview = document.createElement('img');
+            imgPreview.src = URL.createObjectURL(file);
+            imgPreview.width = 100;
+            imgPreview.height = 100;
+            imgPreviewContainer.appendChild(imgPreview);
+        }
+    }
+
+
     </script>
     <script>
         const stock = document.getElementById("stock")
@@ -213,5 +226,40 @@
 			return true
         }
     </script>
+
+<script>
+    const productForm = document.getElementById('productForm');
+
+    productForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const formData = new FormData(productForm);
+
+        fetch('/admin/addProduct', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            // Check if the response is ok (status code 200-299)
+            if (!response.ok) {
+                // Convert the response body to text and throw it as an error
+                return response.text().then(errorText => {
+                    throw new Error(errorText);
+                });
+            }
+            return response.text();  // If response is ok, convert body to text
+        })
+        .then(data => {
+            window.location.href = '/admin/productManagement';
+        })
+        .catch((error) => {
+            console.error('Error:', error.message);
+            alert(error.message);  // Now, this will display our error messages
+        });
+    });
+
+</script>
+
+
 </body>
 </html>

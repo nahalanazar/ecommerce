@@ -22,8 +22,7 @@ const createProduct = (data,images) => {
           reject(err)
         });
       });
-  
-  };
+};
 
   const unListProduct = (query) => {
     return new Promise((resolve, reject) => {

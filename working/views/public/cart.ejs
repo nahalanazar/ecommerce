@@ -63,7 +63,7 @@
 									<td data-title="Stock">
 										<div class="product_count wrap-num-product flex-w m-l-auto m-r-0">
 										  <button class="reduced items-count btn-num-product-down cl8 hov-btn3 trans-04 flex-c-m" onclick="changeQuantity('<%= cart._id %>','<%=cart.item%>','<%=user._id%>','<%=index%>',-1)"><i class="fs-16 zmdi zmdi-minus"></i></button>
-										  <input type="number" name="qty" id="qty-val-<%= cart.item %>" maxlength="12" title="Quantity:" class="qty-val mtext-104 cl3 txt-center num-product" value="<%= cart.quantity %>"><span id="qty-val-<%= cart.item %>" class="qty-val"></span>
+										  <input type="number" name="qty" id="qty-val-<%= cart.item %>" maxlength="12" title="Quantity:" class="qty-val mtext-104 cl3 txt-center num-product" value="<%= cart.quantity %>" readonly><span id="qty-val-<%= cart.item %>" class="qty-val"></span>
 										  <button class="increase items-count btn-num-product-up cl8 hov-btn3 trans-04 flex-c-m" onclick="changeQuantity('<%= cart._id %>','<%=cart.item%>','<%=user._id%>','<%=index%>',1)"><i class="fs-16 zmdi zmdi-plus"></i></button>
 										</div>
 									</td>

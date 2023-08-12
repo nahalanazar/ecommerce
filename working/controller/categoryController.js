@@ -18,23 +18,27 @@ const loadAddCategory = async(req,res)=>{
 }
 
 const createCategory = async(req, res)=>{
-    try {
-      const existingCategory = await Category.findOne({name:req.body.name})
+  try {
+      // Use the regex option for case-insensitive search
+      const existingCategory = await Category.findOne({name: { $regex: new RegExp("^" + req.body.name.trim() + "$", "i") } });
+      
       if(existingCategory){
-        return res.render("addCategory",{message:"Category already exists"})
-      } 
+          return res.render("addCategory",{message:"Category already exists"});
+      }
+
       if (!req.body.name || req.body.name.trim().length === 0) {
-        return res.render("addCategory", { message: "Name is required" });
-    }
-       //await categoryHelper.createCategory(req.body)
-        const { name, description } = req.body;
-        await Category.create({ name, description });
-        res.redirect('/admin/categoryManagement')
-    } catch (error) {
-      console.log(error.message)
+          return res.render("addCategory", { message: "Name is required" });
+      }
+    
+      const { name, description } = req.body;
+      await Category.create({ name, description });
+      res.redirect('/admin/categoryManagement')
+  } catch (error) {
+      console.log(error.message);
       res.status(500).json({ error: 'Failed to create category' });
-    }
+  }
 }
+
 
 const loadUpdateCategory = async(req,res)=>{
     try {

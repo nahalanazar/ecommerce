@@ -119,9 +119,10 @@
                                                     <div>
                                                         <select id="category" name="category" class="form-select">
                                                             <% category.forEach(function(category) { %>
-                                                            <option value="<%= category._id %>"><%= category.name %></option>
+                                                                <option value="<%= category._id %>" <%= product.category && product.category.toString() === category._id.toString() ? 'selected' : '' %>><%= category.name %></option>
                                                             <% }); %>
                                                         </select>
+                                                        
                                                     </div>
                                                 </div>
                                 
@@ -135,43 +136,22 @@
                                                     <div><label class="form-label">Stock</label></div>
                                                     <div><input type="number" placeholder="0" class="form-control" name="stock" value="<%=product.stock%>"></div>
                                                 </div>
-                                
+
                                                 <!-- Images -->
-                                                <!-- Main Image -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="mainImage" class="form-label">Main Image</label></div>
-                                                    <div>
-                                                        <img src="./product_images/<%= product.images[0]%>" id="imgView1" alt="product image" width="100px" height="100px">
-                                                    </div>
-                                                </div>
-                                
-                                                <div class="form-group mb-4">
-                                                    <div>
-                                                        <input type="file" id="mainImage" name="images" class="form-control" onchange="viewImage(event, 'imgView1')">
-                                                    </div>
-                                                </div>
-                                
-                                                <!-- Second Image -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="secondImage" class="form-label">Second Image</label></div>
-                                                    <div>
-                                                        <img src="./product_images/<%= product.images[1]%>" id="imgView2" alt="product image" width="100px" height="100px">
-                                                    </div>
-                                                    <div>
-                                                        <input type="file" id="secondImage" name="images" class="form-control" onchange="viewImage(event, 'imgView2')">
-                                                    </div>
-                                                </div>
-                                
-                                                <!-- Third Image -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="thirdImage" class="form-label">Third Image</label></div>
-                                                    <div>
-                                                        <img src="./product_images/<%= product.images[2]%>" id="imgView3" alt="product image" width="100px" height="100px">
-                                                    </div>
-                                                    <div>
-                                                        <input type="file" id="thirdImage" name="images" class="form-control" onchange="viewImage(event, 'imgView3')">
-                                                    </div>
-                                                </div>
+<div class="form-group mb-4">
+    <div>
+        <label for="productImages" class="form-label">Product Images</label>
+    </div>
+    <div id="imagesPreviewContainer">
+        <% for(let i = 0; i < product.images.length; i++) { %>
+        <img src="./product_images/<%= product.images[i] %>" id="imgView<%= i+1 %>" alt="product image" width="100px" height="100px">
+        <% } %>
+    </div>
+    <div>
+        <input type="file" id="productImages" name="images" class="form-control" onchange="viewImages(event)" multiple>
+    </div>
+</div>
+
                                 
                                                 <!-- Hidden Input -->
                                                 <input type="hidden" name="id" value="<%= product._id %>">
@@ -196,9 +176,47 @@
 
 
     <script>
-        function viewImage(event, imageId) {
-            document.getElementById(imageId).src = URL.createObjectURL(event.target.files[0]);
+        function viewImages(event) {
+    const files = event.target.files;
+    const imagesPreviewContainer = document.getElementById("imagesPreviewContainer");
+
+    // Clear the existing previews
+    imagesPreviewContainer.innerHTML = '';
+
+    if (files.length > 3) {
+        alert('You can upload up to 3 images only.');
+        event.target.value = '';  // Clear the input
+        return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        // Validate file size
+        if (file.size > 2 * 1024 * 1024) {
+            alert('Each image should be less than 2MB in size.');
+            event.target.value = '';  // Clear the input
+            return;
         }
+
+        // Validate file type
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            alert('Only jpeg and png image types are allowed.');
+            event.target.value = '';  // Clear the input
+            return;
+        }
+
+        // Display image preview
+        const imgPreview = document.createElement('img');
+        imgPreview.src = URL.createObjectURL(file);
+        imgPreview.width = 100;
+        imgPreview.height = 100;
+        imgPreview.id = "imgView" + (i+1); // For example, imgView1, imgView2, etc.
+        imagesPreviewContainer.appendChild(imgPreview);
+    }
+}
+
     </script>
 </body>
 </html>

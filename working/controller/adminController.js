@@ -48,6 +48,7 @@ const loadDashboard = async(req, res) => {
 const logout = async(req, res) => {
    try {
     req.session.admin_id = null
+    req.session.destroy()
     res.redirect('/admin')
    } catch (error) {
     console.log(error.message)
@@ -67,7 +68,6 @@ const manageUser = async(req, res)=>{
 
 const blockUser = async(req,res)=>{
     try {
-      console.log("blocked");
       const id = req.body.userId
       await User.findByIdAndUpdate({_id:id},{$set:{is_blocked:true}})
       res.send({status:true})

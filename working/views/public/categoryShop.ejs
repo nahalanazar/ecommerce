@@ -322,9 +322,8 @@
 								</div>
 			
 								<div class="prd-bottom">
-									<a onclick="addtocart('<%=item._id%>')" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
+									<a href="javascript:void(0)" onclick="addtocart('<%=item._id%>')" class="flex-c-m stext-101 cl5 size-10 bg2 bor1 hov-btn1 p-2 trans-04" style="width: 150px;">
+										<i class="ti-bag"></i> Add To Cart
 									</a>
 									<!-- <a href="" class="social-info">
 										<span class="lnr lnr-heart"></span>
@@ -384,7 +383,7 @@
 			method: 'POST',
 	  
 			success: (response) => {
-			  if (response.status) {
+			  if (response.status==true) {
 				Swal.fire({
 				  title: 'Added To Cart',
 				  text: 'Your Product has been added to Cart',
@@ -392,6 +391,22 @@
 				  timer: 5000
 				})
 				
+			  }else if(response.status=='outOfStock'){
+				Swal.fire({
+				  title: 'Out of Stock',
+				  text: 'Product Out Of Stock',
+				  icon: 'error',
+				  timer: 5000
+				})
+			  }else if(response.status=='blocked'){
+				Swal.fire({
+				  title: 'You are blocked',
+				  icon: 'error',
+				  timer: 5000
+				})
+				setTimeout(() => {
+					window.location.href="/logout"
+				},5000)
 			  }
 			}
 		  })

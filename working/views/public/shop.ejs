@@ -321,12 +321,9 @@
 								</div>
 			
 								<div class="prd-bottom">
-									<button>
-										<a onclick="addtocart('<%=item._id%>')" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">add to bag</p>
-										</a>
-									</button>
+									<a href="javascript:void(0)" onclick="addtocart('<%=item._id%>')" class="flex-c-m stext-101 cl5 size-10 bg2 bor1 hov-btn1 p-2 trans-04" style="width: 150px;">
+										<i class="ti-bag"></i> Add To Cart
+									</a>
 									<!-- <a href="" class="social-info">
 										<span class="lnr lnr-heart"></span>
 										<p class="hover-text">Wishlist</p>
@@ -397,7 +394,6 @@
 			  }else if(response.status=='blocked'){
 				Swal.fire({
 				  title: 'You are blocked',
-				  
 				  icon: 'error',
 				  timer: 5000
 				})

@@ -21,20 +21,20 @@ const loadProducts = async(req,res)=>{
     }
   }
 
-  const createProduct = async(req, res) => {
+  const createProduct = async(req, res, next) => {
     try {
       const categories = await Category.find({})
       if (!req.body.name || req.body.name.trim().length === 0) {
-        return res.render("addProduct", { message: "Name is required",category:categories });
+        return res.status(400).send("Name is required");
       }
       if (!req.body.description || req.body.description.trim().length === 0) {
-        return res.render("addProduct", { message: "Description is required",category:categories });
+        return res.status(400).send("Description is required");
       }
       if(req.body.price<=0){
-        return res.render("addProduct", { message: "Product Price Should be greater than 0",category:categories });
+        return res.status(400).send("Product Price Should be greater than 0");
       }
       if(req.body.stock< 0 || req.body.stock.trim().length === 0 ){
-        return res.render("addProduct", { message: "Stock  Should be greater than 0",category:categories });
+        return res.status(400).send("Stock Should be greater than 0");
       }
 
       const images = req.files.map(file => file.filename);
@@ -42,8 +42,10 @@ const loadProducts = async(req,res)=>{
       res.redirect('/admin/productManagement');
     } catch (error) {
       console.log(error)
+      next(error)
     }
-  };
+  }
+
 
 
   const unListProduct = async(req,res)=>{

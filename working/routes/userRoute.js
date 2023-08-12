@@ -1,11 +1,11 @@
 const express = require('express')
+
 const userRoute = express.Router()
 
 const auth = require('../middleware/auth')
 
 userRoute.use(auth.checkSession)
 
-//const session = require("express-session")
 
 const userController = require('../controller/userController')
 const productController = require('../controller/productController')
@@ -36,30 +36,30 @@ userRoute.get('/shop', auth.isLogin, userController.shop)
 userRoute.get('/productPage', auth.isLogin, productController.productPage)
 userRoute.get('/categoryShop', auth.isLogin, userController.categoryPage)
 
-userRoute.get('/cart', auth.blocked, cartController.loadCart)
-userRoute.post('/addToCart/:id', auth.cartBlocked, cartController.addToCart)
+userRoute.get('/cart', auth.isLogin, auth.blocked, cartController.loadCart)
+userRoute.post('/addToCart/:id', auth.isLogin, auth.cartBlocked, cartController.addToCart)
 userRoute.delete('/delete-product-cart', auth.isLogin, cartController.deleteProduct)
 userRoute.put('/change-product-quantity', auth.isLogin, cartController.updateQuantity)
 
-userRoute.get('/profile', auth.isLogin, profileController.profile)
-userRoute.post('/editInfo', auth.isLogin, profileController.editInfo)
-userRoute.get('/profileAddress', auth.isLogin, profileController.profileAddress)
+userRoute.get('/profile', auth.isLogin, auth.blocked, profileController.profile)
+userRoute.post('/editInfo', auth.isLogin,  auth.blocked, profileController.editInfo)
+userRoute.get('/profileAddress', auth.isLogin, auth.blocked, profileController.profileAddress)
 userRoute.post('/submitAddress', auth.isLogin, profileController.submitAddress)
 userRoute.post('/updateAddress', auth.isLogin, profileController.editAddress)
 userRoute.get('/deleteAddress', auth.isLogin, profileController.deleteAddress)
 
-userRoute.get('/checkOut', auth.isLogin, orderController.checkOut)
+userRoute.get('/checkOut', auth.isLogin, auth.blocked, orderController.checkOut)
 userRoute.post('/checkOutAddress', auth.isLogin, profileController.checkOutAddress)
-userRoute.post('/checkOut', auth.isLogin, orderController.postCheckOut)
+userRoute.post('/checkOut', auth.isLogin, auth.cartBlocked, orderController.postCheckOut)
 
 userRoute.post('/changeDefaultAddress', auth.isLogin, orderController.changePrimary)
-userRoute.get('/profileOrderList', auth.isLogin, orderController.orderList)
+userRoute.get('/profileOrderList', auth.isLogin, auth.blocked, orderController.orderList)
 userRoute.put('/cancelOrder', auth.isLogin, orderController.cancelOrder)   
-userRoute.get('/orderDetails', auth.isLogin, orderController.orderDetails)
+userRoute.get('/orderDetails', auth.isLogin, auth.blocked, orderController.orderDetails)
 
 
 userRoute.get('/error_500', userController.error500)
 userRoute.get('/error_403', userController.error403)
+userRoute.get('/success', userController.success)
 
 module.exports = userRoute
-

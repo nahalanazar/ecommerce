@@ -100,8 +100,8 @@
                                         <td><%=order.orders.createdAt.toLocaleString()%></td>
                                         <td class="text-end">
                                             <a href="/admin/orderDetails?id=<%=order.orders._id%>" class="btn btn-md btn-primary rounded font-sm">Detail</a>
-                                            <div class="dropdown">
-                                                <a href="" data-bs-toggle="dropdown" class="btn btn-primary rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                            <div class="dropdown  pt-2">
+                                                <a href="" data-bs-toggle="dropdown" class="btn btn-md btn-primary rounded font-sm">Status</a>
                                                 <div class="dropdown-menu">
                                                     <%if(order.orders.orderStatus=='Placed'||order.orders.orderStatus=='Cancel Declined'){%>
                                                         <a class="dropdown-item" onclick="orderStatus('<%=order.orders._id%>','Dispatched')">Dispatched</a>

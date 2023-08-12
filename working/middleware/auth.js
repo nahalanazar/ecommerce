@@ -28,7 +28,7 @@ const blocked = async(req, res, next) => {
     try {
         if(userData.is_blocked){
             res.redirect('/logout')
-            res.redirect('/error_403')
+            //res.redirect('/error_403')
         }
         next()
     } catch (error) {

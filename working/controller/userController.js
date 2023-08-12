@@ -376,6 +376,14 @@ const insertUser = async (req, res) => {
     }
   }
 
+  const success = async (req, res) => {
+    try {
+      res.render('public/success')
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
 
 
 module.exports= {
@@ -394,5 +402,6 @@ module.exports= {
     shop,
     categoryPage,
     error500,
-    error403
+    error403,
+    success
 }

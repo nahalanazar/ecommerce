@@ -3,6 +3,15 @@
 <head>
 	<title>Fashion Palace</title>
 	<%- include("./includes/template-head-part") %>
+	<link rel="icon" type="image/png" href="/public/images/icons/favicon.png"/>
+    <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.1/font/bootstrap-icons.css">
+
 	<style>
 		.img_banner {
   			width: 350px;
@@ -456,10 +465,10 @@
 									</div>
 				
 									<div class="prd-bottom">
-										<a onclick="addtocart('<%=item._id%>')" class="social-info">
-											<span class="ti-bag"></span>
-											<p class="hover-text">Add To Cart</p>
+										<a href="javascript:void(0)" onclick="addtocart('<%=item._id%>')" class="flex-c-m stext-101 cl5 size-10 bg2 bor1 hov-btn1 p-2 trans-04" style="width: 150px;">
+											<i class="ti-bag"></i> Add To Cart
 										</a>
+										
 										<!-- <a href="" class="social-info">
 											<span class="lnr lnr-heart"></span>
 											<p class="hover-text">Wishlist</p>

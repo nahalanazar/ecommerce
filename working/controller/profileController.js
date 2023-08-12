@@ -53,7 +53,6 @@ const profileAddress = async (req, res) => {
 }
 
 const submitAddress = async (req, res) => {
-    console.log("addressSave");
     try {
         const userId = res.locals.user._id;
         const name = req.body.name;
@@ -150,8 +149,6 @@ const editAddress = async (req, res) => {
       if (!updatedUser) {
         await profileHelper.createAddress(userId, newAddress);
       }
-  
-  
       res.redirect("/checkOut"); 
     } catch (error) {
       console.log(error.message);

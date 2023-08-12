@@ -9,7 +9,6 @@ const orderSchema = new mongoose.Schema({
     orders:{
       type:Array
     }
-    
   });
 
   const Order = mongoose.model('Order', orderSchema);

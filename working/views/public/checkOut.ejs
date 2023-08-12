@@ -383,14 +383,14 @@
                     })
                 } else if (response.codStatus == true) {
                     console.log(response,'status');
-                    Swal.fire({
-                    title: 'Order Placed!',
-                    text: 'Your order has been placed successfully.',
-                    icon: 'success',
-                    timer: 5000
-                    }).then(() => {
-                    location.href = '/'
-                    })
+                    // Swal.fire({
+                    // title: 'Order Placed!',
+                    // text: 'Your order has been placed successfully.',
+                    // icon: 'success',
+                    // timer: 5000
+                    // }).then(() => 
+                   {location.href = '/success'
+                    }
                 }else if (response.orderStatus== true) {
                     Swal.fire({
                     title: 'Order Placed!',
@@ -409,8 +409,16 @@
                     }).then(() => {
                     location.href = '/'
                     })
-                }
-                else {
+                }else if(response.status=='blocked'){
+				Swal.fire({
+				  title: 'You are blocked',
+				  icon: 'error',
+				  timer: 5000
+				})
+				setTimeout(() => {
+					window.location.href="/logout"
+				},5000)
+			  }else {
                     try {
                     razorpay(response)
                     console.log(response, '1');

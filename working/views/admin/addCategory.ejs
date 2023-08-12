@@ -75,7 +75,11 @@
                   <div class="card-body p-4">
                     <!-- Main content -->
                     <main class="container my-5">
-                        <h2 class="mb-5 text-center text-secondary">Add New Category</h2>
+                        <h2 class="mb-3 text-center text-secondary">Add New Category</h2>
+                          <!-- Error message -->
+                          <div class="text-center mt-2">
+                            <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
+                          </div>
                         <form action="/admin/addCategory" method="post">
                             <div class="card shadow-lg">
                                 <div class="card-body">
@@ -101,10 +105,7 @@
                             </div>
                         </form>
                         
-                        <!-- Error message -->
-                        <div class="text-center mt-5">
-                            <p class="text-danger"><%=(typeof message!=='undefined')?message:""%></p>
-                        </div>
+
                     </main>
                   </div>
                 </div>
