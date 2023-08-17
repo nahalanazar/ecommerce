@@ -9,6 +9,7 @@ adminRoute.set('views','./views/admin')
 const adminController = require('../controller/adminController')
 const categoryController = require('../controller/categoryController')
 const productController = require('../controller/productController')
+const couponController = require('../controller/couponController')
 const multer = require('../multer/multer')
 
 adminRoute.get('/', adminController.loadLogin)
@@ -27,7 +28,6 @@ adminRoute.post('/updateCategory', auth.isLogin, categoryController.updateCatego
 adminRoute.get('/unListCategory', auth.isLogin, categoryController.unListCategory)
 adminRoute.get('/reListCategory', auth.isLogin, categoryController.reListCategory)
 
-
 adminRoute.get('/productManagement', auth.isLogin, productController.displayProduct)
 adminRoute.get('/product', auth.isLogin, productController.loadProducts) 
 adminRoute.post('/addProduct', multer.upload, productController.createProduct)
@@ -41,6 +41,12 @@ adminRoute.put('/orderStatus', adminController.changeStatus)
 adminRoute.put('/cancelOrder', adminController.cancelOrder)
 adminRoute.put('/returnOrder', adminController.returnOrder)
 adminRoute.get('/orderDetails', auth.isLogin, adminController.orderDetails)
+
+adminRoute.get('/couponList', auth.isLogin, couponController.couponList)
+adminRoute.get('/addCoupon', auth.isLogin, couponController.loadAddCoupon)
+adminRoute.get('/generateCouponCode', auth.isLogin, couponController.generateCouponCode)
+adminRoute.post('/addCoupon', auth.isLogin, couponController.addCoupon)
+adminRoute.delete('/removeCoupon', auth.isLogin, couponController.removeCoupon)
 
 // Error-handling middleware
 adminRoute.use((error, req, res, next) => {

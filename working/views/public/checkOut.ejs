@@ -64,8 +64,6 @@
                             <h1>Please Add An Address</h1>
                         </div>
                     <%}%>
-
-                    
                     </div>
                 </div>
             </form>
@@ -85,13 +83,11 @@
                 </div>
             </div>
 
-
             <!-- Button trigger modal -->
 
-  
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" style="margin-top: 150px ;">
+                  <div class="modal-dialog" style="margin-top: 150px ;">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">ADDRESSES</h5>
@@ -125,14 +121,12 @@
                                 </div>
                             </div>
                         </div>
-                    
-                        
                     </div>
-                    </div>
+                  </div>
                 </div>
 
                 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" style="margin-top: 150px ;">
+                  <div class="modal-dialog" style="margin-top: 150px ;">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add Address</h5>
@@ -159,12 +153,9 @@
                                 </div>
                             </div>
                         </div>
-                    
-                        
                     </div>
-                    </div>
+                  </div>
                 </div>
-
         </div>
 
 
@@ -187,9 +178,9 @@
                                 <% }) %>
                             </ul>   
                             <ul class="list list_2">
-                                <!-- <li><a href="#">Subtotal <span id="subTotal">₹<%=total.cartTotal%></span></a></li> -->
-                                <!-- <li><a href="#">Discount  <span id="couponOffer"></span></a></li> -->
-                                <li class="p-t-10"><b>Total</b> <span id="total"><b>₹<%=total.cartTotal%></b></span></li>
+                                <li><a href="#">Subtotal <span id="subTotal">₹<%=total.cartTotal%></span></a></li>
+                                <li><a href="#">Discount  <span id="couponOffer"></span></a></li>
+                                <li class="p-t-10"><b>Total: <span id="total"></span></b></li>
                                 <input type="hidden" name="discountPercentage" id="discountPercentage" value="0">
                                 <input type="hidden" name="discountAmount" id="discountAmount" value="0">
                                 <input type="hidden" name="total" value="<%=total.cartTotal%>" id="totalVal" >
@@ -248,7 +239,8 @@
     
     <!-- Footer -->
     <%- include("./includes/template-footer-and-scripts") %>
-
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
     <!-- <div class="pop-up-list">
         <button class="pop-up-button"><i class="fa fa-times" aria-hidden="true"></i>
@@ -363,78 +355,309 @@
 
     <script>
 
-        function proceedToPayment() {
-            event.preventDefault()
-            $.ajax({
-                url: "/checkOut",
-                method: 'POST',
-                data: $('#checkOut-form').serialize(),
-                success: (response) => {
-                console.log(response,'+++++=========== ');
-                if (response.error) {
-                    console.log(response,'error--------------------------------');
+        // function proceedToPayment() {
+        //     event.preventDefault()
+        //     $.ajax({
+        //         url: "/checkOut",
+        //         method: 'POST',
+        //         data: $('#checkOut-form').serialize(),
+        //         success: (response) => {
+        //         if (response.error) {
+        //             console.log(response,'error--------------------------------');
+        //             console.log(response.error.message,'---------------');
+        //             if (response.error === "Insufficient wallet balance!") {
+        //                 console.log("insufficient");
+        //                 Swal.fire({
+        //                     title: 'Error!',
+        //                     text: 'Insufficient wallet balance!',
+        //                     icon: 'error',
+        //                     timer: 5000
+        //                 });
+        //                 return;  // Prevent further processing
+        //             }
+        //             Swal.fire({
+        //             title: 'Error!',
+        //             text: response.error,
+        //             icon: 'error',
+        //             timer: 5000
+        //             })
+        //         } else if (response.codStatus == true) {
+        //             console.log(response,'status');
+        //             // Swal.fire({
+        //             // title: 'Order Placed!',
+        //             // text: 'Your order has been placed successfully.',
+        //             // icon: 'success',
+        //             // timer: 5000
+        //             // }).then(() => 
+        //            {location.href = '/success'
+        //             }
+        //         }else if (response.orderStatus== true) {
+        //             Swal.fire({
+        //             title: 'Order Placed!',
+        //             text: 'Your order has been placed successfully.',
+        //             icon: 'success',
+        //             timer: 5000
+        //             }).then(() => {
+        //             location.href = '/'
+        //             })
+        //         }else if (response.status== "OrderFailed") {
+        //             Swal.fire({
+        //             title: 'Order Failed!',
+        //             text: 'Your Product is Out of Stock .Please Check after some time',
+        //             icon: 'error',
+        //             timer: 5000
+        //             }).then(() => {
+        //             location.href = '/'
+        //             })
+        //         }else if(response.status=='blocked'){
+		// 		Swal.fire({
+		// 		  title: 'You are blocked',
+		// 		  icon: 'error',
+		// 		  timer: 5000
+		// 		})
+		// 		setTimeout(() => {
+		// 			window.location.href="/logout"
+		// 		},5000)
+		// 	  }else {
+        //             try {
+        //             razorpay(response)
+        //             } catch (error) {
+        //             Swal.fire({
+        //                 title: 'Error!',
+        //                 text: error.message,
+        //                 icon: 'error',
+        //                 timer: 5000
+        //             })
+        //             }
+        //         } 
+        //         }
+        //     })
+        // }
 
-                    console.log(response.error.message,'---------------');
-                    Swal.fire({
-                    title: 'Error!',
-                    text: response.error,
-                    icon: 'error',
-                    timer: 5000
-                    })
-                } else if (response.codStatus == true) {
-                    console.log(response,'status');
-                    // Swal.fire({
-                    // title: 'Order Placed!',
-                    // text: 'Your order has been placed successfully.',
-                    // icon: 'success',
-                    // timer: 5000
-                    // }).then(() => 
-                   {location.href = '/success'
+        function proceedToPayment() {
+                event.preventDefault();
+                $.ajax({
+                    url: "/checkOut",
+                    method: 'POST',
+                    data: $('#checkOut-form').serialize(),
+                    success: function (response) {
+                        if (response.error) {
+                            if (response.error === "Insufficient wallet balance!") {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Insufficient wallet balance!',
+                                    icon: 'error',
+                                    timer: 5000
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: response.error,
+                                    icon: 'error',
+                                    timer: 5000
+                                });
+                            }
+                        } else if (response.codStatus == true) {
+                            location.href = '/success';
+                        } else if (response.orderStatus == true) {
+                           location.href = '/success';
+                        } else if (response.status == "OrderFailed") {
+                            Swal.fire({
+                                title: 'Order Failed!',
+                                text: 'Your Product is Out of Stock. Please Check after some time',
+                                icon: 'error',
+                                timer: 5000
+                            }).then(() => {
+                                location.href = '/'
+                            });
+                        } else if (response.status == 'blocked') {
+                            Swal.fire({
+                                title: 'You are blocked',
+                                icon: 'error',
+                                timer: 5000
+                            });
+                            setTimeout(() => {
+                                window.location.href = "/logout"
+                            }, 5000);
+                        } else {
+                            try {
+                                razorpay(response);
+                            } catch (error) {
+                                console.log(error.message)
+                                // Swal.fire({
+                                //     title: 'Error!',
+                                //     text: error.message,
+                                //     icon: 'error',
+                                //     timer: 5000
+                                // });
+                            }
+                        }
+                    },
+                    error: function (jqXHR) {
+                        try {
+                            let errResponse = JSON.parse(jqXHR.responseText);
+                            if (errResponse.error && errResponse.error === "Insufficient wallet balance!") {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Insufficient wallet balance!',
+                                    icon: 'error',
+                                    timer: 5000
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An unexpected error occurred.',
+                                    icon: 'error',
+                                    timer: 5000
+                                });
+                            }
+                        } catch (err) {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'An unexpected error occurred.',
+                                icon: 'error',
+                                timer: 5000
+                            });
+                        }
                     }
-                }else if (response.orderStatus== true) {
-                    Swal.fire({
-                    title: 'Order Placed!',
-                    text: 'Your order has been placed successfully.',
-                    icon: 'success',
-                    timer: 5000
-                    }).then(() => {
-                    location.href = '/'
-                    })
-                }else if (response.status== "OrderFailed") {
-                    Swal.fire({
-                    title: 'Order Failed!',
-                    text: 'Your Product is Out of Stock .Please Check after some time',
-                    icon: 'error',
-                    timer: 5000
-                    }).then(() => {
-                    location.href = '/'
-                    })
-                }else if(response.status=='blocked'){
-				Swal.fire({
-				  title: 'You are blocked',
-				  icon: 'error',
-				  timer: 5000
-				})
-				setTimeout(() => {
-					window.location.href="/logout"
-				},5000)
-			  }else {
-                    try {
-                    razorpay(response)
-                    console.log(response, '1');
-                    console.log(response.amount, '2');
-                    } catch (error) {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: error.message,
-                        icon: 'error',
-                        timer: 5000
-                    })
+                });
+            }
+
+
+        function applyCoupon(total) {
+            event.preventDefault();
+            let couponCode = document.getElementById('couponCode').value
+            $.ajax({
+                url: '/verifyCoupon/' + couponCode,
+                method: 'GET',
+                success: (response) => {
+                    if (response.status == true) {
+
+                        $.ajax({
+                            url: '/applyCoupon/' + couponCode,
+                            method: 'GET',
+                            success: (response) => {
+                                console.log(response, '---');
+                                if (response.status == true) {
+                                    document.getElementById('couponErr').style.color = '#19ff11'
+                                    document.getElementById('couponErr').innerText = "Coupon Applied SuccessFully"
+                                    // document.getElementById('subTotal').innerText = total - response.discountAmount
+                                    document.getElementById('total').innerText = '₹' + Math.floor(total - response.discountAmount)
+                                    document.getElementById('totalVal').value = Math.floor(total - response.discountAmount)
+                                    document.getElementById('couponOffer').innerText = response.discount + '%'
+                                    document.getElementById('discountPercentage').value = response.discount
+                                    document.getElementById('discountAmount').value = Math.ceil(response.discountAmount)
+
+
+                                } else {
+                                    document.getElementById('couponErr').style.color = "#ff0707"
+                                    document.getElementById('couponErr').innerText = response.message
+                                }
+
+                            }
+                        })
+                    } else {
+                        document.getElementById('couponErr').style.color = "#ff0707"
+                        document.getElementById('couponErr').innerText = response.message
+
+                        setTimeout(function () {
+                            location.reload()
+                        }, 5000)
                     }
-                } 
+
                 }
             })
         }
+
+        function razorpay(order) {
+           
+            var options = {
+                "key": "rzp_test_pMTo2NSV4LjyXl", // Enter the Key ID generated from the Dashboard
+                "amount": order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                "currency": "INR",
+                "name": "Fashion Palace",
+                "description": "Test Transaction",
+                "image": "../images/logo.png",
+                "order_id": order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                "handler": function (response) {
+                    console.log(response, '++++++++++', order);
+                    verifypayment(response, order)
+                },
+
+                "modal": {
+                    "ondismiss": function () {
+                        console.log('Payment window closed');
+                        paymentFailed(order);
+                    }
+                },
+
+                "prefill": {
+                    "name": "Nahala",
+                    "email": "nahala@example.com",
+                    "contact": "9876590123"
+                },
+                "notes": {
+                    "address": "Razorpay Corporate Office"
+                },
+                "theme": {
+                    "color": "#3399cc"
+                }
+            }
+            var rzp1 = new Razorpay(options)
+            rzp1.open();
+            e.preventDefault()
+        }
+
+        function verifypayment(payment, order, paymentId) {
+            console.log('12121212121212', payment, order, paymentId, '-------------1212121212121212--');
+            $.ajax({
+                url: 'verifyPayment',
+                method: 'post',
+                data: {
+                    payment,
+                    order,
+                    paymentId
+                },
+
+                success: (response) => {
+                    if (response.status) {
+                        {
+                            location.href = '/success'
+                        }
+                    } else {
+
+                    }
+
+                }
+            })
+        }
+
+        function paymentFailed(order) {
+                $.ajax({
+                    url: 'paymentFailed',
+                    method: 'post',
+                    data: {
+                        order
+                    },
+
+                    success: (response) => {
+                        if (response.status) {
+                            // Swal.fire({
+                            //     title: 'Order Failed!',
+                            //     text: 'Your order is failed.',
+                            //     icon: 'error',
+                            //     timer: 5000
+                            // }).then(() => {
+                            //     location.href = '/'
+                            // })
+                            location.href = '/failed'
+                        } else {
+
+                        }
+
+                    }
+                })
+            }
 
     </script>
 

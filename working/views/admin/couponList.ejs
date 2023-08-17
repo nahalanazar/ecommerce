@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fashion Palace</title>
+    <link rel="icon" type="image/png" href="/public/images/icons/favicon.png" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+
+    <style>
+        .narrow-column {
+            width: 20px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            color: #2e21e6;
+            border-color: #ddd;
+            background-color: #fff;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.next {
+            background-color: grey;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button.previous {
+            background-color: gray;
+            color: white;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            margin-right: 10px;
+            /* Add spacing between all paginate buttons */
+            margin-left: 10px;
+        }
+
+        .dataTables_paginate {
+            display: flex !important;
+            justify-content: center !important;
+            padding: 40px 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <%- include("./includes/sidebar.ejs") %>
+            <!--  Sidebar End -->
+            <!--  Main wrapper -->
+            <div class="body-wrapper">
+                <!--  Header Start -->
+                <%- include("./includes/header.ejs") %>
+                    <!--  Header End -->
+                    <div class="container-fluid">
+                        <!--  Row 1 -->
+
+                        <div class="row">
+
+                            <div class="col-lg-12 d-flex align-items-stretch">
+                                <div class="card w-100">
+                                    <div class="card-body p-4">
+                                        <h5 class="card-title fw-semibold mb-4">Coupon List</h5>
+                                        <a href="/admin/addCoupon"><span class="badge bg-primary rounded-3 fw-semibold mb-2">New Coupon</span></a>
+                                        <div class="table-responsive">
+                                            <table class="table mb-0 align-middle" id="myTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="narrow-column">SI No.</th>
+                                                        <th class="narrow-column">Coupon Code</th>
+                                                        <th class="narrow-column">Min. Purchase Amount</th>
+                                                        <th class="narrow-column">Discount %</th>
+                                                        <th class="narrow-column">Max Discount Amount</th>
+                                                        <th class="narrow-column">Expiry Date</th>
+                                                        <th class="text-end narrow-column"> Action </th>
+                                                    </tr>
+                                                </thead>
+                                                <% let i=1 %>
+                                                    <tbody>
+                                                        <% couponList.forEach((item, index)=> { %>
+
+                                                            <tr>
+                                                                <td scope="row">
+                                                                    <%= i %>
+                                                                </td>
+                                                                <td>
+                                                                   <%= item.couponCode %>
+                                                                </td>
+                                                                <td width="20%">
+                                                                    <i class="fa fa-inr" aria-hidden="true"></i>
+                                                                    <%= item.minPurchase %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= item.minDiscountPercentage %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= item.maxDiscountValue %>
+                                                                </td>
+                                                                <td>
+                                                                    <%= new Date(item.validity).toDateString() %>
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-danger" onclick="removeCoupon('<%= item._id %>')">Remove</button>
+                                                                </td>
+                                                            </tr>
+                                                            <% i++; %>
+                                                        <% }) %>
+                                                    </tbody>
+                                            </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/admin/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+    <script>
+        $(document).ready(function () {
+            // $.noConflict();
+
+            var table = $('#myTable').DataTable({
+                "paging": true,          // Enable pagination
+                "pageLength": 10,        // Number of rows per page
+                "lengthMenu": [10, 25, 50, 75, 100],  // Dropdown options for rows per page
+            });
+
+            table.on('draw', function () {
+                $(".paginate_button:not(.previous):not(.next)").addClass("number_button");
+            });
+        });
+    </script>
+
+    <script>
+        function removeCoupon(couponId){
+            Swal.fire({
+                title: 'Are you sure to Delete?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, Delete!',
+                timer: 4000
+            }).then((result) => {
+                if (result.isConfirmed){
+                    $.ajax({
+                        url: '/admin/removeCoupon',
+                        method: 'delete',
+                        data: {
+                            couponId: couponId
+                        },
+                        success: (successResponse) => {
+                            if (successResponse) {
+                                location.reload()
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+
+    <!-- <script src="/admin/assets/libs/jquery/dist/jquery.min.js"></script> -->
+    <script src="/admin/assets/js/sidebarmenu.js"></script>
+    <script src="/admin/assets/js/app.min.js"></script>
+    <script src="/admin/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="/admin/assets/libs/simplebar/dist/simplebar.js"></script>
+    <script src="/admin/assets/js/dashboard.js"></script>
+</body>
+    
+</html>

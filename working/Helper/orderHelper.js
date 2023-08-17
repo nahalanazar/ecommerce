@@ -4,6 +4,13 @@ const Cart = require('../models/cartModel')
 const Address = require('../models/addressModel')
 const User = require('../models/userModel')
 const { ObjectId } = require("mongodb")
+const Razorpay = require('razorpay')
+require('dotenv').config();
+
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 
 const checkStock = async(userId)=>{
     const products = await Cart.findOne({user:userId})
@@ -38,46 +45,174 @@ const updateStock = async(userId)=>{
     return true
 }
 
-const placeOrder = (data,user)=>{
-    console.log(data);
-    try {
-        return new Promise(async (resolve, reject) => {
+// const placeOrder = (data,user)=>{
+//     console.log(data);
+//     try {
+//         return new Promise(async (resolve, reject) => {
+//             const productDetails = await Cart.aggregate([
+//             {
+//                 $match: {
+//                 user: user.toString(),
+//                 },
+//             },
+//             {
+//                 $unwind: "$cartItems",
+//             },
+//             {
+//                 $project: {
+//                 item: "$cartItems.productId",
+//                 quantity: "$cartItems.quantity",
+//                 },
+//             },
+//             {
+//                 $lookup: {
+//                 from: "products",
+//                 localField: "item",
+//                 foreignField: "_id",
+//                 as: "productDetails",
+//                 },
+//             },
+//             {
+//                 $unwind: "$productDetails",
+//             }, {
+//                 $project: {
+//                 productId: "$productDetails._id",
+//                 productName: "$productDetails.name",
+//                 productPrice: "$productDetails.price",
+//                 quantity: "$quantity",
+//                 category: "$productDetails.category",
+//                 image: "$productDetails.images",
+//                 },
+//             },
+//             ]);
+//             const addressData = await Address.aggregate([
+//                 {
+//                 $match: { user: user.toString() },
+//                 },
+//                 {
+//                 $unwind: "$addresses",
+//                 }
+//                 ,
+//                 {
+//                 $match: { "addresses._id": new ObjectId(data.address) },
+//                 },
+//                 {
+//                 $project: { item: "$addresses" },
+//                 },
+//             ]);
+//             let status,orderStatus
+//             if(data.paymentOption == 'cod'){
+//                 (status = "Success"), (orderStatus = "Placed");
+//             }else if (data.paymentOption === "wallet") {
+//                 const userData = await User.findById({ _id:user });
+//                 if (userData.wallet < data.total) {
+//                   flag = 1;
+//                   reject(new Error("Insufficient wallet balance!"));
+//                   return
+//                 } else  {
+//                   userData.wallet -= data.total;
+//                   await userData.save();
+//                   (status = "Success"), (orderStatus = "Placed");
+
+//                   const walletTransaction = {
+//                     date:new Date(),
+//                     type:"Debit",
+//                     amount:data.total,
+//                   }
+                  
+//                   const walletupdated = await User.updateOne(
+//                     { _id: user },
+//                     {
+//                       $push: { walletTransaction: walletTransaction },
+//                     }
+//                   )
+//                 }
+//               }else {
+//                 (status = "Pending"), (orderStatus = "Pending");
+//             }
+
+//             const orderData = {
+//                 _id: new ObjectId(),
+//                 name: addressData[0].item.name,
+//                 paymentStatus: status,
+//                 paymentMethod: data.paymentOption,
+//                 productDetails: productDetails,
+//                 shippingAddress: addressData[0],
+//                 orderStatus: orderStatus,
+//                 totalPrice: data.total,
+//                 discountPercentage:data.discountPercentage,
+//                 discountAmount:data.discountAmount,
+//                 couponCode:data.couponCode,
+//                 cancelStatus:'false',
+                
+//                 createdAt:new Date()
+//             };
+//             const order = await Order.findOne({ user:user});
+//             if (order) {
+//                 await Order.updateOne(
+//                 { user: user },
+//                 {
+//                     $push: { orders: orderData },
+//                 }
+//                 ).then((response) => {
+//                 resolve(response);
+//                 });
+//             } else {
+//                 const newOrder = Order({
+//                 user: user,
+//                 orders: orderData,
+//                 });
+//                 await newOrder.save().then((response) => {
+//                     resolve(response);
+//                 });
+//           }
+//         });
+//     } catch (error) {
+//         console.log(error.message)
+//     }
+// }
+
+
+const placeOrder = (data, user) => {
+    return new Promise(async (resolve, reject) => {
+        try {
             const productDetails = await Cart.aggregate([
-            {
-                $match: {
-                user: user.toString(),
-                },
-            },
-            {
-                $unwind: "$cartItems",
-            },
-            {
-                $project: {
-                item: "$cartItems.productId",
-                quantity: "$cartItems.quantity",
-                },
-            },
-            {
-                $lookup: {
-                from: "products",
-                localField: "item",
-                foreignField: "_id",
-                as: "productDetails",
-                },
-            },
-            {
-                $unwind: "$productDetails",
-            }, {
-                $project: {
-                productId: "$productDetails._id",
-                productName: "$productDetails.name",
-                productPrice: "$productDetails.price",
-                quantity: "$quantity",
-                category: "$productDetails.category",
-                image: "$productDetails.images",
-                },
-            },
+              {
+                  $match: {
+                  user: user.toString(),
+                  },
+              },
+              {
+                  $unwind: "$cartItems",
+              },
+              {
+                  $project: {
+                  item: "$cartItems.productId",
+                  quantity: "$cartItems.quantity",
+                  },
+              },
+              {
+                  $lookup: {
+                  from: "products",
+                  localField: "item",
+                  foreignField: "_id",
+                  as: "productDetails",
+                  },
+              },
+              {
+                  $unwind: "$productDetails",
+              }, {
+                  $project: {
+                  productId: "$productDetails._id",
+                  productName: "$productDetails.name",
+                  productPrice: "$productDetails.price",
+                  quantity: "$quantity",
+                  category: "$productDetails.category",
+                  image: "$productDetails.images",
+                  },
+              },
             ]);
+
             const addressData = await Address.aggregate([
                 {
                 $match: { user: user.toString() },
@@ -93,10 +228,32 @@ const placeOrder = (data,user)=>{
                 $project: { item: "$addresses" },
                 },
             ]);
-            let status,orderStatus
-            if(data.paymentOption == 'cod'){
+
+            let status, orderStatus;
+
+            if (data.paymentOption == 'cod') {
                 (status = "Success"), (orderStatus = "Placed");
-            }else {
+            } else if (data.paymentOption === "wallet") {
+                const userData = await User.findById({ _id: user });
+                if (userData.wallet < data.total) {
+                    return reject(new Error("Insufficient wallet balance!"));
+                } else {
+                    userData.wallet -= data.total;
+                    await userData.save();
+                    (status = "Success"), (orderStatus = "Placed");
+
+                    const walletTransaction = {
+                        date: new Date(),
+                        type: "Debit",
+                        amount: data.total,
+                    }
+
+                    await User.updateOne(
+                        { _id: user },
+                        { $push: { walletTransaction: walletTransaction } }
+                    );
+                }
+            } else {
                 (status = "Pending"), (orderStatus = "Pending");
             }
 
@@ -115,30 +272,31 @@ const placeOrder = (data,user)=>{
                 cancelStatus:'false',
                 
                 createdAt:new Date()
-            };
-            const order = await Order.findOne({ user:user});
+            }
+
+            const order = await Order.findOne({ user: user });
             if (order) {
                 await Order.updateOne(
-                { user: user },
-                {
-                    $push: { orders: orderData },
-                }
+                    { user: user },
+                    { $push: { orders: orderData } }
                 ).then((response) => {
-                resolve(response);
+                    resolve(response);
                 });
             } else {
                 const newOrder = Order({
-                user: user,
-                orders: orderData,
+                    user: user,
+                    orders: orderData,
                 });
                 await newOrder.save().then((response) => {
                     resolve(response);
                 });
-                }
-        });   
-    } catch (error) {
-        console.log(error.message)
-    }
+            }
+
+        } catch (error) {
+            console.log(error.message)
+            reject(error); // This will send the error back up to the calling function
+        }
+    });
 }
 
 const cancelOrder = async(orderId,status)=>{
@@ -213,12 +371,92 @@ const getOrderList = (page, limit) => {
   });
 };
 
+const generateRazorpay = (userId, total)=> {
+  try {
+    return new Promise(async (resolve, reject) => {
+      let orders = await Order.find({ user: userId });
+
+      let order = orders[0].orders.slice().reverse();
+    
+      let orderId = order[0]._id;
+
+      var options = {
+        amount: total * 100, 
+        currency: "INR",
+        receipt: "" + orderId,
+      };
+      instance.orders.create(options, function (err, order) {
+        if (err) {
+          console.log(err);
+          reject(err)
+        } else {
+          resolve(order);
+        }
+      });
+    });
+  } catch (error) { 
+    console.log(error.message);
+  }
+}
+
+const verifyPayment =  async(details) => {
+  try {
+    await Order.updateOne({})
+
+    let key_secret = process.env.RAZORPAY_SECRET;
+    return new Promise((resolve, reject) => {
+      const crypto = require("crypto");
+      let hmac = crypto.createHmac("sha256", key_secret);
+
+      hmac.update(
+        details.payment.razorpay_order_id +
+          "|" +
+          details.payment.razorpay_payment_id
+      );
+      hmac = hmac.digest("hex");
+      if (hmac == details.payment.razorpay_signature) {
+        resolve();
+      } else {
+        console.log('no matchhhhhhhhhhhhh');
+        reject("not match");
+      }
+    });
+  } catch (error) {
+    console.log(error.message);
+  }
+}
+
+const changePaymentStatus =  (userId, orderId,razorpayId) => {
+  try {
+    return new Promise(async (resolve, reject) => {
+      await Order.updateOne(
+        { "orders._id": new ObjectId(orderId) },
+        {
+          $set: {
+            "orders.$.orderStatus": "Placed",
+            "orders.$.paymentStatus": "Success",
+            "orders.$.razorpayId": razorpayId
+          },
+        }
+      ),
+        await updateStock(userId)
+        Cart.deleteMany({ user: userId }).then(() => {
+          resolve();
+        });
+    });
+  } catch (error) { 
+    console.log(error.message);
+  }
+}
 
 module.exports = {
-    checkStock,
-    updateStock,
-    placeOrder,
-    cancelOrder,
-    findOrder,
-    getOrderList
+  checkStock,
+  updateStock,
+  placeOrder,
+  cancelOrder,
+  findOrder,
+  getOrderList,
+  generateRazorpay,
+  verifyPayment,
+  changePaymentStatus
 }

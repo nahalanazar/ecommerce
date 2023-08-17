@@ -17,11 +17,6 @@ mongoose.connect(mongoURI, {
     console.log("MongoDB Connected");
   });
 
-// const store = new MongoDBSession({
-//   uri: mongoURI,
-//   collection: "mySessions",
-// });
-
 const userStore = new MongoDBSession({
   uri: mongoURI,
   collection: "userSessions",
@@ -47,7 +42,8 @@ const adminSession = session({
   saveUninitialized: true,
   store: adminStore,
   name: 'admin_sid',
-  cookie: { path: '/admin' }});
+  cookie: { path: '/admin' }
+});
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
@@ -56,26 +52,13 @@ const adminSession = session({
   const userRouter = require('./routes/userRoute');
   const adminRouter = require('./routes/adminRoute');
   
-  // app.use('/', userSession, userRouter);
-  // app.use('/admin', adminSession, adminRouter);
-  
   app.use('/admin', (req, res, next) => {
     return next();
-}, adminSession, adminRouter);
+  }, adminSession, adminRouter);
 
-app.use('/', (req, res, next) => {
+  app.use('/', (req, res, next) => {
     return next();
-}, userSession, userRouter);
-
-  
-// app.use(
-//   session({
-//     secret: config.sessionSecret,
-//     resave: true,
-//     saveUninitialized: true,
-//     store: store,
-//   })
-// );
+  }, userSession, userRouter);
 
 
 app.set("view engine", "ejs");
@@ -85,15 +68,6 @@ app.use(express.static("views"));
 
 const nocache = require("nocache");
 app.use(nocache());
-
-// // for user route
-// const userRoute = require("./routes/userRoute");
-// app.use("/", userRoute);
-
-// // for admin route
-// const adminRoute = require('./routes/adminRoute')
-// app.use("/admin", adminRoute)
-
 
 const port = 3500;
 app.listen(port, () => {

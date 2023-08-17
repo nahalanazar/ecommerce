@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fashion Palace</title>
+    <link rel="icon" type="image/png" href="/public/images/icons/favicon.png" />
+    <link rel="stylesheet" href="/admin/assets/css/styles.min.css" />
+
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.0.0-beta2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.4.1/font/bootstrap-icons.css">
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.5/dist/sweetalert2.min.js"></script>
+
+    <!-- Custom CSS -->
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .btn-back {
+            margin: 1rem;
+            font-size: 1rem;
+            color: #ffffff;
+            /* White text */
+            background-color: #007bff;
+            /* Blue background */
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            /* No underline */
+        }
+
+        .card {
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .card .card-body {
+            padding: 3rem 4rem;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .narrow-column {
+            width: 20px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+        data-sidebar-position="fixed" data-header-position="fixed">
+        <!-- Sidebar Start -->
+        <%- include("./includes/sidebar.ejs") %>
+            <!--  Sidebar End -->
+            <!--  Main wrapper -->
+            <div class="body-wrapper">
+                <!--  Header Start -->
+                <%- include("./includes/header.ejs") %>
+                    <!--  Header End -->
+                    <div class="container-fluid">
+                        <!--  Row 1 -->
+
+                        <div class="row">
+
+                            <div class="col-lg-12 d-flex align-items-stretch">
+                                <div class="card w-100">
+                                    <div class="card-body p-4">
+                                        <!-- Main content -->
+                                        <main class="container my-5">
+                                            <h1 class="mb-5 text-center text-secondary">Add New Coupon</h1>
+                                            <!-- <div class="text-center mt-5">
+                                                <p class="text-danger">
+                                                    <%=(typeof message!=='undefined' )?message:""%>
+                                                </p>
+                                            </div> -->
+                                            <form id="productForm">
+                                                <div class="card shadow-lg">
+                                                    <div class="card-body">
+                                                        <!-- Your form groups go here -->
+                                                        <div class="form-group mb-4">
+                                                            <div>
+                                                                <label class="form-label">Coupon Code</label>
+                                                            </div>
+                                                            <div>
+                                                                <input type="text" id="couponName" class="form-control" value="" placeholder="Generate Coupon Code"
+                                                                    aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                                <button class="btn btn-outline-info" type="button" onclick="generateCoupon()">Generate Code</button>
+                                                                <p id="error1" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group mb-4">
+                                                            <div>
+                                                                <label class="form-label">Validity</label>
+                                                            </div>
+                                                            <div>
+                                                                <input type="date" name="" class="form-control" id="validity" cols="45" rows="5">
+                                                                <p id="error2" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group mb-4">
+                                                            <div>
+                                                                <label class="form-label">Min Purchase</label>
+                                                            </div>
+                                                            <div>
+                                                                <input id="minAmount" type="number" class="form-control">
+                                                                <p id="error3" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group mb-4">
+                                                            <div>
+                                                                <label class="form-label">Discount (%)</label>
+                                                            </div>
+                                                            <div>
+                                                                <input id="discountPercentage" type="number" class="form-control" />
+                                                                <p id="error4" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group mb-4">
+                                                            <div>
+                                                                <label class="form-label">Max Discount (Rs)</label>
+                                                            </div>
+                                                            <div>
+                                                                <input id="maxDiscountValue" type="number" class="form-control" />
+                                                                <p id="error5" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="form-group mb-4">
+                                                            <div>
+                                                                <label class="form-label" for="description">Description (T&amp;C)</label>
+                                                            </div>
+                                                            <div>
+                                                                <textarea name="" class="form-control" id="description" cols="45" rows="5"></textarea>
+                                                                <p id="error6" class="text-danger"></p>
+                                                            </div>
+                                                        </div>
+
+                                                        <button type="button" class="btn btn-primary mt-3" onclick="validateCoupon()">Submit</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </main>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+            </div>
+    </div>
+
+
+
+    <script>
+        function validateCoupon(){
+            const couponName = document.getElementById('couponName')
+            const validity = document.getElementById('validity')
+            const minAmount = document.getElementById('minAmount')
+            const discountPercentage = document.getElementById('discountPercentage')
+            const maxDiscount = document.getElementById('maxDiscountValue')
+            const description = document.getElementById('description')
+            
+            const couponNameValue = couponName.value.trim()
+            const validityValue = validity.value.trim()
+            const minAmountValue = minAmount.value.trim()
+            const discountPercentageValue = discountPercentage.value.trim()
+            const maxDiscountValue = maxDiscount.value.trim()
+            const descriptionValue = description.value.trim()
+
+            const error1 = couponName.parentElement.querySelector('p')
+            const error2 = validity.parentElement.querySelector('p')
+            const error3 = minAmount.parentElement.querySelector('p')
+            const error4 = discountPercentage.parentElement.querySelector('p')
+            const error5 = maxDiscount.parentElement.querySelector('p')
+            const error6 = description.parentElement.querySelector('p')
+
+            error1.innerText = ''
+            error2.innerText = ''
+            error3.innerText = ''
+            error4.innerText = ''
+            error5.innerText = ''
+            error6.innerText = ''
+
+            let flag = 1
+
+            if (couponNameValue == '') {
+                error1.innerText = 'Coupon code is required'
+                flag = 2
+            }
+            if (validityValue == '') {
+                error2.innerText = 'Validity is required'
+                flag = 2
+            }
+            if (minAmountValue == '') {
+                error3.innerText = 'Minimum amount is required'
+                flag = 2
+            }
+            if (minAmountValue < 0) {
+                error3.innerText = 'Minimum amount should be greater than or Equal to Zero'
+                flag = 2
+            }
+            if (discountPercentageValue == '') {
+                error4.innerText = 'Discount percentage is required'
+                flag = 2
+            }
+            if (discountPercentageValue <= 0 || discountPercentageValue >= 99) {
+                error4.innerText = 'Discount percentage should be between  1 and 99 '
+                flag = 2
+            }
+            if (maxDiscountValue == '') {
+                error5.innerText = 'Maximum discount is required'
+                flag = 2
+            }
+            if (maxDiscountValue <= 0) {
+                error5.innerText = 'Maximum discount should be greater than Zero'
+                flag = 2
+            }
+            if (descriptionValue == '') {
+                error6.innerText = 'Description is required'
+                flag = 2
+            }
+
+            if (flag == 1) {
+                submit(couponNameValue, validityValue, minAmountValue, discountPercentageValue, maxDiscountValue, descriptionValue)
+            }
+        }
+
+        function submit(coupon, validity, minAmount, discountPercentage, maxDiscount, description){
+            $.ajax({
+                url: '/admin/addCoupon',
+                method: 'post',
+                data: {
+                    coupon: coupon,
+                    validity: validity,
+                    minAmount: minAmount,
+                    discountPercentage: discountPercentage,
+                    maxDiscount: maxDiscount,
+                    description: description
+                },
+                success: (response) => {
+                    if(response.status){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Coupon Added Successfully',
+                            showConfirmationButton: false,
+                            timer: 4000
+                        })
+                        .then(() => {
+                            location.href = '/admin/addCoupon'
+                        })
+                    }else{
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Coupon Code Already exists',
+                            timer: 4000
+                        })
+                    }
+                }
+            })
+        }
+
+        function generateCoupon(){
+            $.ajax({
+                url: '/admin/generateCouponCode',
+                method: 'get',
+                success: (response) => {
+                    document.getElementById('couponName').value = response.couponCode
+                }
+            })
+        }
+    </script>
+
+
+</body>
+
+</html>

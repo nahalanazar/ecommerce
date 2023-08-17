@@ -383,7 +383,14 @@ const insertUser = async (req, res) => {
       console.log(error.message)
     }
   }
-
+  
+const failed = async (req, res) => {
+    try {
+      res.render('public/failed')
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
 
 
 module.exports= {
@@ -403,5 +410,6 @@ module.exports= {
     categoryPage,
     error500,
     error403,
-    success
+    success,
+    failed
 }

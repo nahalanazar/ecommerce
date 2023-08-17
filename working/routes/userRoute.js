@@ -12,6 +12,7 @@ const productController = require('../controller/productController')
 const cartController = require('../controller/cartController')
 const profileController = require('../controller/profileController')
 const orderController = require('../controller/orderController')
+const couponController = require('../controller/couponController')
 
 userRoute.get('/', userController.home)
 userRoute.get('/index', userController.home)
@@ -47,6 +48,7 @@ userRoute.get('/profileAddress', auth.isLogin, auth.blocked, profileController.p
 userRoute.post('/submitAddress', auth.isLogin, profileController.submitAddress)
 userRoute.post('/updateAddress', auth.isLogin, profileController.editAddress)
 userRoute.get('/deleteAddress', auth.isLogin, profileController.deleteAddress)
+userRoute.get('/wallet', auth.isLogin, auth.blocked, profileController.walletTransaction)
 
 userRoute.get('/checkOut', auth.isLogin, auth.blocked, orderController.checkOut)
 userRoute.post('/checkOutAddress', auth.isLogin, profileController.checkOutAddress)
@@ -57,9 +59,16 @@ userRoute.get('/profileOrderList', auth.isLogin, auth.blocked, orderController.o
 userRoute.put('/cancelOrder', auth.isLogin, orderController.cancelOrder)   
 userRoute.get('/orderDetails', auth.isLogin, auth.blocked, orderController.orderDetails)
 
+userRoute.get('/applyCoupon/:id', auth.isLogin, auth.blocked, couponController.applyCoupon)
+userRoute.get('/verifyCoupon/:id', auth.isLogin, auth.blocked, couponController.verifyCoupon)
+
+userRoute.post('/verifyPayment', orderController.verifyPayment)  
+userRoute.post('/paymentFailed', orderController.paymentFailed)
 
 userRoute.get('/error_500', userController.error500)
 userRoute.get('/error_403', userController.error403)
 userRoute.get('/success', userController.success)
+userRoute.get('/failed', userController.failed)
+
 
 module.exports = userRoute
