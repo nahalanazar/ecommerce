@@ -190,11 +190,16 @@
                                 <%}%>
                             </ul>                         
                             <div class="form-group row coupon_area p-t-15">
-                                <div class="col-sm-8">
+                                <div class="col-sm-6">
                                     <input type="text" class="form-control" placeholder="Enter coupon code" name="couponCode" id="couponCode">
                                 </div>
-                                <div class="col-sm-4">
-                                    <button class="flex-c-m stext-101 cl2 size-115 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer" style="width: 100px; height: 40px;" onclick="applyCoupon('<%=total.cartTotal%>')">Apply</button>
+                                <div class="col-sm-3">
+                                    <button class="flex-c-m stext-101 cl2 size-15 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer"
+                                        style="width: 100%; height: 40px;" onclick="applyCoupon('<%=total.cartTotal%>')">Apply</button>
+                                </div>
+                                <div class="col-sm-3">
+                                    <button class="flex-c-m stext-101 cl2 size-15 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer"
+                                        style="width: 100%; height: 40px;" onclick="removeCoupon()">Remove</button>
                                 </div>
                             </div>                            
                             <span id="couponErr"></span>
@@ -241,60 +246,6 @@
     <%- include("./includes/template-footer-and-scripts") %>
     
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-    <!-- <div class="pop-up-list">
-        <button class="pop-up-button"><i class="fa fa-times" aria-hidden="true"></i>
-        </button>
-        <div class="top-title-section">
-            <p class="top-title special">Addresses</p>
-        </div>
-            <br>
-
-        <div class="comment-list grid-view" style="height: 500px; overflow-y:scroll;">
-            <form id="addressForm" action="/changeDefaultAddress" method="POST">
-                <% address.forEach(function(address,index) {%>
-                    <label for="address<%=index%>">Address</label>
-                    <input type="radio" id="addressRadio{<%=index%>}" name="addressRadio" value="<%=address._id%>" onchange="this.form.submit()">
-                    <br>
-                <div class="single-comment grid-item">
-                    <div class="user justify-content-between d-flex">
-                    <div class="desc">
-                        <h5>Name: <%=address.name%></h5>
-                        <h5>Number: <%=address.mobileNumber%></h5>
-                        <h5>Address: <%=address.address%></h5>
-                        <h5>City: <%=address.city%></h5>
-                        <h5>Street: <%=address.locality%></h5>
-                        <h5>Pin: <%=address.pincode%></h5>
-                    </div>
-                    </div>
-                </div>
-                <br>
-                <% }) %>
-            </form>
-        </div>
-    </div> -->
-
-    <!-- <div class="overlay-pop-up"></div> -->
-
-
-    <!-- <div class="popup-wrapper">
-        <div class="popup">
-            <button class="close-button"></button>
-            <form class="popup-form" action="/checkOutAddress" method="POST" id="myForm" onsubmit="return validateForm()">
-                <h2 class="popup-form__title">Add Address</h2>
-                <input type="text" class="popup-form__input" placeholder="Name" name="name" id="name">
-                <span id="nameError"></span>
-                <input type="tel" class="popup-form__input" placeholder="Mobile Number" name="mno" id="mno">
-                <span id="mnoError"></span>
-                <textarea class="popup-form__input" placeholder="House Address" name="address" id="address"></textarea>
-                <input type="text" class="popup-form__input" placeholder="City" name="city" id="city">
-                <input type="text" class="popup-form__input" placeholder="Street" name="locality" id="locality">
-                <input type="text" class="popup-form__input" placeholder="PostalCode/PIN" name="pincode" id="pincode">
-                <input type="text" class="popup-form__input" placeholder="State" name="state" id="state">
-                <button type="submit" id="btn" class="popup-form__submit">ADD</button>
-            </form>
-        </div>
-    </div> -->
 
     <script>
         function validateForm() {
@@ -547,13 +498,10 @@
                                     document.getElementById('couponOffer').innerText = response.discount + '%'
                                     document.getElementById('discountPercentage').value = response.discount
                                     document.getElementById('discountAmount').value = Math.ceil(response.discountAmount)
-
-
                                 } else {
                                     document.getElementById('couponErr').style.color = "#ff0707"
                                     document.getElementById('couponErr').innerText = response.message
                                 }
-
                             }
                         })
                     } else {
@@ -568,6 +516,38 @@
                 }
             })
         }
+
+        function removeCoupon() {
+            event.preventDefault();
+                // Set coupon error to blank
+                document.getElementById('couponErr').innerText = '';
+
+                // If you had a server-side action to undo the coupon, you can call it here. For instance:
+                // $.ajax({
+                //     url: '/removeCoupon',
+                //     method: 'GET',
+                //     success: (response) => {
+                //         if (response.status == true) {
+                //             // handle success here
+                //         } else {
+                //             document.getElementById('couponErr').style.color = "#ff0707"
+                //             document.getElementById('couponErr').innerText = response.message;
+                //         }
+                //     }
+                // })
+
+                // Reset the total and other details to their original values
+                document.getElementById('total').innerText = '₹' + '<%=total.cartTotal%>';
+                document.getElementById('totalVal').value = '<%=total.cartTotal%>';
+
+                // Reset coupon details
+                document.getElementById('couponOffer').innerText = '';
+                document.getElementById('discountPercentage').value = '';
+                document.getElementById('discountAmount').value = '';
+
+                // Optionally: clear the coupon code input
+                document.getElementById('couponCode').value = '';
+            }
 
         function razorpay(order) {
            
@@ -660,90 +640,6 @@
             }
 
     </script>
-
-<!-- <script>
-
-    var popup = document.getElementsByClassName("pop-up-list")[0];
-    console.log(popup)
-    var overlay = document.getElementsByClassName("overlay-pop-up")[0];
-
-    var button = document.getElementsByClassName("button")[0];
-
-    var close = document.getElementsByClassName('pop-up-button')[0];
-
-    button.onclick=function(){
-    popup.style.display = "block";
-    overlay.style.display = "block";
-    }
-
-    overlay.onclick=function(){
-    popup.style.display = "none";
-    overlay.style.display = "none"; 
-    }
-   
-    close.onclick=function(){
-    popup.style.display = "none";
-    overlay.style.display = "none"; 
-   }
-</script> -->
-
-<!-- <script>
-    // Get references to the elements
-    let popupWrappers = document.querySelectorAll(".popup-wrapper");
-    let popupForms = document.querySelectorAll(".popup-form");
-    let popupBtns = document.querySelectorAll(".btn-reply");
-    let popupCloses = document.querySelectorAll(".close-button");
-
-    // Add event listeners to each popup button
-    popupBtns.forEach((btn, index) => {
-        btn.addEventListener("click", (e) => {
-            e.preventDefault();
-            showPopup(index);
-        });
-    });
-
-    // Add event listeners to each popup close button
-    popupCloses.forEach((closeBtn, index) => {
-        closeBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            removePopup(index);
-        });
-    });
-
-    // Add event listeners to each popup form
-    popupForms.forEach((form) => {
-        form.addEventListener("submit", () => {
-            // Implement your form submission logic here
-            removePopup();
-        });
-    });
-
-    // Add event listeners to each popup wrapper
-    popupWrappers.forEach((wrapper, index) => {
-        wrapper.addEventListener("click", (e) => {
-            let target = e.target;
-            if (target.classList.contains("popup-wrapper")) {
-                removePopup(index);
-            } else {
-                return;
-            }
-        });
-    });
-
-    function showPopup(index) {
-        popupWrappers[index].classList.add("active");
-        bodyScroll();
-    }
-
-    function removePopup(index) {
-        popupWrappers[index].classList.remove("active");
-        bodyScroll();
-    }
-
-    function bodyScroll() {
-        document.body.classList.toggle("no-scroll");
-    }
-</script> -->
 
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

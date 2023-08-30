@@ -36,6 +36,48 @@
       		border: 0px;
       		border-right: 1px solid #eee;
       		color: #cccccc; }
+		.active-category {
+    		background-color: #f2f2f2; /* Or any desired color to highlight */
+   			font-weight: bold;}
+		.js-show-sort {
+    		position: relative;}
+		.panel-sort {
+			position: absolute; 
+			top: 100%; 
+			left: 0;
+			z-index: 2; /* to ensure the panel appears over other elements */
+			width: 150%;}
+			.filter-col1 ul {
+    padding: 0;       /* Remove padding from the unordered list */
+    margin: 0;        /* Remove margin from the unordered list */
+    list-style-type: none; /* Remove bullet points */
+}
+
+.filter-col1 li {
+    display: block;   /* Make the list items occupy the full width */
+    margin: 0;        /* Remove any margins */
+}
+
+.filter-col1 a.filter-link {
+    display: block;   /* Make the anchor tags occupy the full width */
+    padding: 5px 0;   /* Add some vertical padding for spacing. Adjust as needed */
+}
+.wrap-filter {
+    width: 100%;  /* Ensuring it takes the full width of its container */
+}
+
+form.d-flex {
+    justify-content: space-between;
+    align-items: center;  /* This ensures vertical centering of elements */
+    flex-grow: 1;  /* This ensures the form takes all available space */
+}
+
+form.d-flex .btn {
+    margin-left: auto;  /* Pushes the button to the far right */
+    margin-right: 0;  /* Ensures no extra margin on the right */
+}
+
+
 	</style>
 </head>
 <body class="animsition">
@@ -49,27 +91,21 @@
 			<div class="flex-w flex-sb-m p-b-52">
 				<div class="flex-w flex-l-m m-tb-10">
 					<button>
-						<li class="main-nav-list"><a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="#">ALL PRODUCTS</a></li>
+						<li class="main-nav-list">
+							<a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 <%= (!selectedCategoryId) ? 'active-category' : '' %>"
+								href="/shop">ALL PRODUCTS</a>
+						</li>
 					</button>
 					<% category.forEach(function(item) { %>
-					<button>
-					<li class="main-nav-list"><a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/categoryShop?id=<%= item._id %>"><%= item.name.toUpperCase() %></a></li>
-					</button>
-					<% })%>
-					
-					<!-- <ul class="main-menu-m">
-						<li>
-							<a href="/index">Home</a>
-							<ul class="sub-menu-m">
-								<li><a href="/public/index.html">Homepage 1</a></li>
-								<li><a href="/public/home-02.html">Homepage 2</a></li>
-								<li><a href="/public/home-03.html">Homepage 3</a></li>
-							</ul>
-							<span class="arrow-main-menu-m">
-								<i class="fa fa-angle-right" aria-hidden="true"></i>
-							</span>
-						</li>
-					</ul>	 -->
+						<button>
+							<li class="main-nav-list">
+								<a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 <%= (item._id.toString() == selectedCategoryId) ? 'active-category' : '' %>"
+									href="/shop?id=<%= item._id %>">
+									<%= item.name.toUpperCase() %>
+								</a>
+							</li>
+						</button>
+						<% })%>
 				</div>
 
 				<div class="flex-w flex-c-m m-tb-10">
@@ -87,14 +123,17 @@
 				</div>
 				
 				<!-- Search product -->
-				<div class="dis-none panel-search w-full p-t-10 p-b-15">
-					<div class="bor8 dis-flex p-l-15">
+				<div class="search_input dis-none panel-search w-full p-t-10 p-b-15" id="search_input_box">
+					<div class="container bor8 dis-flex p-l-15">
 						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
 							<i class="zmdi zmdi-search"></i>
 						</button>
-
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search">
-					</div>	
+						<form class="d-flex justify-content-between" action="/shop">
+							<input class="mtext-107 cl2 size-114 plh2 p-r-15" id="search_input" type="text" name="search"
+								placeholder="Search Here">
+							<button type="submit" class="btn ml-auto">search</button>
+						</form>
+					</div>
 				</div>
 
 				<!-- Filter -->
@@ -107,37 +146,13 @@
 
 							<ul>
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Default
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Popularity
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Average rating
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04 filter-link-active">
-										Newness
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
+									<a href="/shop?sort=price_asc" class="filter-link stext-106 trans-04">
 										Price: Low to High
 									</a>
 								</li>
 
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
+									<a href="/shop?sort=price_desc" class="filter-link stext-106 trans-04">
 										Price: High to Low
 									</a>
 								</li>
@@ -151,137 +166,35 @@
 
 							<ul>
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04 filter-link-active">
+									<a href="/shop" class="filter-link stext-106 trans-04">
 										All
 									</a>
 								</li>
 
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										$0.00 - $50.00
+									<a href="/shop?minPrice=1&&maxPrice=999" class="filter-link stext-106 trans-04">
+										₹ 1 to ₹ 999
 									</a>
 								</li>
 
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										$50.00 - $100.00
+									<a href="/shop?minPrice=1000&&maxPrice=4999" class="filter-link stext-106 trans-04">
+										₹ 1000 to ₹ 4999
 									</a>
 								</li>
 
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										$100.00 - $150.00
+									<a href="/shop?minPrice=5000&&maxPrice=9999" class="filter-link stext-106 trans-04">
+										₹ 5000 to ₹ 9999
 									</a>
 								</li>
 
 								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										$150.00 - $200.00
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										$200.00+
+									<a href="/shop?minPrice=10000&&maxPrice=100000" class="filter-link stext-106 trans-04">
+										Above ₹ 10000
 									</a>
 								</li>
 							</ul>
-						</div>
-
-						<div class="filter-col3 p-r-15 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Color
-							</div>
-
-							<ul>
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #222;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Black
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #4272d7;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="/public/#" class="filter-link stext-106 trans-04 filter-link-active">
-										Blue
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #b3b3b3;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Grey
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #00ad5f;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Green
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #fa4251;">
-										<i class="zmdi zmdi-circle"></i>
-									</span>
-
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										Red
-									</a>
-								</li>
-
-								<li class="p-b-6">
-									<span class="fs-15 lh-12 m-r-6" style="color: #aaa;">
-										<i class="zmdi zmdi-circle-o"></i>
-									</span>
-
-									<a href="/public/#" class="filter-link stext-106 trans-04">
-										White
-									</a>
-								</li>
-							</ul>
-						</div>
-
-						<div class="filter-col4 p-b-27">
-							<div class="mtext-102 cl2 p-b-15">
-								Tags
-							</div>
-
-							<div class="flex-w p-t-4 m-r--5">
-								<a href="/public/#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Fashion
-								</a>
-
-								<a href="/public/#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Lifestyle
-								</a>
-
-								<a href="/public/#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Denim
-								</a>
-
-								<a href="/public/#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Streetstyle
-								</a>
-
-								<a href="/public/#" class="flex-c-m stext-107 cl6 size-301 bor7 p-lr-15 hov-tag1 trans-04 m-r-5 m-b-5">
-									Crafts
-								</a>
-							</div>
 						</div>
 					</div>
 				</div>
@@ -313,57 +226,46 @@
 									</span>
 								</div>
 			
-								<div class="block2-txt-child2 flex-r p-t-3">
-									<a href="/public/#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<img class="icon-heart1 dis-block trans-04" src="/public/images/icons/icon-heart-01.png" alt="ICON">
-										<img class="icon-heart2 dis-block trans-04 ab-t-l" src="/public/images/icons/icon-heart-02.png" alt="ICON">
-									</a>
-								</div>
-			
 								<div class="prd-bottom">
 									<a href="javascript:void(0)" onclick="addtocart('<%=item._id%>')" class="flex-c-m stext-101 cl5 size-10 bg2 bor1 hov-btn1 p-2 trans-04" style="width: 150px;">
 										<i class="ti-bag"></i> Add To Cart
 									</a>
-									<!-- <a href="" class="social-info">
-										<span class="lnr lnr-heart"></span>
-										<p class="hover-text">Wishlist</p>
-									</a> -->
-									<!-- <a href="/productPage?id=" class="social-info">
-										<span class="lnr lnr-move"></span>
-										<p class="hover-text">view more</p>
-									</a> -->
 								</div>
-			
 							</div>
 						</div>
 					</div>
 				<% }) %>
 			</div>
 
-			
-
 			<!-- Load more -->
 			<div class="flex-c-m flex-w w-full p-t-45">
 				<div class="pagination">
-					<% if (currentPage > 1) { %>
-					  <a href="/shop?page=<%= currentPage - 1 %>" class="prev-arrow flex-c-m stext-10 cl5 size-20 bg2 bor1">
-						<i class="fa fa-long-arrow-left" aria-hidden="true"></i>
-					  </a>
+					<% if (currentPage> 1) { %>
+						<a href="/shop?page=<%= currentPage - 1 %>&sort=<%= sortQuery %>"
+							class="prev-arrow flex-c-m stext-10 cl5 size-20 bg2 bor1">
+							<i class="fa fa-long-arrow-left" aria-hidden="true"></i>
+						</a>
 					<% } %>
-				  
-					<% for (let i = 1; i <= totalPages; i++) { %>
-					  <% if (i === currentPage) { %>
-						<a href="/shop?page=<%= i %>" class="active flex-c-m stext-10 cl5 size-20 bg2 bor1"><%= i %></a>
-					  <% } else { %>
-						<a href="/shop?page=<%= i %>"  class="flex-c-m stext-10 cl5 size-30 bg2 bor1"><%= i %></a>
-					  <% } %>
+					
+					<% for (let i=1; i <=totalPages; i++) { %>
+						<% if (i===currentPage) { %>
+							<a href="/shop?page=<%= i %>&sort=<%= sortQuery %>"
+								class="active flex-c-m stext-10 cl5 size-20 bg2 bor1">
+								<%= i %>
+							</a>
+						<% } else { %>
+								<a href="/shop?page=<%= i %>&sort=<%= sortQuery %>" class="flex-c-m stext-10 cl5 size-30 bg2 bor1">
+									<%= i %>
+								</a>
+						<% } %>
 					<% } %>
-				  
+					
 					<% if (currentPage < totalPages) { %>
-					  <a href="/shop?page=<%= currentPage + 1 %>" class="next-arrow flex-c-m stext-10 cl5 size-20 bg2 bor1">
-						<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-					  </a>
-					<% } %>
+						<a href="/shop?page=<%= currentPage + 1 %>&sort=<%= sortQuery %>"
+							class="next-arrow flex-c-m stext-10 cl5 size-20 bg2 bor1">
+							<i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+						</a>
+						<% } %>
 				</div>
 			</div>
 		</div>
@@ -409,6 +311,21 @@
 	<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <%- include("./includes/template-footer-and-scripts") %>
+
+	<script>
+		document.querySelector('.js-show-sort').addEventListener('click', function () {
+				var dropdown = document.querySelector('.panel-sort');
+				// Note: We changed from '.main-categories' to '.panel-sort'
+
+				if (dropdown.classList.contains('dis-none')) {
+					dropdown.classList.remove('dis-none');
+				} else {
+					dropdown.classList.add('dis-none');
+				}
+			});
+
+
+	</script>
 
 </body>
 </html>

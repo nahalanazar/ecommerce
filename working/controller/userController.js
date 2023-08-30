@@ -2,6 +2,7 @@
 const User = require("../models/userModel")
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
+const Banner = require("../models/bannerModel")
 const cartHelper = require("../helper/cartHelper")
 const bcrypt = require("bcrypt");
 require('dotenv').config();
@@ -13,7 +14,7 @@ require('dotenv').config();
 // const client = require("twilio")(accountSid, authToken);
 
 const accountSid = "AC2494e61a37ee26d347cbbf64da4d268c";
-const authToken = "9cbb041c0d5945dbecd99016be94dc90";
+const authToken = "15fde4e72b4cb2ebd802b97d3238183f";
 const verifySid = "VAa679d7990591abe277854951c2ebcdb9";
 const client = require("twilio")(accountSid, authToken);
 
@@ -33,7 +34,6 @@ const client = require("twilio")(accountSid, authToken);
 
 const home = async (req, res) => {
   try {
-
     const category = await Category.find({});
     const page = parseInt(req.query.page) || 1; 
     const limit = 8;
@@ -51,8 +51,10 @@ const home = async (req, res) => {
       const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
       .limit(limit)
       .populate('category');
+    
+    const banner = await Banner.find({})
 
-    res.render('public/index', { product: products, category, currentPage: page, totalPages});
+    res.render('public/index', { product: products, banner, category, currentPage: page, totalPages});
   } catch (error) {
     console.log(error.message);
   }
@@ -310,30 +312,62 @@ const insertUser = async (req, res) => {
 
   const shop = async (req, res) => {
     try {
-      const user = res.locals.user
+      const user = res.locals.user;
 
-      const count = await cartHelper.getCartCount(user.id)
-
+      const count = await cartHelper.getCartCount(user.id);
       const category = await Category.find({});
+      const selectedCategoryId = req.query.id || null;  // This fetches the selected category ID from the query string
+
       const page = parseInt(req.query.page) || 1; 
       const limit = 8;
-      const skip = (page - 1) * limit; // Calculate the number of products to skip
-  
-      // Fetch products with pagination
-      const totalProducts = await Product.countDocuments({ $and: [{ isListed: true }, { isProductListed: true }] }); // Get the total number of products
-      const totalPages = Math.ceil(totalProducts / limit); // Calculate the total number of pages
-  
-      const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
-        .skip(skip)
-        .limit(limit)
+      const skip = (page - 1) * limit;
+
+      const searchQuery = req.query.search || ''; // Get the search query from request query parameters
+      const sortQuery = req.query.sort || 'default'; // Get the sort query from request query parameters (default value is 'default')
+      const minPrice = parseFloat(req.query.minPrice); // Get the minimum price from request query parameters
+      const maxPrice = parseFloat(req.query.maxPrice)
+
+      // Conditionally filter products by category if a category ID is provided
+      const filterCriteria = {
+        $and: [
+          { isListed: true },
+          { isProductListed: true },
+          {
+            $or: [
+              { name: { $regex: new RegExp(searchQuery, 'i') } },
+            ]
+          }] };
+      if (selectedCategoryId) {
+        filterCriteria.category = selectedCategoryId;
+      }
+ 
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        filterCriteria.$and.push({ price: { $gte: minPrice, $lte: maxPrice } });
+      }
+
+      let sortOption = {};
+      if (sortQuery === 'price_asc' ||sortQuery === 'default' ) {
+        sortOption = { price: 1 }; 
+      } else if (sortQuery === 'price_desc') {
+        sortOption = { price: -1 }; 
+      }
+
+      const totalProducts = await Product.countDocuments(filterCriteria);
+      const totalPages = Math.ceil(totalProducts / limit);
+
+      const products = await Product.find(filterCriteria)
+        .skip(skip) 
+        .limit(limit) 
+        .sort(sortOption)
         .populate('category');
-  
-      res.render('public/shop', { product: products, category, currentPage: page, totalPages, count});
+
+      res.render('public/shop', { product: products, category, selectedCategoryId, currentPage: page, totalPages, count, sortQuery });
     } catch (error) {
       console.log(error.message);
-      res.redirect('/error_500')
+      res.redirect('/error_500');
     }
-  };
+};
+
 
   const categoryPage = async (req,res) =>{
     try{

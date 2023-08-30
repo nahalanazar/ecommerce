@@ -17,12 +17,12 @@ const loadAddCoupon = async (req, res) => {
     }
 }
 
-const generateCouponCode = (req, res) => {
-    couponHelper.generateCouponCode()
-        .then((couponCode) => {
-        res.send(couponCode)
-    })
-}
+// const generateCouponCode = (req, res) => {
+//     couponHelper.generateCouponCode()
+//         .then((couponCode) => {
+//         res.send(couponCode)
+//     })
+// }
 
 const addCoupon = (req, res) => {
     try {
@@ -77,9 +77,9 @@ const applyCoupon = async (req, res) => {
 module.exports = {
     couponList,
     loadAddCoupon,
-    generateCouponCode,
+    //generateCouponCode,
     addCoupon,
     removeCoupon,
     verifyCoupon,
-    applyCoupon
+    applyCoupon 
 }

@@ -141,7 +141,7 @@
                                                 <!-- Images will be previewed here -->
                                             </div>
                                             <div>
-                                                <input type="file" id="images" name="images" class="form-control" onchange="viewImages(event)" multiple>
+                                                <input type="file" id="images" name="images" class="form-control" onchange="viewImages(event)" multiple accept=".jpeg, .jpg, .png, .webp">
                                             </div>
                                         </div>
                                         
@@ -185,7 +185,7 @@
             }
 
             // Validate file type
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
             if (!validTypes.includes(file.type)) {
                 alert('Only jpeg and png image types are allowed.');
                 event.target.value = '';  // Clear the input

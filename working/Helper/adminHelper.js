@@ -247,11 +247,128 @@ const addToStock = async(orderId,userId)=>{
     })
   }
 
+const getOnlineCount = async () => {
+  try {
+    const response = await Order.aggregate([
+      { $unwind: "$orders" },
+      {
+        $match: {
+          "orders.paymentMethod": "razorpay",
+          "orders.orderStatus": "Delivered"
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalPriceSum: { $sum: { $toInt: "$orders.totalPrice" } },
+          count: { $sum: 1}
+        }
+      }
+    ])
+    return response
+  } catch (error) {
+    console.error("Error fetching online count: ", error)
+    throw error
+  }
+}
+
+const getWalletCount = async () => {
+  try {
+    const response = await Order.aggregate([
+      { $unwind: "$orders" },
+      {
+        $match: {
+          "orders.paymentMethod": "wallet",
+          "orders.orderStatus": "Delivered"
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalPriceSum: { $sum: { $toInt: "$orders.totalPrice" } },
+          count: { $sum: 1}
+        }
+      }
+    ])
+    return response
+  } catch (error) {
+    console.error("Error fetching online count: ", error)
+    throw error
+  }
+}
+
+const getCodCount = async () => {
+  try {
+    const response = await Order.aggregate([
+      { $unwind: "$orders" },
+      {
+        $match: {
+          "orders.paymentMethod": "cod",
+          "orders.orderStatus": "Delivered"
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          totalPriceSum: { $sum: { $toInt: "$orders.totalPrice" } },
+          count: { $sum: 1}
+        }
+      }
+    ])
+    return response
+  } catch (error) {
+    console.error("Error fetching online count: ", error)
+    throw error
+  }
+}
+
+const getSalesReport = async () => {
+  try {
+    const response = await Order.aggregate([
+      { $unwind: "$orders" },
+      { $match: { "orders.orderStatus": "Delivered"}}
+    ])
+    return response
+  } catch (error) {
+    console.log(error.message)
+  }
+}
+
+const postReport = async (date) => {
+  try {
+    const start = new Date(date.startdate)
+    const end = new Date(date.enddate)
+    const response = await Order.aggregate([
+      { $unwind: "$orders" },
+      {
+        $match: {
+          $and: [
+            {
+              "orders.createdAt": {
+                $gte: start,
+                $lte: new Date(end.getTime() + 86400000)
+              }
+            }
+          ]
+        }
+      }
+    ]).exec()
+
+    return response
+  } catch (error) {
+    console.log(error.message)
+  }
+}
 
 module.exports = {
     changeOrderStatus,
     cancelOrder,
     returnOrder,
     findOrder,
-    addToStock
+    addToStock,
+    getOnlineCount,
+    getWalletCount,
+    getCodCount,
+    getSalesReport,
+    postReport
 }

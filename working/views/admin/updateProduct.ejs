@@ -88,90 +88,88 @@
           <!--  Header End -->
           <div class="container-fluid">
             <!--  Row 1 -->
-            
             <div class="row">
-              
               <div class="col-lg-12 d-flex align-items-stretch">
                 <div class="card w-100">
                   <div class="card-body p-4">
-                                    <!-- Main content -->
-                                    <main class="container py-5 d-flex flex-column align-items-center justify-content-center">
-                                        <h1 class="mb-5 text-center text-secondary">Update Product</h1>
-                                
-                                        <section class="content-main">
-                                            <form action="/admin/updateProduct" method="post" enctype="multipart/form-data" class="card shadow-lg mx-auto">
-                                              <div class="card-body">
-                                                <!-- Product title -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="name" class="form-label">Product title</label></div>
-                                                    <div><input type="text" id="name" name="name" class="form-control" value="<%= product.name %>" placeholder="Type here" required></div>
-                                                </div>
-                                
-                                                <!-- Description -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="description" class="form-label">Description</label></div>
-                                                    <div><textarea id="description" name="description" class="form-control" rows="4" placeholder="Type here" required><%= product.description %></textarea></div>
-                                                </div>
-                                
-                                                <!-- Category -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="category" class="form-label">Category</label></div>
-                                                    <div>
-                                                        <select id="category" name="category" class="form-select">
-                                                            <% category.forEach(function(category) { %>
-                                                                <option value="<%= category._id %>" <%= product.category && product.category.toString() === category._id.toString() ? 'selected' : '' %>><%= category.name %></option>
-                                                            <% }); %>
-                                                        </select>
-                                                        
-                                                    </div>
-                                                </div>
-                                
-                                                <!-- Cost -->
-                                                <div class="form-group mb-4">
-                                                    <div><label for="price" class="form-label">Cost in INR</label></div>
-                                                    <div><input type="number" id="price" name="price" class="form-control" value="<%= product.price %>" placeholder="00.0" required></div>
-                                                </div>
-                                
-                                                <div class="form-group mb-4">
-                                                    <div><label class="form-label">Stock</label></div>
-                                                    <div><input type="number" placeholder="0" class="form-control" name="stock" value="<%=product.stock%>"></div>
-                                                </div>
 
-                                                <!-- Images -->
-<div class="form-group mb-4">
-    <div>
-        <label for="productImages" class="form-label">Product Images</label>
-    </div>
-    <div id="imagesPreviewContainer">
-        <% for(let i = 0; i < product.images.length; i++) { %>
-        <img src="./product_images/<%= product.images[i] %>" id="imgView<%= i+1 %>" alt="product image" width="100px" height="100px">
-        <% } %>
-    </div>
-    <div>
-        <input type="file" id="productImages" name="images" class="form-control" onchange="viewImages(event)" multiple>
-    </div>
-</div>
+                    <!-- Main content -->
+                    <main class="container py-5 d-flex flex-column align-items-center justify-content-center">
+                        <h1 class="mb-5 text-center text-secondary">Update Product</h1>
+                        <section class="content-main">
+                            <form action="/admin/updateProduct" method="post" enctype="multipart/form-data" class="card shadow-lg mx-auto">
+                                <div class="card-body">
+                                    
+                                <!-- Product title -->
+                                <div class="form-group mb-4">
+                                    <div><label for="name" class="form-label">Product title</label></div>
+                                    <div><input type="text" id="name" name="name" class="form-control" value="<%= product.name %>" placeholder="Type here" required></div>
+                                </div>
+                
+                                <!-- Description -->
+                                <div class="form-group mb-4">
+                                    <div><label for="description" class="form-label">Description</label></div>
+                                    <div><textarea id="description" name="description" class="form-control" rows="4" placeholder="Type here" required><%= product.description %></textarea></div>
+                                </div>
+                
+                                <!-- Category -->
+                                <div class="form-group mb-4">
+                                    <div><label for="category" class="form-label">Category</label></div>
+                                    <div>
+                                        <select id="category" name="category" class="form-select">
+                                            <% category.forEach(function(category) { %>
+                                                <option value="<%= category._id %>" <%= product.category && product.category.toString() === category._id.toString() ? 'selected' : '' %>><%= category.name %></option>
+                                            <% }); %>
+                                        </select>
+                                        
+                                    </div>
+                                </div>
+                
+                                <!-- Cost -->
+                                <div class="form-group mb-4">
+                                    <div><label for="price" class="form-label">Cost in INR</label></div>
+                                    <div><input type="number" id="price" name="price" class="form-control" value="<%= product.price %>" placeholder="00.0" required></div>
+                                </div>
+                
+                                <div class="form-group mb-4">
+                                    <div><label class="form-label">Stock</label></div>
+                                    <div><input type="number" placeholder="0" class="form-control" name="stock" value="<%=product.stock%>"></div>
+                                </div>
 
-                                
-                                                <!-- Hidden Input -->
-                                                <input type="hidden" name="id" value="<%= product._id %>">
-                                
-                                                <!-- Submit Button -->
-                                                <div class="d-flex justify-content-center">
-                                                    <input type="submit" value="Publish" class="btn btn-primary">
-                                                </div>
-                                              </div>
-                                            </form>
-                                        </section>
-                                    </main>
-                    </div>
+                                <!-- Images -->
+                                <div class="form-group mb-4">
+                                    <div>
+                                        <label for="productImages" class="form-label">Product Images</label>
+                                    </div>
+                                    <div id="imagesPreviewContainer">
+                                        <% for(let i = 0; i < product.images.length; i++) { %>
+                                        <img src="./product_images/<%= product.images[i] %>" id="imgView<%= i+1 %>" alt="product image" width="100px" height="100px">
+                                        <% } %>
+                                    </div>
+                                    <div>
+                                        <input type="file" id="productImages" name="images" class="form-control" onchange="viewImages(event)" multiple accept=".jpeg, .jpg, .png, .webp">
+                                    </div>
+                                </div>
+
+                
+                                <!-- Hidden Input -->
+                                <input type="hidden" name="id" value="<%= product._id %>">
+                
+                                <!-- Submit Button -->
+                                <div class="d-flex justify-content-center">
+                                    <input type="submit" value="Publish" class="btn btn-primary">
+                                </div>
+                                </div>
+                            </form>
+                        </section>
+                    </main>
                   </div>
                 </div>
               </div>
             </div>
-            
           </div>
-      </div>
+        </div>
+    </div>
 
 
 
@@ -200,7 +198,7 @@
         }
 
         // Validate file type
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
         if (!validTypes.includes(file.type)) {
             alert('Only jpeg and png image types are allowed.');
             event.target.value = '';  // Clear the input

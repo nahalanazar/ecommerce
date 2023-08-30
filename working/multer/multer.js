@@ -13,15 +13,24 @@ const storage = multer.diskStorage({
 
 const fileFilter = (req, file, cb) => {
     // Allowed file types
-    const fileTypes = /jpeg|jpg|png/;
+    const fileTypes = /jpeg|jpg|png|webp/;
     const mimetype = fileTypes.test(file.mimetype);
 
     if (mimetype) {
         cb(null, true);
     } else {
-        cb(new Error('Invalid file type. Only jpg, jpeg, and png are allowed.'), false);
+        cb(new Error('Invalid file type. Only jpg, jpeg, webp and png are allowed.'), false);
     }
 };
+
+const addBanner = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, '../views/admin/banner_images'))
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "-" + file.originalname)
+    }
+})
 
 module.exports = {
     upload: multer({ 
@@ -31,6 +40,8 @@ module.exports = {
             fileSize: 2 * 1024 * 1024 // setting the limit for each image to 2MB
         }
     }).array("images", 3),  // Here, '3' is the maximum number of images you can upload at a time.
+
+    addBannerUpload: multer({storage: addBanner}).single('image')
 };
 
 

@@ -106,9 +106,8 @@
                                                                 <label class="form-label">Coupon Code</label>
                                                             </div>
                                                             <div>
-                                                                <input type="text" id="couponName" class="form-control" value="" placeholder="Generate Coupon Code"
-                                                                    aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                                                <button class="btn btn-outline-info" type="button" onclick="generateCoupon()">Generate Code</button>
+                                                                <input type="text" id="couponName" class="form-control" value="" placeholder="Generate Coupon Code" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                                                                <!-- <button class="btn btn-outline-info" type="button" onclick="generateCoupon()">Generate Code</button> -->
                                                                 <p id="error1" class="text-danger"></p>
                                                             </div>
                                                         </div>
@@ -247,6 +246,10 @@
                 error6.innerText = 'Description is required'
                 flag = 2
             }
+            if (!couponNameValue.startsWith("FP-") || couponNameValue.length != 8) {
+                error1.innerText = 'Coupon code must start with "FP-" and have 5 characters after the prefix';
+                flag = 2;
+            }
 
             if (flag == 1) {
                 submit(couponNameValue, validityValue, minAmountValue, discountPercentageValue, maxDiscountValue, descriptionValue)
@@ -274,7 +277,7 @@
                             timer: 4000
                         })
                         .then(() => {
-                            location.href = '/admin/addCoupon'
+                            location.href = '/admin/couponList'
                         })
                     }else{
                         Swal.fire({
@@ -288,15 +291,15 @@
             })
         }
 
-        function generateCoupon(){
-            $.ajax({
-                url: '/admin/generateCouponCode',
-                method: 'get',
-                success: (response) => {
-                    document.getElementById('couponName').value = response.couponCode
-                }
-            })
-        }
+        // function generateCoupon(){
+        //     $.ajax({
+        //         url: '/admin/generateCouponCode',
+        //         method: 'get',
+        //         success: (response) => {
+        //             document.getElementById('couponName').value = response.couponCode
+        //         }
+        //     })
+        // }
     </script>
 
 

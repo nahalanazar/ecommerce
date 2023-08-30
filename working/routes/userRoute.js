@@ -15,7 +15,7 @@ const orderController = require('../controller/orderController')
 const couponController = require('../controller/couponController')
 
 userRoute.get('/', userController.home)
-userRoute.get('/index', userController.home)
+userRoute.get('/index', userController.home) 
 
 userRoute.get('/signup', userController.signup)
 userRoute.post('/signup', userController.insertUser)
@@ -61,7 +61,7 @@ userRoute.get('/orderDetails', auth.isLogin, auth.blocked, orderController.order
 
 userRoute.get('/applyCoupon/:id', auth.isLogin, auth.blocked, couponController.applyCoupon)
 userRoute.get('/verifyCoupon/:id', auth.isLogin, auth.blocked, couponController.verifyCoupon)
-
+ 
 userRoute.post('/verifyPayment', orderController.verifyPayment)  
 userRoute.post('/paymentFailed', orderController.paymentFailed)
 
@@ -69,6 +69,8 @@ userRoute.get('/error_500', userController.error500)
 userRoute.get('/error_403', userController.error403)
 userRoute.get('/success', userController.success)
 userRoute.get('/failed', userController.failed)
+
+userRoute.get('/invoice', auth.isLogin, auth.blocked, orderController.downloadInvoice)
 
 
 module.exports = userRoute

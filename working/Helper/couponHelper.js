@@ -4,23 +4,23 @@ const User = require('../models/userModel')
 const Cart = require('../models/cartModel')
 const { ObjectId } = require('mongodb')
 
-const generateCouponCode = () => {
-    return new Promise((resolve, reject) => {
-        try {
-            let couponCode = voucherCode.generate({
-                length: 6,
-                count: 1,
-                charset: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-                prefix: "FP-"
-            })
-            console.log(couponCode)
-            resolve({ status: true, couponCode: couponCode[0]})
-        } catch (error) {
-            console.error("Error generating coupon code:", err);
-            reject(err);
-        }
-    })
-}
+// const generateCouponCode = () => {
+//     return new Promise((resolve, reject) => {
+//         try {
+//             let couponCode = voucherCode.generate({
+//                 length: 6,
+//                 count: 1,
+//                 charset: "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+//                 prefix: "FP-"
+//             })
+//             console.log(couponCode)
+//             resolve({ status: true, couponCode: couponCode[0]})
+//         } catch (error) {
+//             console.error("Error generating coupon code:", err);
+//             reject(err);
+//         }
+//     })
+// }
 
 const addCoupon = (data) => {
     try {
@@ -46,9 +46,7 @@ const verifyCoupon = (userId, couponCode) => {
   try {
         return new Promise(async(resolve, reject) => {
           const couponExist = await Coupon.findOne({ couponCode: couponCode })
-              // console.log("code:",couponExist.length);
             if (couponExist) {
-              console.log(couponExist);
               if (new Date(couponExist.validity) - new Date() > 0) {
                 const usersCoupon = await User.findOne({
                   _id: userId,
@@ -131,13 +129,12 @@ const totalCheckOutAmount = (userId) => {
   const applyCoupon = (couponCode, total) => {
     try {
         return new Promise((resolve, reject) => {
-        Coupon.findOne({ couponCode: couponCode }).then(
-          (couponExist) => {
+          Coupon.findOne({ couponCode: couponCode })
+            .then((couponExist) => {
             if (couponExist) {
               if (new Date(couponExist.validity) - new Date() > 0) {
                 if (total >= couponExist.minPurchase) {
-                  let discountAmount =
-                    (total * couponExist.minDiscountPercentage) / 100;
+                  let discountAmount = (total * couponExist.minDiscountPercentage) / 100;
                   if (discountAmount > couponExist.maxDiscountValue) {
                     discountAmount = couponExist.maxDiscountValue;
                     resolve({
@@ -198,7 +195,7 @@ const totalCheckOutAmount = (userId) => {
   }
 
 module.exports = {
-  generateCouponCode,
+  //generateCouponCode,
   addCoupon,
   verifyCoupon,
   totalCheckOutAmount,

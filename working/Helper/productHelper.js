@@ -61,31 +61,42 @@ const createProduct = (data,images) => {
 
   const updateProduct = async (data, images) => {
     try {
+        // Fetch the current product data
+        const currentProduct = await Product.findById(data.id);
+
+        // If there are new images uploaded
+        if(images && images.length > 0) {
+            // Append new images to the existing ones or replace them as necessary
+            images.forEach((img, index) => {
+                if (currentProduct.images[index]) {
+                    // If an image already exists at this position, replace it
+                    currentProduct.images[index] = img;
+                } else {
+                    // If not, simply add the new image to the end
+                    currentProduct.images.push(img);
+                }
+            });
+        }
+
         let updateQuery = {
             $set: {
                 name: data.name,
                 description: data.description,
                 category: data.category,
                 price: data.price,
-                stock: data.stock
+                stock: data.stock,
+                images: currentProduct.images // Set images to the updated array
             }
         };
 
-        // Only add images to the update query if images are not undefined
-        // (i.e., new images have been uploaded)
-        if(images && images.length > 0) {
-            updateQuery.$set.images = images;
-        }
-
         // Update the product in the database
-        const productData = await Product.updateOne({ _id: data.id }, updateQuery);
+        await Product.updateOne({ _id: data.id }, updateQuery);
 
     } catch (error) {
       console.log(error.message);
     }
-};
+  };
 
- 
 
   module.exports = {
     createProduct,
