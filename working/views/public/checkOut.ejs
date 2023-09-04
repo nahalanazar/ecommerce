@@ -191,7 +191,19 @@
                             </ul>                         
                             <div class="form-group row coupon_area p-t-15">
                                 <div class="col-sm-6">
-                                    <input type="text" class="form-control" placeholder="Enter coupon code" name="couponCode" id="couponCode">
+                                    <% if(couponList && couponList.length> 0) { %>
+                                        <select class="form-control" name="couponCode" id="couponCode">
+                                            <option value="" disabled selected>Enter coupon code...</option>
+                                            <% couponList.forEach(function(coupon) { %>
+                                                <option value="<%= coupon.couponCode %>">
+                                                    <%= coupon.couponCode %>
+                                                </option>
+                                                <% }); %>
+                                        </select>
+                                        <% } else { %>
+                                            <input type="text" class="form-control" placeholder="No coupons available" name="couponCode"
+                                                id="couponCode" disabled>
+                                            <% } %>
                                 </div>
                                 <div class="col-sm-3">
                                     <button class="flex-c-m stext-101 cl2 size-15 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer"
@@ -201,7 +213,8 @@
                                     <button class="flex-c-m stext-101 cl2 size-15 bg8 bor13 hov-btn3 p-lr-15 trans-04 pointer"
                                         style="width: 100%; height: 40px;" onclick="removeCoupon()">Remove</button>
                                 </div>
-                            </div>                            
+                            </div>
+
                             <span id="couponErr"></span>
                             <h4 class="p-b-10">Payment</h4>
                             <div class="payment_item">
@@ -228,6 +241,14 @@
                                     <div class="check"></div>
                                 </div>
                                 <p>Pay through Razorpay</p>
+                            </div>
+                            <div class="payment_item">
+                                <div class="radion_btn">
+                                    <label>Wallet Balance: ₹<span id="walletBalance"><%= walletBalance %></span></label>
+                                    <input type="radio" id="useWallet" onchange="updatePaymentAmount()" name="paymentOption" value="wallet_razorpay"> Use Wallet Balance
+                                    <p>Available wallet balance will be deducted from the total & pay the remaining using Razorpay</p>
+                                </div>
+                                <p>Remaining to Pay: ₹<span id="remainingPay"><%=total.cartTotal%></span></p>
                             </div>
                             
                             <%if(address[0]){%>
@@ -305,6 +326,19 @@
     </script>
 
     <script>
+
+        function updatePaymentAmount() {
+            const total = parseFloat(document.getElementById('totalVal').value);
+            let walletBalance = parseFloat(document.getElementById('walletBalance').innerText);
+            const remainingPayElem = document.getElementById('remainingPay');
+
+            if (document.getElementById('useWallet').checked) {
+                const newTotal = total - walletBalance;
+                remainingPayElem.innerText = newTotal > 0 ? newTotal.toFixed(2) : 0;
+            } else {
+                remainingPayElem.innerText = total.toFixed(2);
+            }
+        }
 
         // function proceedToPayment() {
         //     event.preventDefault()
@@ -386,83 +420,83 @@
         // }
 
         function proceedToPayment() {
-                event.preventDefault();
-                $.ajax({
-                    url: "/checkOut",
-                    method: 'POST',
-                    data: $('#checkOut-form').serialize(),
-                    success: function (response) {
-                        if (response.error) {
-                            if (response.error === "Insufficient wallet balance!") {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Insufficient wallet balance!',
-                                    icon: 'error',
-                                    timer: 5000
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: response.error,
-                                    icon: 'error',
-                                    timer: 5000
-                                });
-                            }
-                        } else if (response.codStatus == true) {
-                            location.href = '/success';
-                        } else if (response.orderStatus == true) {
-                           location.href = '/success';
-                        } else if (response.status == "OrderFailed") {
+            event.preventDefault();
+            const remainingPay = parseFloat(document.getElementById('remainingPay').innerText);
+            console.log("Remaining Amount:", remainingPay);
+            const checkoutData = $('#checkOut-form').serializeArray();
+            checkoutData.push({ name: "finalAmount", value: remainingPay });
+            $.ajax({
+                url: "/checkOut",
+                method: 'POST',
+                data: $.param(checkoutData),
+                success: function (response) {
+                    if (response.error) {
+                        if (response.error === "Insufficient wallet balance!") {
                             Swal.fire({
-                                title: 'Order Failed!',
-                                text: 'Your Product is Out of Stock. Please Check after some time',
-                                icon: 'error',
-                                timer: 5000
-                            }).then(() => {
-                                location.href = '/'
-                            });
-                        } else if (response.status == 'blocked') {
-                            Swal.fire({
-                                title: 'You are blocked',
+                                title: 'Error!',
+                                text: 'Insufficient wallet balance!',
                                 icon: 'error',
                                 timer: 5000
                             });
-                            setTimeout(() => {
-                                window.location.href = "/logout"
-                            }, 5000);
                         } else {
-                            try {
-                                razorpay(response);
-                            } catch (error) {
-                                console.log(error.message)
-                                // Swal.fire({
-                                //     title: 'Error!',
-                                //     text: error.message,
-                                //     icon: 'error',
-                                //     timer: 5000
-                                // });
-                            }
+                            Swal.fire({
+                                title: 'Error!',
+                                text: response.error,
+                                icon: 'error',
+                                timer: 5000
+                            });
                         }
-                    },
-                    error: function (jqXHR) {
+                    } else if (response.codStatus == true) {
+                        location.href = '/success';
+                    } else if (response.orderStatus == true) {
+                        location.href = '/success';
+                    } else if (response.status == "OrderFailed") {
+                        Swal.fire({
+                            title: 'Order Failed!',
+                            text: 'Your Product is Out of Stock. Please Check after some time',
+                            icon: 'error',
+                            timer: 5000
+                        }).then(() => {
+                            location.href = '/'
+                        });
+                    } else if (response.status == 'blocked') {
+                        Swal.fire({
+                            title: 'You are blocked',
+                            icon: 'error',
+                            timer: 5000
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/logout"
+                        }, 5000);
+                    } else {
                         try {
-                            let errResponse = JSON.parse(jqXHR.responseText);
-                            if (errResponse.error && errResponse.error === "Insufficient wallet balance!") {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'Insufficient wallet balance!',
-                                    icon: 'error',
-                                    timer: 5000
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'An unexpected error occurred.',
-                                    icon: 'error',
-                                    timer: 5000
-                                });
-                            }
-                        } catch (err) {
+                                // When calling the razorpay function, pass the remaining amount
+                            const remainingPay = parseFloat(document.getElementById('remainingPay').innerText);
+                            response.amount = remainingPay * 100; // Converting to paise
+                            console.log("payment");
+                            razorpay(response);
+                        } catch (error) {
+                            console.log(error.message)
+                            // Swal.fire({
+                            //     title: 'Error!',
+                            //     text: error.message,
+                            //     icon: 'error',
+                            //     timer: 5000
+                            // });
+                        }
+                    }
+                },
+                error: function (jqXHR) {
+                    try {
+                        let errResponse = JSON.parse(jqXHR.responseText);
+                        if (errResponse.error && errResponse.error === "Insufficient wallet balance!") {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: 'Insufficient wallet balance!',
+                                icon: 'error',
+                                timer: 5000
+                            });
+                        } else {
                             Swal.fire({
                                 title: 'Error!',
                                 text: 'An unexpected error occurred.',
@@ -470,10 +504,17 @@
                                 timer: 5000
                             });
                         }
+                    } catch (err) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An unexpected error occurred.',
+                            icon: 'error',
+                            timer: 5000
+                        });
                     }
-                });
-            }
-
+                }
+            });
+        }
 
         function applyCoupon(total) {
             event.preventDefault();
@@ -585,7 +626,7 @@
             }
             var rzp1 = new Razorpay(options)
             rzp1.open();
-            e.preventDefault()
+            //e.preventDefault()
         }
 
         function verifypayment(payment, order, paymentId) {
@@ -641,7 +682,7 @@
 
     </script>
 
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </body>
 </html>

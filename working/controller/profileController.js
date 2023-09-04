@@ -3,7 +3,7 @@ const Address = require('../models/addressModel')
 const profileHelper = require('../helper/profileHelper')
 const cartHelper = require('../helper/cartHelper')
 
-const profile = async (req, res) => {
+const profile = async (req, res, next) => {
     try {
       const usercart = res.locals.user
 
@@ -13,11 +13,11 @@ const profile = async (req, res) => {
         res.render('public/profile', { user, count });
       } catch (error) {
         console.log(error.message)
-        res.redirect('/error_500')
+        next(error);
     }
 }
 
-const editInfo = async (req, res) => {
+const editInfo = async (req, res, next) => {
     try {
       const userId = res.locals.user._id;
       const { name, email, mobile } = req.body;
@@ -28,11 +28,11 @@ const editInfo = async (req, res) => {
       res.redirect("/profile");
     } catch (error) {
       console.log(error.message);
-      res.redirect('/error_500')
+      next(error);
     }
 }
 
-const profileAddress = async (req, res) => {
+const profileAddress = async (req, res, next) => {
     try {
       const usercart = res.locals.user
 
@@ -48,11 +48,11 @@ const profileAddress = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message)
-        res.redirect('/error_500')
+        next(error);
     }
 }
 
-const submitAddress = async (req, res) => {
+const submitAddress = async (req, res, next) => {
     try {
         const userId = res.locals.user._id;
         const name = req.body.name;
@@ -82,11 +82,11 @@ const submitAddress = async (req, res) => {
         // res.redirect('/profileAddress')
     } catch (error) {
         console.log(error.message)
-        res.redirect('/error_500')
+        next(error);
     }
 }
 
-const editAddress = async (req, res) => {
+const editAddress = async (req, res, next) => {
     const id = req.body.id;
     const name = req.body.name;
     const address = req.body.address;
@@ -112,7 +112,7 @@ const editAddress = async (req, res) => {
     );
 }
 
-  const deleteAddress = async (req, res) => {
+  const deleteAddress = async (req, res, next) => {
     const userId = res.locals.user._id;
     const addId = req.query.id;
   
@@ -124,7 +124,7 @@ const editAddress = async (req, res) => {
     res.redirect("/profileAddress");
   }
 
-  const checkOutAddress = async (req, res) => {
+  const checkOutAddress = async (req, res, next) => {
     try {
       const userId = res.locals.user._id;
       const name = req.body.name;
@@ -152,10 +152,11 @@ const editAddress = async (req, res) => {
       res.redirect("/checkOut"); 
     } catch (error) {
       console.log(error.message);
+      next(error);
     }
   }
   
-  const walletTransaction = async(req,res)=>{
+  const walletTransaction = async(req, res, next)=>{
     try {
       const user = res.locals.user
       const count = await cartHelper.getCartCount(user.id)
@@ -169,6 +170,7 @@ const editAddress = async (req, res) => {
       res.render('public/walletTransaction',{wallet, count})
     } catch (error) {
       console.log(error.message);
+      next(error);
     }
   }
 

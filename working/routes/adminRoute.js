@@ -20,7 +20,7 @@ adminRoute.get('/index', auth.isLogin, adminController.manageUser)
 adminRoute.get('/logout', auth.isLogin, adminController.logout)
 adminRoute.post('/blockUser', auth.isLogin, adminController.blockUser)
 adminRoute.post('/unBlockUser', auth.isLogin, adminController.unBlockUser)
-
+ 
 adminRoute.get('/categoryManagement', auth.isLogin, categoryController.loadCategory)
 adminRoute.get('/addCategory', auth.isLogin, categoryController.loadAddCategory)
 adminRoute.post('/addCategory', auth.isLogin, categoryController.createCategory)
@@ -69,7 +69,7 @@ adminRoute.post('/salesReport', auth.isLogin, adminController.postSalesReport)
 //             case 'LIMIT_UNEXPECTED_FILE':
 //                 return res.status(400).send('Too many files. Maximum 3 files are allowed.');
 //             case 'LIMIT_FILE_TYPE':
-//                 return res.status(400).send('Invalid file type. Only jpg, jpeg, and png are allowed.');
+//                 return res.status(400).send('Invalid file type. Only jpg, jpeg, webp and png are allowed.');
 //             // ... you can handle other error codes if needed
 //             default:
 //                 return res.status(400).send('Error uploading file.');

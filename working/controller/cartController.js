@@ -1,7 +1,7 @@
 const Cart = require('../models/cartModel')
 const cartHelper = require('../helper/cartHelper')
 
-const loadCart = async (req, res) => {
+const loadCart = async (req, res, next) => {
     try {
         const user = res.locals.user
         const count = await cartHelper.getCartCount(user.id)
@@ -39,10 +39,11 @@ const loadCart = async (req, res) => {
         }
     } catch (error) {
         console.log(error.message)
+        next(error);
     }
 }
 
-const addToCart = (req, res) => {
+const addToCart = (req, res, next) => {
     try {
         cartHelper.addCart(req.params.id, res.locals.user._id)
         .then((response) => {
@@ -50,17 +51,17 @@ const addToCart = (req, res) => {
         })
     } catch (error) {
         console.log(error.message)
-        res.redirect('/error_500')
+        next(error);
     }
 }
 
-const deleteProduct = (req, res) => {
+const deleteProduct = (req, res, next) => {
     cartHelper.deleteProduct(req.body).then((response) => {
         res.send(response)
     })
 }
 
-const updateQuantity = (req, res) => {
+const updateQuantity = (req, res, next) => {
     const userId = res.locals.user._id
     cartHelper.updateQuantity(req.body)
     .then(async (response) => {

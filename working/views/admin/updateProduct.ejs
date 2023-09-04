@@ -142,10 +142,16 @@
                                         <label for="productImages" class="form-label">Product Images</label>
                                     </div>
                                     <div id="imagesPreviewContainer">
-                                        <% for(let i = 0; i < product.images.length; i++) { %>
-                                        <img src="./product_images/<%= product.images[i] %>" id="imgView<%= i+1 %>" alt="product image" width="100px" height="100px">
+                                        <% for(let i=0; i < product.images.length; i++) { %>
+                                            <div class="image-wrapper">
+                                                <img src="./product_images/<%= product.images[i] %>" id="imgView<%= i+1 %>" alt="product image" width="100px"
+                                                    height="100px">
+                                                <button type="button" class="btn btn-danger btn-sm delete-btn" onclick="deleteImage('imgView<%= i+1 %>')">Delete</button>
+                                            </div>
                                         <% } %>
                                     </div>
+                                    <input type="hidden" id="deletedImages" name="deletedImages" value="">
+
                                     <div>
                                         <input type="file" id="productImages" name="images" class="form-control" onchange="viewImages(event)" multiple accept=".jpeg, .jpg, .png, .webp">
                                     </div>
@@ -175,45 +181,63 @@
 
     <script>
         function viewImages(event) {
-    const files = event.target.files;
-    const imagesPreviewContainer = document.getElementById("imagesPreviewContainer");
+            const files = event.target.files;
+            const imagesPreviewContainer = document.getElementById("imagesPreviewContainer");
 
-    // Clear the existing previews
-    imagesPreviewContainer.innerHTML = '';
+            // Clear the existing previews
+            imagesPreviewContainer.innerHTML = '';
 
-    if (files.length > 3) {
-        alert('You can upload up to 3 images only.');
-        event.target.value = '';  // Clear the input
-        return;
-    }
+            if (files.length > 3) {
+                alert('You can upload up to 3 images only.');
+                event.target.value = '';  // Clear the input
+                return;
+            }
 
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
 
-        // Validate file size
-        if (file.size > 2 * 1024 * 1024) {
-            alert('Each image should be less than 2MB in size.');
-            event.target.value = '';  // Clear the input
-            return;
+                // Validate file size
+                if (file.size > 2 * 1024 * 1024) {
+                    alert('Each image should be less than 2MB in size.');
+                    event.target.value = '';  // Clear the input
+                    return;
+                }
+
+                // Validate file type
+                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+                if (!validTypes.includes(file.type)) {
+                    alert('Only jpeg and png image types are allowed.');
+                    event.target.value = '';  // Clear the input
+                    return;
+                }
+
+                // Display image preview
+                const imgPreview = document.createElement('img');
+                imgPreview.src = URL.createObjectURL(file);
+                imgPreview.width = 100;
+                imgPreview.height = 100;
+                imgPreview.id = "imgView" + (i+1); // For example, imgView1, imgView2, etc.
+                imagesPreviewContainer.appendChild(imgPreview);
+            }
         }
 
-        // Validate file type
-        const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-        if (!validTypes.includes(file.type)) {
-            alert('Only jpeg and png image types are allowed.');
-            event.target.value = '';  // Clear the input
-            return;
+        function deleteImage(imgViewId) {
+            const imageElement = document.getElementById(imgViewId);
+            const deletedImagesInput = document.getElementById('deletedImages');
+
+            // Add the image's filename to the deleted images list
+            if (deletedImagesInput.value) {
+                deletedImagesInput.value += ',' + imageElement.src.split('/').pop();
+            } else {
+                deletedImagesInput.value = imageElement.src.split('/').pop();
+            }
+
+            // Remove image preview and its delete button from the page
+            const imageWrapper = imageElement.parentNode;  // Assuming this is the container of both the image and the delete button.
+            imageWrapper.parentNode.removeChild(imageWrapper);
+
         }
 
-        // Display image preview
-        const imgPreview = document.createElement('img');
-        imgPreview.src = URL.createObjectURL(file);
-        imgPreview.width = 100;
-        imgPreview.height = 100;
-        imgPreview.id = "imgView" + (i+1); // For example, imgView1, imgView2, etc.
-        imagesPreviewContainer.appendChild(imgPreview);
-    }
-}
 
     </script>
 </body>

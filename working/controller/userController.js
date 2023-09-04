@@ -14,12 +14,12 @@ require('dotenv').config();
 // const client = require("twilio")(accountSid, authToken);
 
 const accountSid = "AC2494e61a37ee26d347cbbf64da4d268c";
-const authToken = "15fde4e72b4cb2ebd802b97d3238183f";
+const authToken = "7d42896718af74606302c7906f5980bc";
 const verifySid = "VAa679d7990591abe277854951c2ebcdb9";
 const client = require("twilio")(accountSid, authToken);
 
 
-// const home = async (req, res) => {
+// const home = async (req, res, next) => {
 //     try {
 //       //if(req.session.ivide_check){
 //         //console.log(req.session)
@@ -32,7 +32,7 @@ const client = require("twilio")(accountSid, authToken);
 //     }
 // }
 
-const home = async (req, res) => {
+const home = async (req, res, next) => {
   try {
     const category = await Category.find({});
     const page = parseInt(req.query.page) || 1; 
@@ -57,22 +57,25 @@ const home = async (req, res) => {
     res.render('public/index', { product: products, banner, category, currentPage: page, totalPages});
   } catch (error) {
     console.log(error.message);
+    next(error);
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res, next) => {
     try {
         res.render('public/login')
     } catch (error) {
-        console.log(error.message)
+      console.log(error.message)
+      next(error);
     }
 }
 
-const signup = async (req, res) => {
+const signup = async (req, res, next) => {
     try {
         res.render('public/signup')
     } catch (error) {
-        console.log(error.message)
+      console.log(error.message)
+      next(error);
     }
 }
 
@@ -85,7 +88,7 @@ const securePassword = async (password) => {
     }
   };
 
-const insertUser = async (req, res) => {
+const insertUser = async (req, res, next) => {
     try {
       const { name, email, mobile, password } = req.body;
       const existingUser = await User.findOne({$or: [{email:email}, {mobile:mobile}]})
@@ -137,7 +140,7 @@ const insertUser = async (req, res) => {
     }
   };
 
-  const verifyLogin2 = async(req, res) => {
+  const verifyLogin2 = async(req, res, next) => {
     try {
       const mobile = req.body.mobile
       const password = req.body.password
@@ -163,13 +166,12 @@ const insertUser = async (req, res) => {
   }
 
 
-  const verifyLogin = async(req, res)=>{
+  const verifyLogin = async(req, res, next)=>{
     try {
       const mobile = req.body.mobile
       const password = req.body.password
   
       const userData = await User.findOne({mobile:mobile})
-      console.log(userData,"vl userdata");
   
       if (userData) {
         const passwordMatch = await bcrypt.compare(password, userData.password)
@@ -202,7 +204,7 @@ const insertUser = async (req, res) => {
     }
   }
 
-  const verifyOtp = async (req, res) => {
+  const verifyOtp = async (req, res, next) => {
     try {
       const otp =req.body.otp;
        const mobile = req.body.mobile
@@ -229,7 +231,7 @@ const insertUser = async (req, res) => {
     }
   }
   
-  const loadForgotPassword = async(req, res) => {
+  const loadForgotPassword = async(req, res, next) => {
     try {
       res.render('public/forgotPassword')
     } catch (error) {
@@ -238,7 +240,7 @@ const insertUser = async (req, res) => {
     }
   }
 
-  const forgotPasswordOtp = async(req, res) => {
+  const forgotPasswordOtp = async(req, res, next) => {
     const user = await User.findOne({mobile: req.body.mobile})
     const mobile = req.body.mobile
     if(!user){
@@ -255,7 +257,7 @@ const insertUser = async (req, res) => {
     }
   }
 
-  const resetPasswordOtpVerify = async (req, res) => {
+  const resetPasswordOtpVerify = async (req, res, next) => {
     try {
       const otp =req.body.otp;
        const mobile = req.session.mobile
@@ -277,11 +279,11 @@ const insertUser = async (req, res) => {
         }
     } catch (error) {
       console.log(error)
-      res.redirect('/error_500')
+      next(error);
     }
   }
 
-  const setNewPassword = async (req, res) => {
+  const setNewPassword = async (req, res, next) => {
     const newPw = req.body.newPassword
     const confirmPw = req.body.confirmPassword
     const mobile = req.session.mobile
@@ -295,11 +297,11 @@ const insertUser = async (req, res) => {
       res.redirect('/login')
     }else{
       res.render('public/resetPassword', {message:"Password and Confirm Password is not matching"})
-    }
-  }
+    }  
+  } 
 
 
-  const userLogout = async(req, res)=>{
+  const userLogout = async(req, res, next)=>{
     try {
       req.session.user_id=null
       req.session.destroy()
@@ -310,7 +312,7 @@ const insertUser = async (req, res) => {
   }
 
 
-  const shop = async (req, res) => {
+  const shop = async (req, res, next) => {
     try {
       const user = res.locals.user;
 
@@ -364,7 +366,7 @@ const insertUser = async (req, res) => {
       res.render('public/shop', { product: products, category, selectedCategoryId, currentPage: page, totalPages, count, sortQuery });
     } catch (error) {
       console.log(error.message);
-      res.redirect('/error_500');
+      next(error);
     }
 };
 
@@ -390,11 +392,12 @@ const insertUser = async (req, res) => {
         res.render('public/categoryShop',{product,category, currentPage: page, totalPages, categoryId, count})
       }
     catch(err){
-        console.log('category page error',err);
+      console.log('category page error', err);
+      next(err);
       }
   }
 
-  const error500 = async (req, res) => {
+  const error500 = async (req, res, next) => {
     try {
       res.render('public/error_500')
     } catch (error) {
@@ -402,7 +405,7 @@ const insertUser = async (req, res) => {
     }
   }
 
-  const error403 = async (req, res) => {
+  const error403 = async (req, res, next) => {
     try {
       res.render('public/error_403')
     } catch (error) {
@@ -410,7 +413,7 @@ const insertUser = async (req, res) => {
     }
   }
 
-  const success = async (req, res) => {
+  const success = async (req, res, next) => {
     try {
       res.render('public/success')
     } catch (error) {
@@ -418,7 +421,7 @@ const insertUser = async (req, res) => {
     }
   }
   
-const failed = async (req, res) => {
+const failed = async (req, res, next) => {
     try {
       res.render('public/failed')
     } catch (error) {

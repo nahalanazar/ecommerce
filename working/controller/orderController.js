@@ -1,6 +1,8 @@
 const Address = require('../models/addressModel')
 const Cart = require('../models/cartModel')
 const Order = require('../models/orderModel')
+const User = require('../models/userModel')
+const Coupon = require('../models/couponModel')
 const orderHelper = require('../helper/orderHelper')
 const cartHelper = require('../helper/cartHelper')
 const couponHelper = require('../helper/couponHelper')
@@ -9,11 +11,11 @@ const easyInvoice = require('easyinvoice')
 const fs = require('fs')
 const { Readable } = require('stream')
 
-const checkOut = async (req, res) => {
+const checkOut = async (req, res, next) => {
     try {
         const user = res.locals.user
         const count = await cartHelper.getCartCount(user.id)
-
+        const couponList = await Coupon.find()
         const total = await Cart.findOne({user: user.id})
         const address = await Address.findOne({user: user._id}).lean().exec()
         const cart = await Cart.aggregate([
@@ -33,16 +35,17 @@ const checkOut = async (req, res) => {
             }}
         ])
         if(address){
-            res.render('public/checkOut', {address: address.addresses, cart, total, count})
+            res.render('public/checkOut', {address: address.addresses, cart, total, count, walletBalance: user.wallet, couponList})
         }else{
-            res.render('public/checkOut', {address: [], cart, total, count})
+            res.render('public/checkOut', {address: [], cart, total, count, walletBalance: user.wallet, couponList})
         }
     } catch (error) {
-        console.log(error.message)
+      console.log(error.message)
+      next(error);
     }
 }
 
-const changePrimary = async (req, res) => {
+const changePrimary = async (req, res, next) => {
     try {
       const userId = res.locals.user._id
       const result = req.body.addressRadio;
@@ -66,23 +69,42 @@ const changePrimary = async (req, res) => {
       res.redirect("/checkout");
     } catch (error) {
       console.log(error.message);
+      next(error);
     }
 }
 
-const postCheckOut = async (req, res) => {
-    try {
+const postCheckOut = async (req, res, next) => {
+  try {
         const userId = res.locals.user._id;
         const data = req.body;
 
         await couponHelper.addCouponToUser(data.couponCode, userId);
         const checkStock = await orderHelper.checkStock(userId);
-
         if (!checkStock) {
             await Cart.deleteOne({ user: userId });
             return res.json({ status: 'OrderFailed' });
         }
+ 
+        const userData = await User.findById({ _id: userId })
+        const walletAmount = userData.wallet
 
-        if (data.paymentOption === "cod" || data.paymentOption === "wallet") {
+         // If payment option is wallet + razorpay
+        if (data.paymentOption === "wallet_razorpay" && walletAmount < data.total) {
+               
+            // Deduct amount from the wallet
+          
+            // userData.wallet = 0;  //////////////
+            // await userData.save();   ///////////
+
+            // Deduct the wallet amount from the total and let the user pay the remaining amount through razorpay.
+            const remainingAmount = data.finalAmount;
+          
+            await orderHelper.placeOrder(data, userId);
+            const order = await orderHelper.generateRazorpay(userId, remainingAmount); //pass the remaining amount
+            return res.json(order);
+        } else {
+            // ... rest of your code
+          if (data.paymentOption === "cod" || data.paymentOption === "wallet") {
             await orderHelper.updateStock(userId);
             await orderHelper.placeOrder(data, userId);
             await Cart.deleteOne({ user: userId });
@@ -92,21 +114,26 @@ const postCheckOut = async (req, res) => {
             }
 
             return res.json({ orderStatus: true, message: "order placed successfully" });
-        } else if (data.paymentOption === "razorpay") {
-            await orderHelper.placeOrder(data, userId);
+          } else if (data.paymentOption === "razorpay") {
+            console.log("payment:razor");
+              await orderHelper.placeOrder(data, userId);
             const order = await orderHelper.generateRazorpay(userId, data.total);
-            return res.json(order);
+            console.log(order);
+              return res.json(order);
+          }
         }
+ 
+        
     } catch (error) {
         console.error("Error in postCheckOut:", error.message);
         if (error.message === "Insufficient wallet balance!") {
           return res.status(400).json({ error: "Insufficient wallet balance!" });
         }
-      return res.status(500).json({ error: "An error occurred while processing your request." });
+    return res.status(500).json({ error: "An error occurred while processing your request." });
     }
 }
 
-const orderList = async (req, res) => {
+const orderList = async (req, res, next) => {
     try {
         const user = res.locals.user
         const count = await cartHelper.getCartCount(user.id)
@@ -118,7 +145,8 @@ const orderList = async (req, res) => {
         ])
         res.render('public/profileOrder', {orders, count})
     } catch (error) {
-        console.log(error.message)
+      console.log(error.message)
+      next(error);
     }
 }
 
@@ -143,11 +171,12 @@ const orderDetails = async (req,res)=>{
       });      
     } catch (error) {
       console.log(error.message);
+      next(error);
     }
   
 }
 
-const verifyPayment = (req, res) => {
+const verifyPayment = (req, res, next) => {
     console.log("payment");
   const orderId = req.body.order.receipt
     orderHelper.verifyPayment(req.body)
@@ -161,10 +190,11 @@ const verifyPayment = (req, res) => {
       });
   }).catch(async(err)=>{
     console.log(err);
+    next(err);
   });
 }
 
-const paymentFailed = async (req, res) => {
+const paymentFailed = async (req, res, next) => {
     try {
     const order = req.body
     const deleted = await Order.updateOne(
@@ -172,17 +202,18 @@ const paymentFailed = async (req, res) => {
       { $pull: { orders: { _id:new ObjectId(order.order.receipt) } } }
     )
     res.send({status:true})
-  } catch (error) {
+    } catch (error) {
+      next(error);
   }
 }
 
-const downloadInvoice = async (req, res) => {
+const downloadInvoice = async (req, res, next) => {
   try {
     const id = req.query.id
     userId = res.locals.user._id
     result = await orderHelper.findOrder(id, userId)
     const date = result[0].createdAt.toLocaleDateString()
-    const product = result[0].productDetails
+    const product = result[0].productDetails 
 
     const order = {
       id: id,
@@ -197,6 +228,7 @@ const downloadInvoice = async (req, res) => {
       pincode: result[0].shippingAddress.item.pincode,
       product: result[0].productDetails
     }
+    
     const products = order.product.map((product) => ({
       "quantity": parseInt(product.quantity),
       "description": product.productName,
@@ -246,6 +278,7 @@ const downloadInvoice = async (req, res) => {
     })
   } catch (error) {
     console.log(error.message)
+    next(error);
   }
 }
 

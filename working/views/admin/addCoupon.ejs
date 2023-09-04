@@ -246,7 +246,7 @@
                 error6.innerText = 'Description is required'
                 flag = 2
             }
-            if (!couponNameValue.startsWith("FP-") || couponNameValue.length != 8) {
+            if (!couponNameValue.startsWith("FP-") || couponNameValue.length !== 8) {
                 error1.innerText = 'Coupon code must start with "FP-" and have 5 characters after the prefix';
                 flag = 2;
             }

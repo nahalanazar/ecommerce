@@ -161,11 +161,11 @@
 				<div class="flex-w flex-sb-m p-b-52">
 					<div class="flex-w flex-l-m m-tb-10">
 						<button>
-							<li class="main-nav-list"><a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="#">All Products</a></li>
+							<li class="main-nav-list"><a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/shop">All Products</a></li>
 						</button>
 						<% category.forEach(function(item) { %>
 						<button>
-						<li class="main-nav-list"><a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/categoryShop?id=<%= item._id %>"><%= item.name %></a></li>
+						<li class="main-nav-list"><a class="nav-link stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/shop?id=<%= item._id %>"><%= item.name %></a></li>
 						</button>
 						<% }) %>
 					</div>

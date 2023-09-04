@@ -3,6 +3,7 @@ const Category = require('../models/categoryModel')
 const productHelper = require('../helper/productHelper')
 const cartHelper = require('../helper/cartHelper')
 
+
 const loadProducts = async(req,res)=>{
     try {
       const categories = await Category.find({})
@@ -84,8 +85,21 @@ const loadProducts = async(req,res)=>{
   const updateProduct = async (req, res) => {
     try {
       const images = req.files ? req.files.map(file => file.filename) : undefined;
-        await productHelper.updateProduct(req.body,images)
-        res.redirect('/admin/productManagement');
+      const deletedImages = req.body.deletedImages ? req.body.deletedImages.split(",") : [];
+      const currentProduct = await Product.findById(req.body.id);
+
+
+       // If there are new images, add the old image names to the deleted images array
+        if (images && images.length > 0) {
+            images.forEach((img, index) => {
+                const oldImageName = currentProduct.images[index];
+                if (oldImageName) {
+                    deletedImages.push(oldImageName);
+                }
+            }); 
+        }
+      await productHelper.updateProduct(req.body, images, deletedImages)
+      res.redirect('/admin/productManagement');
     } catch (error) {
       console.log(error.message);
     }

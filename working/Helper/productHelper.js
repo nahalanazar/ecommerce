@@ -1,4 +1,5 @@
 const Product = require('../models/productModel')
+const fs = require('fs');
 
 
 const createProduct = (data,images) => {
@@ -59,7 +60,7 @@ const createProduct = (data,images) => {
     });
   };
 
-  const updateProduct = async (data, images) => {
+  const updateProduct = async (data, images, deletedImages) => {
     try {
         // Fetch the current product data
         const currentProduct = await Product.findById(data.id);
@@ -76,7 +77,31 @@ const createProduct = (data,images) => {
                     currentProduct.images.push(img);
                 }
             });
+      } 
+
+      if (deletedImages && deletedImages.length > 0) {
+    deletedImages.forEach(imgName => {
+        console.log("Attempting to delete:", imgName);
+        const imagePath = `./views/admin/product_images/${imgName}`;
+        if (fs.existsSync(imagePath)) {
+            fs.unlink(imagePath, err => {
+                if (err) {
+                    console.error("Error deleting image: ", err.message);
+                } else {
+                    console.log("Successfully deleted image:", imgName);
+                }
+            });
+        } else {
+            console.error("Image not found on server:", imgName);
         }
+        
+        // Remove from currentProduct.images if it's still there
+        const imgIndex = currentProduct.images.indexOf(imgName);
+        if (imgIndex !== -1) {
+            currentProduct.images.splice(imgIndex, 1);
+        }
+    });
+}
 
         let updateQuery = {
             $set: {
@@ -88,7 +113,7 @@ const createProduct = (data,images) => {
                 images: currentProduct.images // Set images to the updated array
             }
         };
-
+        console.log("updated:", images);
         // Update the product in the database
         await Product.updateOne({ _id: data.id }, updateQuery);
 

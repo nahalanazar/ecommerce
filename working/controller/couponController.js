@@ -1,6 +1,6 @@
 const Coupon = require('../models/couponModel')
 const couponHelper = require('../helper/couponHelper')
-const couponList = async (req, res) => {
+const couponList = async (req, res, next) => {
     try {
         const couponList = await Coupon.find()
         res.render('couponList', {couponList})
@@ -9,7 +9,7 @@ const couponList = async (req, res) => {
     }
 }
 
-const loadAddCoupon = async (req, res) => {
+const loadAddCoupon = async (req, res, next) => {
     try {
         res.render('addCoupon')
     } catch (error) {
@@ -17,14 +17,14 @@ const loadAddCoupon = async (req, res) => {
     }
 }
 
-// const generateCouponCode = (req, res) => {
+// const generateCouponCode = (req, res, next) => {
 //     couponHelper.generateCouponCode()
 //         .then((couponCode) => {
 //         res.send(couponCode)
 //     })
 // }
 
-const addCoupon = (req, res) => {
+const addCoupon = (req, res, next) => {
     try {
         const data = {
             couponCode: req.body.coupon,
@@ -43,7 +43,7 @@ const addCoupon = (req, res) => {
     }
 }
 
-const removeCoupon = async(req, res) => {
+const removeCoupon = async(req, res, next) => {
     try {
         const id = req.body.couponId
         await Coupon.deleteOne({ _id: id })
@@ -53,7 +53,7 @@ const removeCoupon = async(req, res) => {
     }
 }
 
-const verifyCoupon = (req, res) => {
+const verifyCoupon = (req, res, next) => {
     const couponCode = req.params.id
     const userId = res.locals.user._id
     couponHelper.verifyCoupon(userId, couponCode)
@@ -62,7 +62,7 @@ const verifyCoupon = (req, res) => {
         })
 }
 
-const applyCoupon = async (req, res) => {
+const applyCoupon = async (req, res, next) => {
     console.log("apply");
     const couponCode = req.params.id
     const userId = res.locals.user._id

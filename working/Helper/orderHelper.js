@@ -5,11 +5,12 @@ const Address = require('../models/addressModel')
 const User = require('../models/userModel')
 const { ObjectId } = require("mongodb")
 const Razorpay = require('razorpay')
+const { default: Response } = require('twilio/lib/http/response')
 require('dotenv').config();
 
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID,
-  key_secret: process.env.RAZORPAY_SECRET,
+  key_secret: process.env.RAZORPAY_SECRET
 });
 
 const checkStock = async(userId)=>{
@@ -201,7 +202,8 @@ const placeOrder = (data, user) => {
               },
               {
                   $unwind: "$productDetails",
-              }, {
+              },
+              {
                   $project: {
                   productId: "$productDetails._id",
                   productName: "$productDetails.name",
@@ -212,35 +214,52 @@ const placeOrder = (data, user) => {
                   },
               },
             ]);
-
             const addressData = await Address.aggregate([
                 {
-                $match: { user: user.toString() },
+                  $match: { user: user.toString() },
                 },
                 {
-                $unwind: "$addresses",
+                  $unwind: "$addresses",
                 }
                 ,
                 {
-                $match: { "addresses._id": new ObjectId(data.address) },
+                  $match: { "addresses._id": new ObjectId(data.address) },
                 },
                 {
-                $project: { item: "$addresses" },
+                  $project: { item: "$addresses" },
                 },
             ]);
 
             let status, orderStatus;
 
-            if (data.paymentOption == 'cod') {
+            const userData = await User.findById({ _id: user });
+            if (data.paymentOption === "wallet_razorpay" && userData.wallet < data.total) {
+                userData.wallet = 0; // Deduct the entire wallet amount
+                await userData.save();
+
+                const walletTransaction = {
+                    date: new Date(),
+                    type: "Debit",
+                    amount: userData.wallet
+                }
+
+                await User.updateOne(
+                    { _id: user },
+                    { $push: { walletTransaction: walletTransaction } }
+                );
+
+                // Remaining payment will be handled by Razorpay
+                (status = "Pending"), (orderStatus = "Pending");
+
+            } else if (data.paymentOption === "cod") {
                 (status = "Success"), (orderStatus = "Placed");
+
             } else if (data.paymentOption === "wallet") {
-                const userData = await User.findById({ _id: user });
                 if (userData.wallet < data.total) {
                     return reject(new Error("Insufficient wallet balance!"));
                 } else {
                     userData.wallet -= data.total;
                     await userData.save();
-                    (status = "Success"), (orderStatus = "Placed");
 
                     const walletTransaction = {
                         date: new Date(),
@@ -252,8 +271,13 @@ const placeOrder = (data, user) => {
                         { _id: user },
                         { $push: { walletTransaction: walletTransaction } }
                     );
+
+                    (status = "Success"), (orderStatus = "Placed");
                 }
+
             } else {
+              console.log("payment pending");
+                // Assuming other options will default to Razorpay
                 (status = "Pending"), (orderStatus = "Pending");
             }
 
@@ -287,14 +311,14 @@ const placeOrder = (data, user) => {
                     user: user,
                     orders: orderData,
                 });
-                await newOrder.save().then((response) => {
+              await newOrder.save().then((response) => {
                     resolve(response);
                 });
             }
 
         } catch (error) {
-            console.log(error.message)
-            reject(error); // This will send the error back up to the calling function
+            console.log(error.message);
+            reject(error);
         }
     });
 }
@@ -385,6 +409,7 @@ const generateRazorpay = (userId, total)=> {
         currency: "INR",
         receipt: "" + orderId,
       };
+      console.log("Amount sent to Razorpay:", options.amount)
       instance.orders.create(options, function (err, order) {
         if (err) {
           console.log(err);
@@ -393,9 +418,11 @@ const generateRazorpay = (userId, total)=> {
           resolve(order);
         }
       });
+      console.log("resolve");
     });
-  } catch (error) { 
-    console.log(error.message);
+  } catch (err) { 
+    console.log("error");
+    console.log(err.message);
   }
 }
 

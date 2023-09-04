@@ -72,5 +72,13 @@ userRoute.get('/failed', userController.failed)
 
 userRoute.get('/invoice', auth.isLogin, auth.blocked, orderController.downloadInvoice)
 
+ 
+// Error-handling middleware
+userRoute.use((err, req, res, next) => {
+    console.error(err.stack); // Log the error for debugging
 
+    // Send the user to the error page
+    res.status(500).render('public/error_500', { errorMessage: err.message });
+});
+ 
 module.exports = userRoute
