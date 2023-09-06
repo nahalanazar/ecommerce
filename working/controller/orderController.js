@@ -87,22 +87,43 @@ const postCheckOut = async (req, res, next) => {
  
         const userData = await User.findById({ _id: userId })
         const walletAmount = userData.wallet
-
+ 
          // If payment option is wallet + razorpay
-        if (data.paymentOption === "wallet_razorpay" && walletAmount < data.total) {
-               
-            // Deduct amount from the wallet
-          
-            // userData.wallet = 0;  //////////////
-            // await userData.save();   ///////////
+        if (data.paymentOption === "wallet_razorpay") {
+          if (walletAmount >= data.total) {
+          console.log("waallet1a")
+        // Handle the case when the wallet has enough or more than enough balance
+        //     userData.wallet -= data.total; // Deduct the total amount from the wallet
+        //     console.log("userData 1a", userData.wallet)
+        //     console.log("dataTotal 1a", data.total)
+        // await userData.save();
 
-            // Deduct the wallet amount from the total and let the user pay the remaining amount through razorpay.
-            const remainingAmount = data.finalAmount;
-          
-            await orderHelper.placeOrder(data, userId);
-            const order = await orderHelper.generateRazorpay(userId, remainingAmount); //pass the remaining amount
-            return res.json(order);
-        } else {
+        // const walletTransaction = {
+        //     date: new Date(),
+        //     type: "Debit",
+        //     amount: data.total,
+        // }
+  
+        // await User.updateOne(
+        //     { _id: userId },
+        //     { $push: { walletTransaction: walletTransaction } }
+        // );
+
+        await orderHelper.updateStock(userId);
+        await orderHelper.placeOrder(data, userId);
+        await Cart.deleteOne({ user: userId });
+        return res.json({ orderStatus: true, message: "order placed successfully using wallet" });
+
+    } else {
+        // Handle the case when the wallet doesn't have enough balance and the rest will be handled by Razorpay
+        console.log("waallet 2a")
+        const remainingAmount = data.finalAmount;
+
+        await orderHelper.placeOrder(data, userId);
+        const order = await orderHelper.generateRazorpay(userId, remainingAmount);
+        return res.json(order);
+    }
+} else {
             // ... rest of your code
           if (data.paymentOption === "cod" || data.paymentOption === "wallet") {
             await orderHelper.updateStock(userId);
@@ -122,7 +143,6 @@ const postCheckOut = async (req, res, next) => {
               return res.json(order);
           }
         }
- 
         
     } catch (error) {
         console.error("Error in postCheckOut:", error.message);
@@ -132,6 +152,7 @@ const postCheckOut = async (req, res, next) => {
     return res.status(500).json({ error: "An error occurred while processing your request." });
     }
 }
+
 
 const orderList = async (req, res, next) => {
     try {

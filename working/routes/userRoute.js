@@ -67,18 +67,51 @@ userRoute.post('/paymentFailed', orderController.paymentFailed)
 
 userRoute.get('/error_500', userController.error500)
 userRoute.get('/error_403', userController.error403)
+userRoute.get('/error_404', userController.error404)
+
 userRoute.get('/success', userController.success)
 userRoute.get('/failed', userController.failed)
 
 userRoute.get('/invoice', auth.isLogin, auth.blocked, orderController.downloadInvoice)
 
- 
+
+// Catch-all handler for unmatched requests (any HTTP method)
+userRoute.all('*', (req, res, next) => {
+    const err = new Error(`Cannot ${req.method} ${req.originalUrl}`);
+    err.status = 404; // Set the HTTP status code to 404 (Not Found)
+    next(err);
+});
+   
 // Error-handling middleware
 userRoute.use((err, req, res, next) => {
     console.error(err.stack); // Log the error for debugging
 
-    // Send the user to the error page
-    res.status(500).render('public/error_500', { errorMessage: err.message });
+    const status = err.status || 500;
+    let errorCode = status;
+    let errorTitle = "";
+
+    // Determining the title based on the status code
+    switch (status) {
+        case 400:
+            errorTitle = "Bad Request";
+            break;
+        case 404:
+            errorTitle = "Page Not Found";
+            break;
+        case 500:
+            errorTitle = "Internal Server Error";
+            break;
+        default:
+            errorTitle = "Error";
+    }
+
+    // Render the error page
+    res.status(status).render('public/error_500', { 
+        errorCode: errorCode, 
+        errorTitle: errorTitle,
+        errorMessage: err.message 
+    });
 });
  
-module.exports = userRoute
+module.exports = userRoute;
+ 

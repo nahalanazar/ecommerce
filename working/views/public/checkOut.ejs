@@ -214,7 +214,6 @@
                                         style="width: 100%; height: 40px;" onclick="removeCoupon()">Remove</button>
                                 </div>
                             </div>
-
                             <span id="couponErr"></span>
                             <h4 class="p-b-10">Payment</h4>
                             <div class="payment_item">
@@ -627,7 +626,7 @@
             var rzp1 = new Razorpay(options)
             rzp1.open();
             //e.preventDefault()
-        }
+        } 
 
         function verifypayment(payment, order, paymentId) {
             console.log('12121212121212', payment, order, paymentId, '-------------1212121212121212--');

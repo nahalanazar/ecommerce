@@ -105,7 +105,7 @@ const loadProducts = async(req,res)=>{
     }
   };
 
-  const productPage = async (req, res) => {
+  const productPage = async (req, res, next) => {
     try {
       const usercart = res.locals.user
 
@@ -115,7 +115,8 @@ const loadProducts = async(req,res)=>{
       res.render('public/product',{product : product, count: count })    
     } catch (error) {
       console.log(error);
-      res.send({ success: false, error: error.message });
+      next(error)
+      // res.send({ success: false, error: error.message });
     }
   }
 

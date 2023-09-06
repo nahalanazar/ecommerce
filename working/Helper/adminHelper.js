@@ -55,7 +55,7 @@ const cancelOrder = (orderId,userId, status) => {
                 resolve(response);
               });
             }
-          }else if(order.paymentMethod=='wallet'||order.paymentMethod=='razorpay'){
+          }else if(order.paymentMethod=='wallet'||order.paymentMethod=='razorpay'||order.paymentMethod=='wallet_razorpay'){
                     console.log(status);
             if(status == 'Cancel Accepted'){
               Order.updateOne(
@@ -155,7 +155,7 @@ const returnOrder = async (orderId, userId, status) => {
                   resolve(response);
                 });
               }
-            }else if(order.paymentMethod=='wallet'||order.paymentMethod=='razorpay'){
+            }else if(order.paymentMethod=='wallet'||order.paymentMethod=='razorpay'||order.paymentMethod=='wallet_razorpay'){
               if(status == 'Return Accepted'){
                 Order.updateOne(
                   { "orders._id": new ObjectId(orderId) },

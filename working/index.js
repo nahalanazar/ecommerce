@@ -47,11 +47,20 @@ const adminSession = session({
 
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
+  
+// Serve static files
+  app.set("view engine", "ejs");
+  app.set("views", "./views");
+  app.use(express.static("views"));
 
+  // Use no-cache
+  const nocache = require("nocache");
+  app.use(nocache());
+ 
 
   const userRouter = require('./routes/userRoute');
   const adminRouter = require('./routes/adminRoute');
-  
+   
   app.use('/admin', (req, res, next) => {
     return next();
   }, adminSession, adminRouter);
@@ -61,15 +70,8 @@ const adminSession = session({
   }, userSession, userRouter);
 
 
-app.set("view engine", "ejs");
-app.set("views", "./views");
-
-app.use(express.static("views"));
-
-const nocache = require("nocache");
-app.use(nocache());
-
 const port = 3500;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
 });
+ 

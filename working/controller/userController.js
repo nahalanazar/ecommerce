@@ -5,32 +5,19 @@ const Category = require("../models/categoryModel")
 const Banner = require("../models/bannerModel")
 const cartHelper = require("../helper/cartHelper")
 const bcrypt = require("bcrypt");
-require('dotenv').config();
+const dotenv = require('dotenv').config();
 
 //const otpHelper=require("../Helper/otpHelper")
-// const accountSid = process.env.TWILIO_SID
-// const authToken = process.env.TWILIO_AUTH_TOKEN
-// const verifySid = "VAe86f583a3b6c2a84119a5f15ef3c7c89";
-// const client = require("twilio")(accountSid, authToken);
-
-const accountSid = "AC2494e61a37ee26d347cbbf64da4d268c";
-const authToken = "7d42896718af74606302c7906f5980bc";
-const verifySid = "VAa679d7990591abe277854951c2ebcdb9";
+const accountSid = process.env.TWILIO_SID
+const authToken = process.env.TWILIO_AUTH_TOKEN
+const verifySid = process.env.TWILIO_VERIFY_SID
 const client = require("twilio")(accountSid, authToken);
 
+// const accountSid = "AC2494e61a37ee26d347cbbf64da4d268c";
+// const authToken = "7d42896718af74606302c7906f5980bc";
+// const verifySid = "VAa679d7990591abe277854951c2ebcdb9";
+// const client = require("twilio")(accountSid, authToken);
 
-// const home = async (req, res, next) => {
-//     try {
-//       //if(req.session.ivide_check){
-//         //console.log(req.session)
-//         res.render('public/index')
-//       //}else{
-//         //res.redirect('/login')
-//       //}
-//     } catch (error) {
-//         console.log(error.message)
-//     }
-// }
 
 const home = async (req, res, next) => {
   try {
@@ -42,11 +29,6 @@ const home = async (req, res, next) => {
     // Fetch products with pagination
     const totalProducts = await Product.countDocuments({ $and: [{ isListed: true }, { isProductListed: true }] }); // Get the total number of products
     const totalPages = Math.ceil(totalProducts / limit); // Calculate the total number of pages
-
-    // const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
-    //   .skip(skip)
-    //   .limit(limit)
-    //   .populate('category');
 
       const products = await Product.find({ $and: [{ isListed: true }, { isProductListed: true }] })
       .limit(limit)
@@ -412,6 +394,14 @@ const insertUser = async (req, res, next) => {
       console.log(error)
     }
   }
+  
+  const error404 = async (req, res, next) => {
+    try {
+      res.render('public/error_404')
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const success = async (req, res, next) => {
     try {
@@ -447,6 +437,7 @@ module.exports= {
     categoryPage,
     error500,
     error403,
+    error404,
     success,
     failed
 }

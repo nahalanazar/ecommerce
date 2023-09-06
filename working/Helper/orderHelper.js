@@ -233,24 +233,46 @@ const placeOrder = (data, user) => {
             let status, orderStatus;
 
             const userData = await User.findById({ _id: user });
-            if (data.paymentOption === "wallet_razorpay" && userData.wallet < data.total) {
-                userData.wallet = 0; // Deduct the entire wallet amount
-                await userData.save();
+            if (data.paymentOption === "wallet_razorpay") {
+              if (userData.wallet >= data.total) {
+                console.log("wallet 1 b")
+                console.log("waallet 1b ", userData.wallet, data.total)
+                    // Deduct the total amount from the wallet
+                    userData.wallet -= data.total;
+                    await userData.save()
+                    const walletTransaction = {
+                        date: new Date(),
+                        type: "Debit",
+                        amount: data.total,
+                    }
 
-                const walletTransaction = {
-                    date: new Date(),
-                    type: "Debit",
-                    amount: userData.wallet
+                    await User.updateOne(
+                        { _id: user },
+                        { $push: { walletTransaction: walletTransaction } }
+                    );
+
+                    (status = "Success"), (orderStatus = "Placed");
+              } else {
+                console.log("waallet 2b")
+                 console.log("waallet 2b ", userData.wallet, data.total)
+                    // Deduct the entire wallet amount
+                    const deductedWalletAmount = userData.wallet;
+                    userData.wallet = 0;
+
+                    const walletTransaction = {
+                        date: new Date(),
+                        type: "Debit",
+                        amount: deductedWalletAmount,
+                    }
+
+                    await User.updateOne(
+                        { _id: user },
+                        { $push: { walletTransaction: walletTransaction } }
+                    );
+
+                    // The remaining amount will be handled by Razorpay
+                    (status = "Pending"), (orderStatus = "Pending");
                 }
-
-                await User.updateOne(
-                    { _id: user },
-                    { $push: { walletTransaction: walletTransaction } }
-                );
-
-                // Remaining payment will be handled by Razorpay
-                (status = "Pending"), (orderStatus = "Pending");
-
             } else if (data.paymentOption === "cod") {
                 (status = "Success"), (orderStatus = "Placed");
 
