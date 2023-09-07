@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const Address = require('../models/addressModel')
-const profileHelper = require('../_helper/profileHelper')
-const cartHelper = require('../_helper/cartHelper')
+const profileHelper = require('../helper/profileHelper')
+const cartHelper = require('../helper/cartHelper')
 
 const profile = async (req, res, next) => {
     try {

@@ -1,7 +1,7 @@
 const Product = require('../models/productModel')
 const Category = require('../models/categoryModel')
-const productHelper = require('../_helper/productHelper')
-const cartHelper = require('../_helper/cartHelper')
+const productHelper = require('../helper/productHelper')
+const cartHelper = require('../helper/cartHelper')
 
 
 const loadProducts = async(req,res)=>{

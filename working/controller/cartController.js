@@ -1,5 +1,5 @@
 const Cart = require('../models/cartModel')
-const cartHelper = require('../_helper/cartHelper')
+const cartHelper = require('../helper/cartHelper')
 
 const loadCart = async (req, res, next) => {
     try {
