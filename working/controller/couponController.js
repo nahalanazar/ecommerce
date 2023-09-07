@@ -1,5 +1,5 @@
 const Coupon = require('../models/couponModel')
-const couponHelper = require('../helper/couponHelper')
+const couponHelper = require('../_helper/couponHelper')
 const couponList = async (req, res, next) => {
     try {
         const couponList = await Coupon.find()

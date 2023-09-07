@@ -3,7 +3,7 @@ const User = require("../models/userModel")
 const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
 const Banner = require("../models/bannerModel")
-const cartHelper = require("../helper/cartHelper")
+const cartHelper = require("../_helper/cartHelper")
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv').config();
  
