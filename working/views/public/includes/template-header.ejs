@@ -10,17 +10,9 @@
                 <% if (isAuthenticated) { %>
                     <div class="right-top-bar flex-w h-full">
 
-                        <!-- <a href="/index" class="flex-c-m trans-04 p-lr-25">
-                         gggh
-                        </a> -->
-
                         <a href="profile" class="flex-c-m trans-04 p-lr-25">
                             <%= userName ? userName : "" %>
                         </a>
-    
-                        <!-- <a href="/#" class="flex-c-m trans-04 p-lr-25">
-                            USD
-                        </a> -->
     
                         <a href="logout" class="flex-c-m trans-04 p-lr-25">
                             Logout
@@ -110,7 +102,7 @@
             <% if (isAuthenticated) { %>
                 <li>
                     <div class="right-top-bar flex-w h-full">
-                        <a href="" class="flex-c-m p-lr-10 trans-04">
+                        <a href="profile" class="flex-c-m p-lr-10 trans-04">
                             <%= userName ? userName : "" %>
                         </a>
                         <a href="logout" class="flex-c-m p-lr-10 trans-04">
@@ -121,7 +113,7 @@
             <% } else { %>  
                 <li>
                     <div class="right-top-bar flex-w h-full">
-                        <a href="/public/#" class="flex-c-m p-lr-10 trans-04">
+                        <a href="/login" class="flex-c-m p-lr-10 trans-04">
                             Login
                         </a>
                     </div>
@@ -135,7 +127,7 @@
             </li>
 
             <li>
-                <a href="/product">Shop</a>
+                <a href="/shop">Shop</a>
             </li>
         </ul>
     </div>

@@ -231,8 +231,8 @@ const paymentFailed = async (req, res, next) => {
 const downloadInvoice = async (req, res, next) => {
   try {
     const id = req.query.id
-    userId = res.locals.user._id
-    result = await orderHelper.findOrder(id, userId)
+    const userId = res.locals.user._id
+    const result = await orderHelper.findOrder(id, userId)
     const date = result[0].createdAt.toLocaleDateString()
     const product = result[0].productDetails 
 
@@ -250,12 +250,31 @@ const downloadInvoice = async (req, res, next) => {
       product: result[0].productDetails
     }
     
+        let totalQuantity = 0;
+
+    // Iterate through the products and sum up the quantities
+    for (const products of product) {
+      totalQuantity += products.quantity;
+    } 
+
+    console.log('Total Quantity:', totalQuantity, result[0].discountAmount, totalQuantity);
+
+    const discountUsed = parseFloat((result[0].discountAmount) / totalQuantity)
+    
     const products = order.product.map((product) => ({
       "quantity": parseInt(product.quantity),
       "description": product.productName,
       "tax-rate": 0,
-      "price": parseInt(product.productPrice)
+      // "price": parseInt(product.productPrice)
+      "price": parseFloat(product.productPrice-discountUsed), 
+      // "discount": parseFloat(discountUsed)
     }))
+    // const products = order.product.map((product) => ({
+    //   "quantity": parseInt(product.quantity),
+    //   "description": product.productName,
+    //   "tax-rate": 0,
+    //   "price": parseInt(product.productPrice)
+    // }))
 
     var data = {
       customize: {},

@@ -6,7 +6,7 @@ const Banner = require("../models/bannerModel")
 const cartHelper = require("../helper/cartHelper")
 const bcrypt = require("bcrypt");
 const dotenv = require('dotenv').config();
-
+ 
 //const otpHelper=require("../Helper/otpHelper")
 const accountSid = process.env.TWILIO_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN

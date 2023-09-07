@@ -36,7 +36,7 @@ const verifyLogin = async(req,res)=>{
 }
 
 const loadDashboard = async (req, res) => {
-  try {
+  try { 
     const orders = await Order.aggregate([
       { $unwind: "$orders" },
       { $match: { "orders.orderStatus": "Delivered" } },
@@ -46,7 +46,7 @@ const loadDashboard = async (req, res) => {
           totalPriceSum: { $sum: { $toInt: "$orders.totalPrice" } },
           count: { $sum: 1}
       }}
-    ])
+    ]) 
 
     const categorySales = await Order.aggregate([
       { $unwind: "$orders" },
@@ -224,7 +224,7 @@ const blockUser = async(req,res)=>{
     adminHelper.cancelOrder(orderId,userId,status).then((response) => {
       res.send(response);
     });
-  }
+  }   
 
   const returnOrder = async(req,res)=>{
     const orderId = req.body.orderId

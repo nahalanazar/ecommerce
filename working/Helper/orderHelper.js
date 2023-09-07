@@ -258,7 +258,7 @@ const placeOrder = (data, user) => {
                     // Deduct the entire wallet amount
                     const deductedWalletAmount = userData.wallet;
                     userData.wallet = 0;
-
+                    await userData.save()
                     const walletTransaction = {
                         date: new Date(),
                         type: "Debit",

@@ -7,7 +7,7 @@ const config = require("./configuration/config");
 
 const app = express();
 
-const mongoURI = "mongodb://127.0.0.1:27017/e_commerce_site";
+const mongoURI ='mongodb+srv://fathimathunahala:zSKxKsDt9FSV4byY@fashionpalace.qra9chq.mongodb.net/'
 
 mongoose.connect(mongoURI, {
     useNewUrlParser: true,
