@@ -4,7 +4,7 @@ const Product = require("../models/productModel")
 const Category = require("../models/categoryModel")
 const Banner = require("../models/bannerModel")
 const cartHelper = require("../helper/cartHelper")
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const dotenv = require('dotenv').config();
  
 //const otpHelper=require("../Helper/otpHelper")
