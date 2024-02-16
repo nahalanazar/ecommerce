@@ -11,48 +11,50 @@
   <!-- Header -->
 	<%- include("./includes/template-header") %>
 
-    <div class="text-center center-div" id="login">
+    <!-- <div class="text-center center-div" id="login">
         <div class="container w-25 py-5">
             <div class="title pb-5">
                 <h2 class="font-weight-bold">Login</h2>
-                <!-- <span><%= locals.msg ? msg : "Log in for the existing user" %></span>
+                <span>
+                    <%= locals.msg ? msg : "Log in for the existing user" %>
+                </span>
                 <% if(locals.logout){ %>
                     <div class="alter alert-success text-center">
                         <%= logout %>
                     </div>
-                <% } %> -->
+                    <% } %>
             </div>
     
-            <%
-                if(typeof message !== 'undefined'){
-                    %>
-                    <h6><%= message %></h6>
-                    <%
-                }
-            %>
+            <% if(typeof message !=='undefined' ){ %>
+                <h6>
+                    <%= message %>
+                </h6>
+                <% } %>
     
-            <form action="/loginValidate" method="post">
-                <div class="form-group">
-                    <input type="string" class="form-control mb-4" placeholder="mobile" name="mobile">
-                </div>
-                <div class="form-group">
-                    <input type="password" class="form-control mb-5" placeholder="Password" name="password" required>
-                </div>
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <a class="text-primary fw-bold" href="/forgotPassword">Forgot Password ?</a>
-                  </div>
-                  <button type="submit" class="btn btn-success rounded-pill mb-3">Send OTP</button>
-                  <div class="d-flex align-items-center justify-content-center">
-                    <p class="mb-0">New to Fashion Palace?</p>
-                    <a class="text-primary ms-2" href="signup">Create an account</a>
-                  </div>
-            </form>
+                    <form action="/loginValidate" method="post">
+                        <div class="form-group">
+                            <input type="string" class="form-control mb-4" placeholder="mobile" name="mobile">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control mb-5" placeholder="Password" name="password"
+                                required>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <a class="text-primary fw-bold" href="/forgotPassword">Forgot Password ?</a>
+                        </div>
+                        <button type="submit" class="btn btn-success rounded-pill mb-3">Send OTP</button>
+                        <div class="d-flex align-items-center justify-content-center">
+                            <p class="mb-0">New to Fashion Palace?</p>
+                            <a class="text-primary ms-2" href="signup">Create an account</a>
+                        </div>
+                    </form>
         </div>
-    </div>
+    </div> -->
 
     
-    <div class="text-center center-div" id="login">
-        <div class="container w-25 py-5">
+    <div class="text-center center-div container w-25 py-5" id="login">
+        <h2 class="font-weight-bold">Login</h2>
+        <div>
             <form action="/loginValidate2" method="post">
                 <div class="form-group">
                     <input type="string" class="form-control" placeholder="mobile" name="mobile">
@@ -71,3 +73,4 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
   </body>
 </html>
+
